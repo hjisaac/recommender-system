@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "codes"
+version = "0.1.0"
+description = ""
+authors = ["hjisaac <isaac.houngue@imsp-uac.org>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+matplotlib = "^3.9.2"
+scikit-learn = "^1.5.2"
+pandas = "^2.2.3"
+scipy = "^1.14.1"
+powerlaw = "^1.5"
+tqdm = "^4.66.5"
+dill = "^0.3.9"
+streamlit = "^1.39.0"
+
+
+[tool.poetry.group.dev.dependencies]
+pipdeptree = "^2.23.4"
+black = {extras = ["jupyter"], version = "^24.8.0"}
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
