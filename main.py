@@ -729,7 +729,7 @@ class AlternatingLeastSquares(object):
     def _compute_loss(self, accumulated_squared_residual: float) -> float:
         return -1 / 2 * self.hyper_lambda * accumulated_squared_residual
 
-    def _accumulated_squared_residual(
+    def _get_accumulated_squared_residual_and_count(
         self, data_by_user_id: SerialUnidirectionalMapper
     ) -> tuple[float, int]:
         accumulated_squared_residuals = 0
@@ -815,13 +815,13 @@ class AlternatingLeastSquares(object):
             # current iteration for both the training and the test datasets
             # TODO: Parallelize things here
             accumulated_squared_residual_train, residuals_count_train = (
-                self._accumulated_squared_residual(data_by_user_id_train)
+                self._get_accumulated_squared_residual_and_count(data_by_user_id_train)
             )
             print(
                 "Squared => ", accumulated_squared_residual_train, residuals_count_train
             )
             accumulated_squared_residual_test, residuals_count_test = (
-                self._accumulated_squared_residual(data_by_user_id_test)
+                self._get_accumulated_squared_residual_and_count(data_by_user_id_test)
             )
 
             loss_train = self._compute_loss(accumulated_squared_residual_train)
