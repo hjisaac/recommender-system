@@ -1,0 +1,20 @@
+[general]
+# Original: LINES_COUNT_TO_READ = 1_000_000
+LINES_COUNT_TO_READ = 10000
+TRAIN_TEST_SPLIT_RATIO = 0.1
+
+[als]
+# Original: HYPER_N_EPOCH = 20
+HYPER_N_EPOCH = 4
+
+# Original: HYPER_N_FACTOR = 10
+HYPER_N_FACTOR = 2
+
+HYPER_GAMMA = 0.01
+HYPER_LAMBDA = 0.1
+HYPER_TAU = 1
+CHECKPOINT_FOLDER = "./checkpoints"
+
+[figures]
+PLT_FIGURE_FOLDER = "./plt_figures"
+PLT_FIGURE_FORMAT = "svg"

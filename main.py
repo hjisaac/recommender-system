@@ -591,9 +591,9 @@ class AlternatingLeastSquares(object):
                     "hyper_n_epochs": hyper_n_epochs,
                     "hyper_n_factors": hyper_n_factors,
                     "user_factors": user_factors
-                    # TODO: 
+                    # TODO:
                     # It does not crash when with pass np.zeros()
-                    # 
+                    #
                     or np.random.normal(
                         loc=0.0,
                         scale=1 / math.sqrt(hyper_n_factors),
@@ -736,8 +736,7 @@ class AlternatingLeastSquares(object):
         ratings_count = 0
         _A = np.zeros((self.hyper_n_factors, self.hyper_n_factors))
         _B = np.zeros(self.hyper_n_factors)
-        
-        
+
         for data in user_ratings_data:
             item, user_item_rating = data["movieId"], data["rating"]
             user_item_rating = float(user_item_rating)
@@ -765,7 +764,8 @@ class AlternatingLeastSquares(object):
             ) * self.item_factors[item_id]
 
         self.user_factors[user_id] = np.linalg.solve(
-            self.hyper_lambda * _A + TAU * np.eye(self.hyper_n_factors), self.hyper_lambda * _B
+            self.hyper_lambda * _A + TAU * np.eye(self.hyper_n_factors),
+            self.hyper_lambda * _B,
         )
 
     def update_item_bias_and_factors(self, item_id, item_ratings_data: list):
@@ -797,12 +797,12 @@ class AlternatingLeastSquares(object):
             user, item_user_rating = data["userId"], data["rating"]
             item_user_rating = float(item_user_rating)
             user_id = self.get_user_id(user)
-            
+
             _A += np.outer(self.user_factors[user_id], self.user_factors[user_id])
             _B += (
                 item_user_rating - self.user_biases[user_id] - self.item_biases[item_id]
             ) * self.user_factors[user_id]
-        
+
         try:
             self.item_factors[item_id] = np.linalg.solve(
                 self.hyper_lambda * _A + TAU * np.eye(self.hyper_n_factors),
@@ -814,13 +814,13 @@ class AlternatingLeastSquares(object):
             print("item_biases shape => ", self.item_biases.shape)
             print("user_biases shape => ", self.user_biases.shape)
 
-
             print("user factors  => ", self.user_factors)
             print("item factors  => ", self.item_factors)
             print("user biases  => ", self.user_biases)
             print("item biases  => ", self.item_biases)
 
-            raise 
+            raise
+
     def fit(
         self,
         data_by_user_id_train: SerialUnidirectionalMapper,
@@ -923,7 +923,7 @@ indexed_data.plot_power_low_distribution()
 
 
 N_EPOCH = 20
-N_FACTOR = 3 # 10
+N_FACTOR = 3  # 10
 TRAIN_TEST_SPLIT_RATIO = 0.2
 NORMAL_DIST_MEAN = 0.0
 NORMAL_DIST_STD = 1 / math.sqrt(N_FACTOR)
@@ -1154,7 +1154,3 @@ surf = plt.contourf(U, V, P)
 
 
 # In[ ]:
-
-
-
-
