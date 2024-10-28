@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[954]:
+# In[149]:
 
 
 import contextlib
@@ -14,7 +14,7 @@ from csv import DictReader
 from datetime import datetime, date
 from functools import cached_property
 from typing import Iterable, Callable, Sequence, Optional
-
+from numpy.linalg import LinAlgError
 from dataclasses import dataclass, asdict
 from matplotlib import pyplot as plt
 
@@ -24,7 +24,7 @@ class logger:  # noqa
     log = staticmethod(print)
 
 
-# In[955]:
+# In[150]:
 
 
 import doctest
@@ -266,8 +266,8 @@ class InMemory2DIndexer(object):
     def plot_data_item_distribution_as_hist(
         self,
         data_item: str,
-        plot_title: str = "Distribution of Data item",
-        plot_xlabel: str = "Data item",
+        plot_title: str = "Ratings distribution",
+        plot_xlabel: str = "Ratings",
         plot_ylabel: str = "Count",
     ):
 
@@ -334,89 +334,6 @@ class InMemory2DIndexer(object):
                 math.floor(len(dataset_indices_based_representation) * ratio),
             )
         )
-        # TODO: To be removed
-        test_dataset_indices_based_representation = {
-            (1, 40),
-            (0, 5),
-            (0, 124),
-            (2, 2),
-            (0, 14),
-            (2, 11),
-            (0, 133),
-            (4, 2),
-            (1, 33),
-            (2, 50),
-            (3, 15),
-            (0, 7),
-            (2, 68),
-            (0, 37),
-            (0, 101),
-            (0, 110),
-            (0, 55),
-            (3, 17),
-            (1, 19),
-            (1, 28),
-            (2, 45),
-            (0, 57),
-            (0, 121),
-            (4, 27),
-            (2, 127),
-            (1, 3),
-            (1, 21),
-            (2, 20),
-            (2, 84),
-            (2, 29),
-            (0, 96),
-            (2, 93),
-            (0, 41),
-            (0, 50),
-            (3, 12),
-            (0, 123),
-            (2, 13),
-            (0, 107),
-            (2, 49),
-            (3, 14),
-            (4, 22),
-            (0, 18),
-            (0, 91),
-            (2, 88),
-            (4, 6),
-            (0, 20),
-            (2, 136),
-            (0, 93),
-            (2, 35),
-            (0, 4),
-            (2, 10),
-            (0, 77),
-            (0, 86),
-            (2, 28),
-            (0, 95),
-            (2, 92),
-            (0, 113),
-            (0, 70),
-            (0, 24),
-            (4, 3),
-            (2, 51),
-            (2, 60),
-            (1, 6),
-            (2, 5),
-            (2, 142),
-            (0, 35),
-            (4, 14),
-            (1, 45),
-            (2, 108),
-            (0, 1),
-            (2, 117),
-            (0, 65),
-            (0, 138),
-            (4, 16),
-            (1, 47),
-            (0, 49),
-            (2, 110),
-            (2, 9),
-            (0, 76),
-            (2, 137),
-        }
 
         for user_id, user_item_id in dataset_indices_based_representation:
             # Get the item_id using the `user_item_id`
@@ -514,7 +431,7 @@ class InMemory2DIndexer(object):
 doctest.testmod(report=True, verbose=True)
 
 
-# In[956]:
+# In[151]:
 
 
 class CheckpointManager(object):
@@ -590,7 +507,46 @@ class AlsState:
         return attr_value
 
 
+TAU = 0.1
+
+
 class AlternatingLeastSquares(object):
+    """
+    Alternating Least Squares (ALS) model implementation.
+
+    Methods
+    -------
+    _compute_rmse:
+        Computes RMSE (Root Mean Squared Error) given accumulated squared residuals and the count of residuals.
+
+    _get_accumulated_squared_residual_and_count:
+        Computes accumulated squared residuals for a given dataset.
+
+    fit:
+        Trains the model using the provided training data.
+
+    Examples
+    --------
+    >>> als = AlternatingLeastSquares(lambda user_id: 0, lambda item_id: 0, (2, 2))
+    >>> als._compute_rmse(4.0, 2)  # RMSE calculation with simple inputs
+    1.4142135623730951
+
+    >>> accumulated_sq_residuals, residual_count = als._get_accumulated_squared_residual_and_count({0: [{"movieId": "m1", "rating": 3}]})
+    >>> accumulated_sq_residuals, residual_count
+    (9.0, 1)
+
+    >>> als.hyper_lambda, als.hyper_gamma  # Check initial hyperparameters
+    (0.1, 0.01)
+
+    >>> data_train = {0: [{"movieId": "m1", "rating": 5}], 1: [{"movieId": "m2", "rating": 3}]}
+    >>> data_test = {0: [{"movieId": "m1", "rating": 5}], 1: [{"movieId": "m2", "rating": 3}]}
+    >>> als.fit(data_train, data_train, data_test, data_test)  # Fit model with simple data
+    >>> len(als.epochs_rmse_train) > 0  # Check that training RMSE has been computed
+    True
+
+    >>> als.epochs_rmse_train[0], als.epochs_rmse_test[0]  # Check first epoch's RMSE for both train and test sets
+    (0.0, 0.0)
+    """
 
     checkpoint_manager = CheckpointManager(checkpoint_folder="./checkpoints")
 
@@ -623,12 +579,8 @@ class AlternatingLeastSquares(object):
         # Initialize the biases and the latent factors
 
         users_count, items_count = self.matrix_shape
-        # TODO: Need fix, std is not a parameter, should be ?
-        NORMAL_DIST_STD = 1 / math.sqrt(N_FACTOR)
-        USER_FACTOR_SHAPE = (indexed_data.users_count, N_FACTOR)
-        ITEM_FACTOR_SHAPE = (indexed_data.items_count, N_FACTOR)
 
-        self._initialize_state(
+        self.__initialize_state(
             resume,
             **(
                 {}
@@ -639,16 +591,27 @@ class AlternatingLeastSquares(object):
                     "hyper_n_epochs": hyper_n_epochs,
                     "hyper_n_factors": hyper_n_factors,
                     "user_factors": user_factors
-                    or np.zeros((users_count, hyper_n_factors)),
+                    # TODO: 
+                    # It does not crash when with pass np.zeros()
+                    # 
+                    or np.random.normal(
+                        loc=0.0,
+                        scale=1 / math.sqrt(hyper_n_factors),
+                        size=(users_count, hyper_n_factors),
+                    ),
                     "item_factors": item_factors
-                    or np.zeros((indexed_data.items_count, hyper_n_factors)),
+                    or np.random.normal(
+                        loc=0.0,
+                        scale=1 / math.sqrt(hyper_n_factors),
+                        size=(items_count, hyper_n_factors),
+                    ),
                     "user_biases": user_biases or np.zeros(users_count),
                     "item_biases": item_biases or np.zeros(items_count),
                 }
             ),
         )
 
-    def _initialize_state(self, resume, **kwargs):
+    def __initialize_state(self, resume, **kwargs):
         if resume:
             self._state = AlsState.create_from(data=self.checkpoint_manager.load())
             logger.log(
@@ -677,7 +640,7 @@ class AlternatingLeastSquares(object):
         return self._state.hyper_n_epochs
 
     @property
-    def hyper_n_factors(self):  # TODO:
+    def hyper_n_factors(self):
         return self._state.hyper_n_factors
 
     @property
@@ -727,7 +690,11 @@ class AlternatingLeastSquares(object):
         return math.sqrt(accumulated_squared_residual / residuals_count)
 
     def _compute_loss(self, accumulated_squared_residual: float) -> float:
-        return -1 / 2 * self.hyper_lambda * accumulated_squared_residual
+        return (
+            (-1 / 2 * self.hyper_lambda * accumulated_squared_residual)
+            - TAU / 2 * sum(self._get_accumulated_factors_product())
+            - self.hyper_gamma * sum(self._get_accumulated_squared_biases())
+        )
 
     def _get_accumulated_squared_residual_and_count(
         self, data_by_user_id: SerialUnidirectionalMapper
@@ -738,17 +705,122 @@ class AlternatingLeastSquares(object):
             for data in data_by_user_id[user_id]:
                 item, user_item_rating = data["movieId"], data["rating"]
                 user_item_rating = float(user_item_rating)
+                item_id = self.get_item_id(item)
                 accumulated_squared_residuals += (
                     user_item_rating
                     - (
                         self.user_biases[user_id]
                         + self.item_biases[self.get_item_id(item)]
+                        + np.dot(self.user_factors[user_id], self.item_factors[item_id])
                     )
                 ) ** 2
 
                 residuals_count += 1
         return accumulated_squared_residuals, residuals_count
 
+    def _get_accumulated_squared_biases(self):
+        return sum(bias**2 for bias in self.user_biases), sum(
+            bias**2 for bias in self.item_biases
+        )
+
+    def _get_accumulated_factors_product(self):
+        return sum(np.dot(factor, factor) for factor in self.user_factors), sum(
+            np.dot(factor, factor) for factor in self.item_factors
+        )
+
+    def update_user_bias_and_factors(self, user_id, user_ratings_data: list):
+        """
+        Side effect method that updates the given item's bias and latent factors
+        """
+        bias = 0
+        ratings_count = 0
+        _A = np.zeros((self.hyper_n_factors, self.hyper_n_factors))
+        _B = np.zeros(self.hyper_n_factors)
+        
+        
+        for data in user_ratings_data:
+            item, user_item_rating = data["movieId"], data["rating"]
+            user_item_rating = float(user_item_rating)
+            item_id = self.get_item_id(item)
+
+            bias += (
+                user_item_rating
+                - self.item_biases[item_id]
+                - np.dot(self.user_factors[user_id], self.item_factors[item_id])
+            )
+            ratings_count += 1
+
+        bias = (self.hyper_lambda * bias) / (
+            self.hyper_lambda * ratings_count + self.hyper_gamma
+        )
+        self.user_biases[user_id] = bias
+
+        for data in user_ratings_data:
+            item, user_item_rating = data["movieId"], data["rating"]
+            user_item_rating = float(user_item_rating)
+            item_id = self.get_item_id(item)
+            _A += np.outer(self.item_factors[item_id], self.item_factors[item_id])
+            _B += (
+                user_item_rating - self.user_biases[user_id] - self.item_biases[item_id]
+            ) * self.item_factors[item_id]
+
+        self.user_factors[user_id] = np.linalg.solve(
+            self.hyper_lambda * _A + TAU * np.eye(self.hyper_n_factors), self.hyper_lambda * _B
+        )
+
+    def update_item_bias_and_factors(self, item_id, item_ratings_data: list):
+        """
+        Side effect method that updates the given item's bias and latent factors
+        """
+        bias = 0
+        ratings_count = 0
+        _A = np.zeros((self.hyper_n_factors, self.hyper_n_factors))
+        _B = np.zeros(self.hyper_n_factors)
+
+        for data in item_ratings_data:
+            user, item_user_rating = data["userId"], data["rating"]
+            item_user_rating = float(item_user_rating)
+            user_id = self.get_user_id(user)
+            bias += (
+                item_user_rating
+                - self.user_biases[self.get_user_id(user)]
+                - np.dot(self.user_factors[user_id], self.item_factors[item_id])
+            )
+            ratings_count += 1
+
+        bias = (self.hyper_lambda * bias) / (
+            self.hyper_lambda * ratings_count + self.hyper_gamma
+        )
+        self.item_biases[item_id] = bias
+
+        for data in item_ratings_data:
+            user, item_user_rating = data["userId"], data["rating"]
+            item_user_rating = float(item_user_rating)
+            user_id = self.get_user_id(user)
+            
+            _A += np.outer(self.user_factors[user_id], self.user_factors[user_id])
+            _B += (
+                item_user_rating - self.user_biases[user_id] - self.item_biases[item_id]
+            ) * self.user_factors[user_id]
+        
+        try:
+            self.item_factors[item_id] = np.linalg.solve(
+                self.hyper_lambda * _A + TAU * np.eye(self.hyper_n_factors),
+                self.hyper_lambda * _B,
+            )
+        except LinAlgError as exc:
+
+            print("user_factors shape => ", self.user_factors.shape)
+            print("item_biases shape => ", self.item_biases.shape)
+            print("user_biases shape => ", self.user_biases.shape)
+
+
+            print("user factors  => ", self.user_factors)
+            print("item factors  => ", self.item_factors)
+            print("user biases  => ", self.user_biases)
+            print("item biases  => ", self.item_biases)
+
+            raise 
     def fit(
         self,
         data_by_user_id_train: SerialUnidirectionalMapper,
@@ -777,39 +849,18 @@ class AlternatingLeastSquares(object):
             f"Expect the items matrices to have the same dimensionality for both the training and the test dataset. But got {len(data_by_user_id_test)} and {len(data_by_item_id_test)} "
             "for them respectively."
         )
-        print("Before iteration start")
+
         for epoch in range(self.starting_epoch, self.hyper_n_epochs):
-            print("Starting epoch => ", epoch)
             for user_id in data_by_user_id_train:
-                bias = 0
-                items_count = 0
-                for data in data_by_user_id_train[user_id]:
-                    item, user_item_rating = data["movieId"], data["rating"]
-                    user_item_rating = float(user_item_rating)
-                    bias += user_item_rating - self.item_biases[self.get_item_id(item)]
-                    items_count += 1
-
-                bias = (self.hyper_lambda * bias) / (
-                    self.hyper_lambda * items_count + self.hyper_gamma
+                self.update_user_bias_and_factors(
+                    user_id, data_by_user_id_train[user_id]
                 )
-                if user_id == 0:
-                    print("About to set => ", bias)
-                self.user_biases[user_id] = bias
 
+                # Update user_factors using the biases
             for item_id in data_by_item_id_train:
-                bias = 0
-                users_count = 0
-                for data in data_by_item_id_train[item_id]:
-                    user, movie_item_rating = data["userId"], data["rating"]
-                    movie_item_rating = float(movie_item_rating)
-                    bias += movie_item_rating - self.user_biases[self.get_user_id(user)]
-                    users_count += 1
-
-                bias = (self.hyper_lambda * bias) / (
-                    self.hyper_lambda * users_count + self.hyper_gamma
+                self.update_item_bias_and_factors(
+                    item_id, data_by_item_id_train[item_id]
                 )
-
-                self.item_biases[item_id] = bias
 
             # We've got a new model, so time to compute the metrics for the
             # current iteration for both the training and the test datasets
@@ -817,9 +868,7 @@ class AlternatingLeastSquares(object):
             accumulated_squared_residual_train, residuals_count_train = (
                 self._get_accumulated_squared_residual_and_count(data_by_user_id_train)
             )
-            print(
-                "Squared => ", accumulated_squared_residual_train, residuals_count_train
-            )
+
             accumulated_squared_residual_test, residuals_count_test = (
                 self._get_accumulated_squared_residual_and_count(data_by_user_id_test)
             )
@@ -839,23 +888,12 @@ class AlternatingLeastSquares(object):
             self.epochs_rmse_train.append(rmse_train)
             self.epochs_rmse_test.append(rmse_test)
 
-            print(
-                f"Iteration Train {epoch} => MSE: ",
-                math.sqrt(accumulated_squared_residual_train / residuals_count_train),
-                "User bias: ",
-                user_biases[0],
-                "Movie bias: ",
-                movie_biases[0],
-                "Loss: ",
-                loss_train,
-            )
 
-
-# In[957]:
+# In[152]:
 
 
 # From here, we will use the domain vocabulary
-LINES_COUNT_TO_READ = 400  # 100_000
+LINES_COUNT_TO_READ = 100_000
 
 indexed_data = InMemory2DIndexer.create_from_csv(
     file_path="./ml-32m/ratings.csv",
@@ -867,13 +905,13 @@ indexed_data = InMemory2DIndexer.create_from_csv(
 )
 
 
-# In[958]:
+# In[153]:
 
 
 indexed_data.plot_data_item_distribution_as_hist(data_item="rating")
 
 
-# In[959]:
+# In[154]:
 
 
 indexed_data.plot_power_low_distribution()
@@ -881,11 +919,11 @@ indexed_data.plot_power_low_distribution()
 
 # ## Practical 2: biases only
 
-# In[960]:
+# In[155]:
 
 
 N_EPOCH = 20
-N_FACTOR = 10
+N_FACTOR = 3 # 10
 TRAIN_TEST_SPLIT_RATIO = 0.2
 NORMAL_DIST_MEAN = 0.0
 NORMAL_DIST_STD = 1 / math.sqrt(N_FACTOR)
@@ -904,7 +942,7 @@ user_biases = np.zeros(indexed_data.users_count)
 movie_biases = np.zeros(indexed_data.items_count)
 
 
-# In[961]:
+# In[156]:
 
 
 (data_by_user_id__train, data_by_item_id__train), (
@@ -932,20 +970,21 @@ assert sum(
 ) == math.floor((1 - TRAIN_TEST_SPLIT_RATIO) * LINES_COUNT_TO_READ)
 
 
-# In[962]:
+# In[157]:
 
 
 als_model = AlternatingLeastSquares(
     hyper_lambda=LAMBDA,
     hyper_gamma=GAMMA,
     hyper_n_epochs=N_EPOCH,
+    hyper_n_factors=N_FACTOR,
     user_id_getter=lambda user: indexed_data.id_to_user_bmap.inverse[user],
     item_id_getter=lambda item: indexed_data.id_to_item_bmap.inverse[item],
     matrix_shape=(len(indexed_data.data_by_user_id), len(indexed_data.data_by_item_id)),
 )
 
 
-# In[963]:
+# In[158]:
 
 
 als_model.fit(
@@ -956,7 +995,134 @@ als_model.fit(
 )
 
 
-# In[964]:
+# In[159]:
+
+
+def plot_als_train_test_rmse_evolution(als_model):  # noqa
+    """
+    Plots the error evolution over iterations for a given set of error values.
+
+    Parameters:
+    error_values: List or array of error values (e.g., RMSE, loss) for each iteration.
+    label: Label for the plot (default is "Test MSE").
+    """
+    iterations = range(1, len(als_model.epochs_rmse_train) + 1)
+
+    # Plotting the error values
+    plt.plot(iterations, als_model.epochs_rmse_train, label="Train RMSE", color="blue")
+    plt.plot(iterations, als_model.epochs_rmse_test, label="Test RMSE", color="red")
+    # Adding titles and labels
+    plt.title("RMSE Evolution Over Iterations")
+    plt.xlabel("Iterations")
+    plt.ylabel("RMSE")
+
+    # Show legend
+    plt.legend()
+
+    # Display the plot
+    plt.show()
+
+
+def plot_als_train_test_loss_evolution(als_model):  # noqa
+    """
+    Plots the loss evolution over iterations for the given ALS model.
+
+    Parameters:
+    als_model: Object containing 'epochs_loss_train' and 'epochs_loss_test'
+               attributes that represent the loss values for each iteration.
+    """
+    iterations = range(1, len(als_model.epochs_loss_train) + 1)
+
+    # Plotting the loss values
+    plt.plot(iterations, als_model.epochs_loss_train, label="Train Loss", color="blue")
+    plt.plot(iterations, als_model.epochs_loss_test, label="Test Loss", color="red")
+
+    # Adding titles and labels
+    plt.title("Loss Evolution Over Iterations")
+    plt.xlabel("Iterations")
+    plt.ylabel("Loss")
+
+    # Show legend
+    plt.legend()
+
+    # Display the plot
+    plt.show()
+
+
+def plot_error_evolution(
+    error_values,
+    label="Error",
+    title="Error Evolution Over Iterations",
+    ylabel="Error",
+    color="blue",
+):
+    """
+    Plots the error evolution over iterations for a given set of error values.
+
+    Parameters:
+    error_values: List or array of error values (e.g., RMSE, loss) for each iteration.
+    label: Label for the plot (default is "Error").
+    title: Title for the plot (default is "Error Evolution Over Iterations").
+    ylabel: Y-axis label (default is "Error").
+    """
+    iterations = range(1, len(error_values) + 1)
+
+    # Plotting the error values
+    plt.plot(iterations, error_values, label=label, color=color)
+
+    # Adding titles and labels
+    plt.title(title)
+    plt.xlabel("Iteration")
+    plt.ylabel(ylabel)
+
+    # Show legend
+    plt.legend()
+
+    # Display the plot
+    plt.show()
+
+
+# ### Train and test RMSE
+
+# In[160]:
+
+
+plot_als_train_test_rmse_evolution(als_model)
+plot_error_evolution(
+    als_model.epochs_rmse_train,
+    ylabel="Train RMSE",
+    title="Train RMSE Evolution Over Iterations",
+)
+plot_error_evolution(
+    als_model.epochs_rmse_test,
+    ylabel="Test RMSE",
+    title="Test RMSE Evolution Over Iterations",
+    color="red",
+)
+
+
+# ### Train and test loss
+
+# In[161]:
+
+
+plot_als_train_test_loss_evolution(als_model)
+
+plot_error_evolution(
+    als_model.epochs_loss_train,
+    ylabel="Train Loss",
+    title="Train Loss Evolution Over Iterations",
+)
+
+plot_error_evolution(
+    als_model.epochs_loss_test,
+    ylabel="Test Loss",
+    title="Test Loss Evolution Over Iterations",
+    color="red",
+)
+
+
+# In[162]:
 
 
 import numpy as np
@@ -965,13 +1131,13 @@ from matplotlib import pyplot as plt
 u = np.arange(-5, 5, 0.25)
 
 
-# In[965]:
+# In[163]:
 
 
 v = np.arange(-5, 5, 0.25)
 
 
-# In[966]:
+# In[164]:
 
 
 tau = 0.1
@@ -988,3 +1154,7 @@ surf = plt.contourf(U, V, P)
 
 
 # In[ ]:
+
+
+
+
