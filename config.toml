@@ -16,5 +16,5 @@ HYPER_TAU = 1
 CHECKPOINT_FOLDER = "./checkpoints"
 
 [figures]
-PLT_FIGURE_FOLDER = "./plt_figures"
+PLT_FIGURE_FOLDER = "./figures"
 PLT_FIGURE_FORMAT = "svg"
