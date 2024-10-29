@@ -459,7 +459,7 @@ doctest.testmod(report=True, verbose=True)
 # In[257]:
 
 
-def generate_filename_from_kwargs(prefix="", extension="", **kwargs):
+def generate_kwargs_based_name(prefix="", extension="", **kwargs):
     """
     Generate filename based on the provided kwargs. Useful to create
     checkpoints filename and figure names based on the config of the
@@ -474,10 +474,10 @@ def generate_filename_from_kwargs(prefix="", extension="", **kwargs):
         str: Generated filename with timestamp and provided keyword arguments.
 
     Examples:
-        >>> generate_filename_from_kwargs(prefix="checkpoint", extension="pt", lambda_=0.1, gamma=0.5, tau=0.2)
+        >>> generate_kwargs_based_name(prefix="checkpoint", extension="pt", lambda_=0.1, gamma=0.5, tau=0.2)
         'checkpoint_20231028-152433_lambda0.1_gamma0.5_tau0.2.pt'
 
-        >>> generate_filename_from_kwargs(prefix="plot", extension="svg", width=800, height=600)
+        >>> generate_kwargs_based_name(prefix="plot", extension="svg", width=800, height=600)
         'plot_20231028-152433_width800_height600.svg'
     """
     prefix = prefix or ""
@@ -495,8 +495,8 @@ def generate_filename_from_kwargs(prefix="", extension="", **kwargs):
     return "_".join(filename_parts) + extension
 
 
-generate_config_based_filename = partial(
-    generate_filename_from_kwargs,
+generate_config_based_name = partial(
+    generate_kwargs_based_name,
     _lambda=ALS_HYPER_LAMBDA,
     gamma=ALS_HYPER_GAMMA,
     tau=ALS_HYPER_TAU,
@@ -509,7 +509,7 @@ generate_config_based_filename = partial(
 
 def get_plt_figure_path(figure_name):
 
-    config_based_figure_name = generate_config_based_filename(
+    config_based_figure_name = generate_config_based_name(
         prefix=figure_name, extension=PLT_FIGURE_FORMAT
     )
     return f"{PLT_FIGURE_FOLDER}/{config_based_figure_name}"
@@ -523,9 +523,9 @@ class CheckpointManager(object):
         self.checkpoint_folder = checkpoint_folder
 
         self._checkpoint_filepath = None
-        self.set_checkpoint_name(checkpoint_name)
+        self.set_checkpoint_path(checkpoint_name)
 
-    def set_checkpoint_name(self, checkpoint_name: Callable[..., str] | str = None):
+    def set_checkpoint_path(self, checkpoint_name: Callable[..., str] | str = None):
         if not (
             name := (
                 checkpoint_name() if callable(checkpoint_name) else checkpoint_name
@@ -711,16 +711,14 @@ class AlternatingLeastSquares(object):
             logger.log(
                 f"Successfully initialized state from last checkpoints: {self._state}",
             )
-            self.checkpoint_manager.set_checkpoint_name(
-                self._ext_free_checkpoint_filename
-            )
+            self.checkpoint_manager.set_checkpoint_path(self.checkpoint_name)
 
     @property
-    def _ext_free_checkpoint_filename(self):
+    def checkpoint_name(self):
         """
         Extension free checkpoint file
         """
-        return generate_filename_from_kwargs(
+        return generate_kwargs_based_name(
             _lambda=self.hyper_lambda,
             tau=self.hyper_tau,
             gamma=self.hyper_gamma,
