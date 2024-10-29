@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[187]:
+# In[235]:
 
 
 import contextlib
@@ -43,7 +43,7 @@ class logger:  # noqa
     log = staticmethod(print)
 
 
-# In[188]:
+# In[236]:
 
 
 import doctest
@@ -456,7 +456,7 @@ class InMemory2DIndexer(object):
 doctest.testmod(report=True, verbose=True)
 
 
-# In[189]:
+# In[237]:
 
 
 def generate_kwargs_based_name(prefix="", extension="", **kwargs):
@@ -532,7 +532,7 @@ def get_plt_figure_path(figure_name, subdir=""):
     )
 
 
-# In[190]:
+# In[238]:
 
 
 class CheckpointManager(object):
@@ -674,7 +674,7 @@ class AlternatingLeastSquares(object):
         self.epochs_rmse_test = []
         self.epochs_loss_test = []
 
-        self.__model_name = generate_config_based_name()
+        self._model_name = generate_config_based_name()
 
         users_count, items_count = self.matrix_shape
 
@@ -722,16 +722,6 @@ class AlternatingLeastSquares(object):
             logger.log(
                 f"Successfully initialized the model state to: {self._state}",
             )
-
-    @property
-    def checkpoint_name(self):
-        return generate_kwargs_based_name(
-            _lambda=self.hyper_lambda,
-            tau=self.hyper_tau,
-            gamma=self.hyper_gamma,
-            epochs=self.hyper_n_epochs,
-            factors=self.hyper_n_factors,
-        )
 
     @property
     def hyper_n_epochs(self):
@@ -1012,14 +1002,14 @@ class AlternatingLeastSquares(object):
             self.epochs_rmse_test.append(rmse_test)
 
         # Save the current state of the training for investigation purposes
-        self.checkpoint_manager.save(self._state, self.__model_name)
+        self.checkpoint_manager.save(self._state, self._model_name)
         # self.checkpoint_manager.save(
         #     {"loss_test": loss_test, "loss_train": loss_train}, self.__model_name
         # )
-        logger.log(f"Saved checkpoint successfully at {self.checkpoint_name}")
+        logger.log(f"Checkpoint successfully saved at {self._model_name}")
 
 
-# In[191]:
+# In[239]:
 
 
 indexed_data = InMemory2DIndexer.create_from_csv(
@@ -1032,13 +1022,13 @@ indexed_data = InMemory2DIndexer.create_from_csv(
 )
 
 
-# In[192]:
+# In[240]:
 
 
 indexed_data.plot_data_item_distribution_as_hist(data_item="rating")
 
 
-# In[193]:
+# In[241]:
 
 
 indexed_data.plot_power_low_distribution()
@@ -1046,7 +1036,7 @@ indexed_data.plot_power_low_distribution()
 
 # ## Practical 2: biases only
 
-# In[194]:
+# In[242]:
 
 
 (data_by_user_id__train, data_by_item_id__train), (
@@ -1074,7 +1064,7 @@ assert sum(
 ) == math.floor((1 - TRAIN_TEST_SPLIT_RATIO) * LINES_COUNT_TO_READ)
 
 
-# In[195]:
+# In[243]:
 
 
 als_model = AlternatingLeastSquares(
@@ -1089,7 +1079,7 @@ als_model = AlternatingLeastSquares(
 )
 
 
-# In[143]:
+# In[244]:
 
 
 als_model.fit(
@@ -1100,7 +1090,7 @@ als_model.fit(
 )
 
 
-# In[144]:
+# In[245]:
 
 
 def plot_als_train_test_rmse_evolution(als_model):  # noqa
@@ -1195,7 +1185,7 @@ def plot_error_evolution(
 
 # ### Train and test RMSE
 
-# In[145]:
+# In[246]:
 
 
 plot_als_train_test_rmse_evolution(als_model)
@@ -1214,7 +1204,7 @@ plot_error_evolution(
 
 # ### Train and test loss
 
-# In[146]:
+# In[247]:
 
 
 plot_als_train_test_loss_evolution(als_model)
@@ -1233,7 +1223,7 @@ plot_error_evolution(
 )
 
 
-# In[147]:
+# In[248]:
 
 
 import numpy as np
@@ -1242,13 +1232,13 @@ from matplotlib import pyplot as plt
 u = np.arange(-5, 5, 0.25)
 
 
-# In[148]:
+# In[249]:
 
 
 v = np.arange(-5, 5, 0.25)
 
 
-# In[149]:
+# In[250]:
 
 
 tau = 0.1
@@ -1264,7 +1254,7 @@ P = (
 surf = plt.contourf(U, V, P)
 
 
-# In[150]:
+# In[251]:
 
 
 x = np.arange(0, 100, 0.00001)

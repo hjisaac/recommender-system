@@ -250,11 +250,6 @@ class InMemory2DIndexer(object):
             for item_id in self.id_to_item_bmap
         }
 
-    def getdata_by_user_id(self, user_id):
-        return self.data_by_user_id[user_id]
-
-    def getdata_by_item_id(self, item_id):
-        return self.data_by_item_id[item_id]
 
     def plot_data_item_distribution_as_hist(
         self,
