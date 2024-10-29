@@ -1,22 +1,41 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[149]:
+# In[4]:
 
 
 import contextlib
 import math
 import os
+import sys
 import random
+import toml
 import dill as pickle
 import numpy as np
+from functools import partial
 from csv import DictReader
-from datetime import datetime, date
+from datetime import datetime
 from functools import cached_property
 from typing import Iterable, Callable, Sequence, Optional
-from numpy.linalg import LinAlgError
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from matplotlib import pyplot as plt
+
+# Load the configuration from the config.toml file
+config = toml.load("config.toml")
+
+# Access the configurations
+LINES_COUNT_TO_READ = config["general"]["LINES_COUNT_TO_READ"]
+TRAIN_TEST_SPLIT_RATIO = config["general"]["TRAIN_TEST_SPLIT_RATIO"]
+
+ALS_HYPER_N_EPOCH = config["als"]["HYPER_N_EPOCH"]
+ALS_HYPER_N_FACTOR = config["als"]["HYPER_N_FACTOR"]
+ALS_HYPER_GAMMA = config["als"]["HYPER_GAMMA"]
+ALS_HYPER_LAMBDA = config["als"]["HYPER_LAMBDA"]
+ALS_HYPER_TAU = config["als"]["HYPER_TAU"]
+ALS_CHECKPOINT_FOLDER = config["als"]["CHECKPOINT_FOLDER"]
+
+PLT_FIGURE_FOLDER = config["figures"]["PLT_FIGURE_FOLDER"]
+PLT_FIGURE_FORMAT = config["figures"]["PLT_FIGURE_FORMAT"]
 
 
 class logger:  # noqa
@@ -24,7 +43,7 @@ class logger:  # noqa
     log = staticmethod(print)
 
 
-# In[150]:
+# In[256]:
 
 
 import doctest
@@ -270,7 +289,7 @@ class InMemory2DIndexer(object):
         plot_xlabel: str = "Ratings",
         plot_ylabel: str = "Count",
     ):
-
+        # TODO: Use this link to fix https://stackoverflow.com/questions/23246125/how-to-center-labels-in-histogram-plotx hist
         data_to_plot = []
         for user_id in self.id_to_user_bmap:
             for data in self.data_by_user_id[user_id]:
@@ -281,6 +300,10 @@ class InMemory2DIndexer(object):
         plt.title(plot_title)
         plt.xlabel(plot_xlabel)
         plt.ylabel(plot_ylabel)
+
+        plt.savefig(
+            get_plt_figure_path("ratings_distribution"), format=PLT_FIGURE_FORMAT
+        )
         plt.show()
 
     def plot_power_low_distribution(self):  # noqa
@@ -309,6 +332,8 @@ class InMemory2DIndexer(object):
 
         plt.yscale("log")
         plt.xscale("log")
+
+        plt.savefig(get_plt_figure_path("power_low"), format=PLT_FIGURE_FORMAT)
 
         plt.show()
 
@@ -431,7 +456,66 @@ class InMemory2DIndexer(object):
 doctest.testmod(report=True, verbose=True)
 
 
-# In[151]:
+# In[257]:
+
+
+def generate_filename_from_kwargs(prefix="", extension="", **kwargs):
+    """
+    Generate filename based on the provided kwargs. Useful to create
+    checkpoints filename and figure names based on the config of the
+    environment.
+
+    Parameters:
+        prefix (str): Optional prefix to add at the beginning of the filename.
+        extension (str): Optional file extension to add at the end of the filename.
+        **kwargs: Key-value pairs to be included in the filename.
+
+    Returns:
+        str: Generated filename with timestamp and provided keyword arguments.
+
+    Examples:
+        >>> generate_filename_from_kwargs(prefix="checkpoint", extension="pt", lambda_=0.1, gamma=0.5, tau=0.2)
+        'checkpoint_20231028-152433_lambda0.1_gamma0.5_tau0.2.pt'
+
+        >>> generate_filename_from_kwargs(prefix="plot", extension="svg", width=800, height=600)
+        'plot_20231028-152433_width800_height600.svg'
+    """
+    prefix = prefix or ""
+    extension = f".{extension}" if extension else ""
+
+    # Create a readable timestamp
+    readable_timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+
+    # Construct the filename with provided keyword arguments
+    filename_parts = [prefix, f"{readable_timestamp}"]
+    for key, value in kwargs.items():
+        filename_parts.append(f"{key}{value}")
+
+    # Join all parts with underscores
+    return "_".join(filename_parts) + extension
+
+
+generate_config_based_filename = partial(
+    generate_filename_from_kwargs,
+    _lambda=ALS_HYPER_LAMBDA,
+    gamma=ALS_HYPER_GAMMA,
+    tau=ALS_HYPER_TAU,
+    epochs=ALS_HYPER_N_EPOCH,
+    factors=ALS_HYPER_N_FACTOR,
+    # The dataset lines count
+    input=LINES_COUNT_TO_READ,
+)
+
+
+def get_plt_figure_path(figure_name):
+
+    config_based_figure_name = generate_config_based_filename(
+        prefix=figure_name, extension=PLT_FIGURE_FORMAT
+    )
+    return f"{PLT_FIGURE_FOLDER}/{config_based_figure_name}"
+
+
+# In[258]:
 
 
 class CheckpointManager(object):
@@ -479,6 +563,7 @@ class AlsState:
     user_biases: Optional[Sequence]
     item_biases: Optional[Sequence]
     hyper_lambda: float
+    hyper_tau: float
     hyper_gamma: float
     hyper_n_epochs: int
     hyper_n_factors: int
@@ -492,7 +577,8 @@ class AlsState:
             item_factors=data["item_factors"],
             user_biases=data["user_biases"],
             item_biases=data["item_biases"],
-            hyper_lambda=data["hyper_param"],
+            hyper_lambda=data["hyper_lambda"],
+            hyper_tau=data["hyper_tau"],
             hyper_gamma=data["hyper_gamma"],
             hyper_n_epochs=data["hyper_n_epochs"],
             hyper_n_factors=data["hyper_n_factors"],
@@ -505,9 +591,6 @@ class AlsState:
                 f"AlsState not yet fully initialized. {attr} is still not defined"
             )
         return attr_value
-
-
-TAU = 0.1
 
 
 class AlternatingLeastSquares(object):
@@ -557,6 +640,7 @@ class AlternatingLeastSquares(object):
         matrix_shape: tuple[int, int],  # (users_count, items_count)
         hyper_lambda: float = 0.1,
         hyper_gamma: float = 0.01,
+        hyper_tau: float = 0.1,
         hyper_n_epochs: int = 10,
         hyper_n_factors: int = 10,
         user_factors: Optional[Sequence] = None,
@@ -587,12 +671,13 @@ class AlternatingLeastSquares(object):
                 if resume
                 else {
                     "hyper_lambda": hyper_lambda,
+                    "hyper_tau": hyper_tau,
                     "hyper_gamma": hyper_gamma,
                     "hyper_n_epochs": hyper_n_epochs,
                     "hyper_n_factors": hyper_n_factors,
                     "user_factors": user_factors
                     # TODO:
-                    # It does not crash when with pass np.zeros()
+                    # It does not crash when we pass np.zeros()
                     #
                     or np.random.normal(
                         loc=0.0,
@@ -632,8 +717,16 @@ class AlternatingLeastSquares(object):
 
     @property
     def _ext_free_checkpoint_filename(self):
-        readable_timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-        return f"{readable_timestamp}_lambda{self.hyper_lambda}_gamma{self.hyper_gamma}_epochs{self.hyper_n_epochs}_factors{self.hyper_n_factors}"
+        """
+        Extension free checkpoint file
+        """
+        return generate_filename_from_kwargs(
+            _lambda=self.hyper_lambda,
+            tau=self.hyper_tau,
+            gamma=self.hyper_gamma,
+            epochs=self.hyper_n_epochs,
+            factors=self.hyper_n_factors,
+        )
 
     @property
     def hyper_n_epochs(self):
@@ -650,6 +743,10 @@ class AlternatingLeastSquares(object):
     @property
     def hyper_lambda(self):
         return self._state.hyper_lambda
+
+    @property
+    def hyper_tau(self):
+        return self._state.hyper_tau
 
     @property
     def user_factors(self):
@@ -692,7 +789,7 @@ class AlternatingLeastSquares(object):
     def _compute_loss(self, accumulated_squared_residual: float) -> float:
         return (
             (-1 / 2 * self.hyper_lambda * accumulated_squared_residual)
-            - TAU / 2 * sum(self._get_accumulated_factors_product())
+            - self.hyper_tau / 2 * sum(self._get_accumulated_factors_product())
             - self.hyper_gamma * sum(self._get_accumulated_squared_biases())
         )
 
@@ -764,7 +861,7 @@ class AlternatingLeastSquares(object):
             ) * self.item_factors[item_id]
 
         self.user_factors[user_id] = np.linalg.solve(
-            self.hyper_lambda * _A + TAU * np.eye(self.hyper_n_factors),
+            self.hyper_lambda * _A + self.hyper_tau * np.eye(self.hyper_n_factors),
             self.hyper_lambda * _B,
         )
 
@@ -803,23 +900,17 @@ class AlternatingLeastSquares(object):
                 item_user_rating - self.user_biases[user_id] - self.item_biases[item_id]
             ) * self.user_factors[user_id]
 
-        try:
-            self.item_factors[item_id] = np.linalg.solve(
-                self.hyper_lambda * _A + TAU * np.eye(self.hyper_n_factors),
-                self.hyper_lambda * _B,
-            )
-        except LinAlgError as exc:
+        self.item_factors[item_id] = np.linalg.solve(
+            self.hyper_lambda * _A + self.hyper_tau * np.eye(self.hyper_n_factors),
+            self.hyper_lambda * _B,
+        )
 
-            print("user_factors shape => ", self.user_factors.shape)
-            print("item_biases shape => ", self.item_biases.shape)
-            print("user_biases shape => ", self.user_biases.shape)
+    def learn_user_factor(self):
+        pass
 
-            print("user factors  => ", self.user_factors)
-            print("item factors  => ", self.item_factors)
-            print("user biases  => ", self.user_biases)
-            print("item biases  => ", self.item_biases)
-
-            raise
+    def learn_item_factor(self):
+        # Add comments here
+        pass
 
     def fit(
         self,
@@ -889,11 +980,8 @@ class AlternatingLeastSquares(object):
             self.epochs_rmse_test.append(rmse_test)
 
 
-# In[152]:
+# In[259]:
 
-
-# From here, we will use the domain vocabulary
-LINES_COUNT_TO_READ = 100_000
 
 indexed_data = InMemory2DIndexer.create_from_csv(
     file_path="./ml-32m/ratings.csv",
@@ -905,13 +993,13 @@ indexed_data = InMemory2DIndexer.create_from_csv(
 )
 
 
-# In[153]:
+# In[260]:
 
 
 indexed_data.plot_data_item_distribution_as_hist(data_item="rating")
 
 
-# In[154]:
+# In[261]:
 
 
 indexed_data.plot_power_low_distribution()
@@ -919,30 +1007,7 @@ indexed_data.plot_power_low_distribution()
 
 # ## Practical 2: biases only
 
-# In[155]:
-
-
-N_EPOCH = 20
-N_FACTOR = 3  # 10
-TRAIN_TEST_SPLIT_RATIO = 0.2
-NORMAL_DIST_MEAN = 0.0
-NORMAL_DIST_STD = 1 / math.sqrt(N_FACTOR)
-USER_FACTOR_SHAPE = (indexed_data.users_count, N_FACTOR)
-ITEM_FACTOR_SHAPE = (indexed_data.items_count, N_FACTOR)
-GAMMA = 0.01
-LAMBDA = 0.1
-
-user_factors = np.random.normal(
-    loc=NORMAL_DIST_MEAN, scale=NORMAL_DIST_STD, size=USER_FACTOR_SHAPE
-)
-movie_factors = np.random.normal(
-    loc=NORMAL_DIST_MEAN, scale=NORMAL_DIST_STD, size=USER_FACTOR_SHAPE
-)
-user_biases = np.zeros(indexed_data.users_count)
-movie_biases = np.zeros(indexed_data.items_count)
-
-
-# In[156]:
+# In[262]:
 
 
 (data_by_user_id__train, data_by_item_id__train), (
@@ -970,21 +1035,22 @@ assert sum(
 ) == math.floor((1 - TRAIN_TEST_SPLIT_RATIO) * LINES_COUNT_TO_READ)
 
 
-# In[157]:
+# In[263]:
 
 
 als_model = AlternatingLeastSquares(
-    hyper_lambda=LAMBDA,
-    hyper_gamma=GAMMA,
-    hyper_n_epochs=N_EPOCH,
-    hyper_n_factors=N_FACTOR,
+    hyper_lambda=ALS_HYPER_LAMBDA,
+    hyper_gamma=ALS_HYPER_GAMMA,
+    hyper_tau=ALS_HYPER_TAU,
+    hyper_n_epochs=ALS_HYPER_N_EPOCH,
+    hyper_n_factors=ALS_HYPER_N_FACTOR,
     user_id_getter=lambda user: indexed_data.id_to_user_bmap.inverse[user],
     item_id_getter=lambda item: indexed_data.id_to_item_bmap.inverse[item],
     matrix_shape=(len(indexed_data.data_by_user_id), len(indexed_data.data_by_item_id)),
 )
 
 
-# In[158]:
+# In[264]:
 
 
 als_model.fit(
@@ -995,7 +1061,7 @@ als_model.fit(
 )
 
 
-# In[159]:
+# In[265]:
 
 
 def plot_als_train_test_rmse_evolution(als_model):  # noqa
@@ -1018,6 +1084,8 @@ def plot_als_train_test_rmse_evolution(als_model):  # noqa
 
     # Show legend
     plt.legend()
+
+    plt.savefig(get_plt_figure_path("rmse_test_train"))
 
     # Display the plot
     plt.show()
@@ -1044,6 +1112,7 @@ def plot_als_train_test_loss_evolution(als_model):  # noqa
 
     # Show legend
     plt.legend()
+    plt.savefig(get_plt_figure_path("loss_test_train"), format=PLT_FIGURE_FORMAT)
 
     # Display the plot
     plt.show()
@@ -1077,6 +1146,9 @@ def plot_error_evolution(
 
     # Show legend
     plt.legend()
+    plt.savefig(
+        get_plt_figure_path(title.lower().replace(" ", "_")), format=PLT_FIGURE_FORMAT
+    )
 
     # Display the plot
     plt.show()
@@ -1084,7 +1156,7 @@ def plot_error_evolution(
 
 # ### Train and test RMSE
 
-# In[160]:
+# In[266]:
 
 
 plot_als_train_test_rmse_evolution(als_model)
@@ -1103,7 +1175,7 @@ plot_error_evolution(
 
 # ### Train and test loss
 
-# In[161]:
+# In[267]:
 
 
 plot_als_train_test_loss_evolution(als_model)
@@ -1122,7 +1194,7 @@ plot_error_evolution(
 )
 
 
-# In[162]:
+# In[268]:
 
 
 import numpy as np
@@ -1131,13 +1203,13 @@ from matplotlib import pyplot as plt
 u = np.arange(-5, 5, 0.25)
 
 
-# In[163]:
+# In[269]:
 
 
 v = np.arange(-5, 5, 0.25)
 
 
-# In[164]:
+# In[270]:
 
 
 tau = 0.1
@@ -1151,6 +1223,15 @@ P = (
 )
 
 surf = plt.contourf(U, V, P)
+
+
+# In[271]:
+
+
+x = np.arange(0, 100, 0.00001)
+y = x * np.sin(2 * np.pi * x)
+plt.plot(y)
+plt.savefig("test.svg", format="svg")
 
 
 # In[ ]:

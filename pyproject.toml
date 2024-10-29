@@ -15,6 +15,7 @@ powerlaw = "^1.5"
 tqdm = "^4.66.5"
 dill = "^0.3.9"
 streamlit = "^1.39.0"
+toml = "^0.10.2"
 
 
 [tool.poetry.group.dev.dependencies]
