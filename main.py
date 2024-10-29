@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[4]:
+# In[187]:
 
 
 import contextlib
@@ -17,7 +17,7 @@ from csv import DictReader
 from datetime import datetime
 from functools import cached_property
 from typing import Iterable, Callable, Sequence, Optional
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from matplotlib import pyplot as plt
 
 # Load the configuration from the config.toml file
@@ -43,7 +43,7 @@ class logger:  # noqa
     log = staticmethod(print)
 
 
-# In[256]:
+# In[188]:
 
 
 import doctest
@@ -456,7 +456,7 @@ class InMemory2DIndexer(object):
 doctest.testmod(report=True, verbose=True)
 
 
-# In[257]:
+# In[189]:
 
 
 def generate_kwargs_based_name(prefix="", extension="", **kwargs):
@@ -480,6 +480,12 @@ def generate_kwargs_based_name(prefix="", extension="", **kwargs):
         >>> generate_kwargs_based_name(prefix="plot", extension="svg", width=800, height=600)
         'plot_20231028-152433_width800_height600.svg'
     """
+
+    # This is a special case that we want to support. And this is
+    # due to the fact that `lambda` is a reserved word is python
+    _lambda = kwargs.pop("lambda_", None) or kwargs.pop("_lambda", None)
+    kwargs["lambda"] = _lambda
+
     prefix = prefix or ""
     extension = f".{extension}" if extension else ""
 
@@ -487,12 +493,17 @@ def generate_kwargs_based_name(prefix="", extension="", **kwargs):
     readable_timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
 
     # Construct the filename with provided keyword arguments
-    filename_parts = [prefix, f"{readable_timestamp}"]
+    filename_parts = [readable_timestamp, f"lambda{_lambda}"]
     for key, value in kwargs.items():
         filename_parts.append(f"{key}{value}")
 
+    if prefix:
+        filename_parts.insert(0, prefix)
+    if extension:
+        filename_parts.append(extension)
+
     # Join all parts with underscores
-    return "_".join(filename_parts) + extension
+    return "_".join(filename_parts)
 
 
 generate_config_based_name = partial(
@@ -507,44 +518,47 @@ generate_config_based_name = partial(
 )
 
 
-def get_plt_figure_path(figure_name):
-
+def get_plt_figure_path(figure_name, subdir=""):
+    """
+    Return a path to save the figure to
+    """
     config_based_figure_name = generate_config_based_name(
         prefix=figure_name, extension=PLT_FIGURE_FORMAT
     )
-    return f"{PLT_FIGURE_FOLDER}/{config_based_figure_name}"
+    return (
+        f"{PLT_FIGURE_FOLDER}/{subdir}/{config_based_figure_name}"
+        if subdir
+        else f"{PLT_FIGURE_FOLDER}/{config_based_figure_name}"
+    )
 
 
-# In[258]:
+# In[190]:
 
 
 class CheckpointManager(object):
-    def __init__(self, checkpoint_folder, checkpoint_name=None):
+    def __init__(self, checkpoint_folder):
         self.checkpoint_folder = checkpoint_folder
 
-        self._checkpoint_filepath = None
-        self.set_checkpoint_path(checkpoint_name)
-
-    def set_checkpoint_path(self, checkpoint_name: Callable[..., str] | str = None):
-        if not (
-            name := (
-                checkpoint_name() if callable(checkpoint_name) else checkpoint_name
-            )
-        ):
+    def _get_checkpoint_path(self, checkpoint_name):
+        """
+        Join fs folders with file
+        """
+        if not checkpoint_name:
             return
 
-        filename = name if name.endswith(".pkl") else f"{name}.pkl"
-        self._checkpoint_filepath = os.path.join(self.checkpoint_folder, filename)
-        logger.log(
-            f"Setting the checkpoint file path to '{self._checkpoint_filepath}'",
+        # Split the path to check for file extension
+        checkpoint_name = (
+            checkpoint_name
+            if (checkpoint_name.endswith(".pkl"))
+            else f"{checkpoint_name}.pkl"
         )
+        return os.path.join(self.checkpoint_folder, checkpoint_name)
 
-    def save(self, state):
+    def save(self, state, checkpoint_name):
         os.makedirs(self.checkpoint_folder, exist_ok=True)
-        with open(self._checkpoint_filepath, "wb") as f:
+        checkpoint_path = self._get_checkpoint_path(checkpoint_name)
+        with open(checkpoint_path, "wb") as f:
             pickle.dump(state, f)
-
-        logger.log(f"Checkpoint saved at {self._checkpoint_filepath}")
 
     def load(self) -> dict:
         pass
@@ -631,7 +645,7 @@ class AlternatingLeastSquares(object):
     (0.0, 0.0)
     """
 
-    checkpoint_manager = CheckpointManager(checkpoint_folder="./checkpoints")
+    checkpoint_manager = CheckpointManager(checkpoint_folder=ALS_CHECKPOINT_FOLDER)
 
     def __init__(
         self,
@@ -653,14 +667,14 @@ class AlternatingLeastSquares(object):
         self.get_user_id = user_id_getter
         self.get_item_id = item_id_getter
         self.matrix_shape = matrix_shape
-        # It'll be different to 0 typically if resume=True
+        # Will be different to 0 typically if resume=True
         self.starting_epoch = 0
         self.epochs_rmse_train = []
         self.epochs_loss_train = []
         self.epochs_rmse_test = []
         self.epochs_loss_test = []
 
-        # Initialize the biases and the latent factors
+        self.__model_name = generate_config_based_name()
 
         users_count, items_count = self.matrix_shape
 
@@ -676,9 +690,6 @@ class AlternatingLeastSquares(object):
                     "hyper_n_epochs": hyper_n_epochs,
                     "hyper_n_factors": hyper_n_factors,
                     "user_factors": user_factors
-                    # TODO:
-                    # It does not crash when we pass np.zeros()
-                    #
                     or np.random.normal(
                         loc=0.0,
                         scale=1 / math.sqrt(hyper_n_factors),
@@ -697,27 +708,23 @@ class AlternatingLeastSquares(object):
         )
 
     def __initialize_state(self, resume, **kwargs):
+
         if resume:
             self._state = AlsState.create_from(data=self.checkpoint_manager.load())
             logger.log(
                 f"Successfully resumed state from last checkpoints: {self._state}",
             )
-            # TODO: Set the checkpoint_file_name
-            # Update the starting_epoch
+            # FIXME: Update the starting_epoch. Think about its relevance before.
         else:
             self._state = AlsState(
                 **kwargs,
             )
             logger.log(
-                f"Successfully initialized state from last checkpoints: {self._state}",
+                f"Successfully initialized the model state to: {self._state}",
             )
-            self.checkpoint_manager.set_checkpoint_path(self.checkpoint_name)
 
     @property
     def checkpoint_name(self):
-        """
-        Extension free checkpoint file
-        """
         return generate_kwargs_based_name(
             _lambda=self.hyper_lambda,
             tau=self.hyper_tau,
@@ -823,11 +830,12 @@ class AlternatingLeastSquares(object):
             np.dot(factor, factor) for factor in self.item_factors
         )
 
-    def update_user_bias_and_factors(self, user_id, user_ratings_data: list):
+    def learn_user_bias_and_factors(self, user_id, user_ratings_data: list):
         """
-        Side effect method that updates the given item's bias and latent factors
+        Learn or compute the given user_id related bias and factor based on the
+        provided ratings data and the actual state of the item biases and factors.
         """
-        bias = 0
+        user_bias = 0
         ratings_count = 0
         _A = np.zeros((self.hyper_n_factors, self.hyper_n_factors))
         _B = np.zeros(self.hyper_n_factors)
@@ -837,17 +845,16 @@ class AlternatingLeastSquares(object):
             user_item_rating = float(user_item_rating)
             item_id = self.get_item_id(item)
 
-            bias += (
+            user_bias += (
                 user_item_rating
                 - self.item_biases[item_id]
                 - np.dot(self.user_factors[user_id], self.item_factors[item_id])
             )
             ratings_count += 1
 
-        bias = (self.hyper_lambda * bias) / (
+        user_bias = (self.hyper_lambda * user_bias) / (
             self.hyper_lambda * ratings_count + self.hyper_gamma
         )
-        self.user_biases[user_id] = bias
 
         for data in user_ratings_data:
             item, user_item_rating = data["movieId"], data["rating"]
@@ -855,19 +862,27 @@ class AlternatingLeastSquares(object):
             item_id = self.get_item_id(item)
             _A += np.outer(self.item_factors[item_id], self.item_factors[item_id])
             _B += (
-                user_item_rating - self.user_biases[user_id] - self.item_biases[item_id]
+                user_item_rating - user_bias - self.item_biases[item_id]
             ) * self.item_factors[item_id]
 
-        self.user_factors[user_id] = np.linalg.solve(
+            self.user_factors[user_id] = np.linalg.solve(
+                self.hyper_lambda * _A + self.hyper_tau * np.eye(self.hyper_n_factors),
+                self.hyper_lambda * _B,
+            )
+        user_factor = np.linalg.solve(
             self.hyper_lambda * _A + self.hyper_tau * np.eye(self.hyper_n_factors),
             self.hyper_lambda * _B,
         )
 
-    def update_item_bias_and_factors(self, item_id, item_ratings_data: list):
+        return user_factor, user_bias
+
+    def learn_item_bias_and_factors(self, item_id, item_ratings_data: list):
         """
-        Side effect method that updates the given item's bias and latent factors
+        Learn or compute the given item_id related bias and factor based on the
+        provided ratings data and the actual state of the user biases and factors.
         """
-        bias = 0
+
+        item_bias = 0
         ratings_count = 0
         _A = np.zeros((self.hyper_n_factors, self.hyper_n_factors))
         _B = np.zeros(self.hyper_n_factors)
@@ -876,17 +891,17 @@ class AlternatingLeastSquares(object):
             user, item_user_rating = data["userId"], data["rating"]
             item_user_rating = float(item_user_rating)
             user_id = self.get_user_id(user)
-            bias += (
+            item_bias += (
                 item_user_rating
                 - self.user_biases[self.get_user_id(user)]
                 - np.dot(self.user_factors[user_id], self.item_factors[item_id])
             )
             ratings_count += 1
 
-        bias = (self.hyper_lambda * bias) / (
+        item_bias = (self.hyper_lambda * item_bias) / (
             self.hyper_lambda * ratings_count + self.hyper_gamma
         )
-        self.item_biases[item_id] = bias
+        self.item_biases[item_id] = item_bias
 
         for data in item_ratings_data:
             user, item_user_rating = data["userId"], data["rating"]
@@ -895,49 +910,67 @@ class AlternatingLeastSquares(object):
 
             _A += np.outer(self.user_factors[user_id], self.user_factors[user_id])
             _B += (
-                item_user_rating - self.user_biases[user_id] - self.item_biases[item_id]
+                item_user_rating - self.user_biases[user_id] - item_bias
             ) * self.user_factors[user_id]
 
-        self.item_factors[item_id] = np.linalg.solve(
+        item_factor = np.linalg.solve(
             self.hyper_lambda * _A + self.hyper_tau * np.eye(self.hyper_n_factors),
             self.hyper_lambda * _B,
         )
 
-    def learn_user_factor(self):
-        pass
+        return item_factor, item_bias
 
-    def learn_item_factor(self):
-        # Add comments here
-        pass
+    def update_user_bias_and_factors(self, user_id, user_ratings_data: list):
+        """
+        Side effect method that updates the given user's bias and latent factor
+        """
+        user_factor, user_bias = self.learn_user_bias_and_factors(
+            user_id, user_ratings_data
+        )
+        self.user_biases[user_id] = user_bias
+        self.user_factors[user_id] = user_factor
+
+    def update_item_bias_and_factors(self, item_id, item_ratings_data: list):
+        """
+        Side effect method that updates the given item's bias and latent factor
+        """
+        item_factor, item_bias = self.learn_item_bias_and_factors(
+            item_id, item_ratings_data
+        )
+
+        self.item_biases[item_id] = item_bias
+        self.item_factors[item_id] = item_factor
 
     def fit(
         self,
         data_by_user_id_train: SerialUnidirectionalMapper,
         data_by_item_id_train: SerialUnidirectionalMapper,
-        # DOCME
-        data_by_user_id_test: Optional[SerialUnidirectionalMapper] = None,
-        data_by_item_id_test: Optional[SerialUnidirectionalMapper] = None,
+        # The validation data, just to compute the loss for the validation data too
+        data_by_user_id_validation: Optional[SerialUnidirectionalMapper] = None,
+        data_by_item_id_validation: Optional[SerialUnidirectionalMapper] = None,
     ):
-        # The fact that we're passing `data_by_user_id_test` and `data_by_item_id_test`
-        # can be confusing. TODO: Improve the api regarding that variables
-
-        # TODO: Safety check: Ensure that sparse matrices (like) have the save
-        # dimensionality for both the training and the test dataset.
 
         assert self.matrix_shape == (
             len(data_by_user_id_train),
             len(data_by_item_id_train),
         ), f"The expected matrix shape must match the the dimension defined when instantiating '{self.__class__.__name__}' class"
 
-        assert len(data_by_user_id_train) == len(data_by_user_id_test), (
+        assert not data_by_user_id_validation or (
+            len(data_by_user_id_train) == len(data_by_user_id_validation)
+        ), (
             f"Expect the users sparse matrices to have the same dimensionality for both the training and the test dataset. But got {len(data_by_user_id_train)} and {len(data_by_item_id_train)} "
             "for them respectively."
         )
 
-        assert len(data_by_item_id_train) == len(data_by_item_id_test), (
-            f"Expect the items matrices to have the same dimensionality for both the training and the test dataset. But got {len(data_by_user_id_test)} and {len(data_by_item_id_test)} "
+        assert not data_by_item_id_validation or (
+            len(data_by_item_id_train) == len(data_by_item_id_validation)
+        ), (
+            f"Expect the items matrices to have the same dimensionality for both the training and the test dataset. But got {len(data_by_user_id_validation)} and {len(data_by_item_id_validation)} "
             "for them respectively."
         )
+
+        loss_test = None
+        loss_train = None
 
         for epoch in range(self.starting_epoch, self.hyper_n_epochs):
             for user_id in data_by_user_id_train:
@@ -945,21 +978,22 @@ class AlternatingLeastSquares(object):
                     user_id, data_by_user_id_train[user_id]
                 )
 
-                # Update user_factors using the biases
             for item_id in data_by_item_id_train:
                 self.update_item_bias_and_factors(
                     item_id, data_by_item_id_train[item_id]
                 )
 
             # We've got a new model, so time to compute the metrics for the
-            # current iteration for both the training and the test datasets
+            # current iteration for both the training and the validation datasets
             # TODO: Parallelize things here
             accumulated_squared_residual_train, residuals_count_train = (
                 self._get_accumulated_squared_residual_and_count(data_by_user_id_train)
             )
 
             accumulated_squared_residual_test, residuals_count_test = (
-                self._get_accumulated_squared_residual_and_count(data_by_user_id_test)
+                self._get_accumulated_squared_residual_and_count(
+                    data_by_user_id_validation
+                )
             )
 
             loss_train = self._compute_loss(accumulated_squared_residual_train)
@@ -977,8 +1011,15 @@ class AlternatingLeastSquares(object):
             self.epochs_rmse_train.append(rmse_train)
             self.epochs_rmse_test.append(rmse_test)
 
+        # Save the current state of the training for investigation purposes
+        self.checkpoint_manager.save(self._state, self.__model_name)
+        # self.checkpoint_manager.save(
+        #     {"loss_test": loss_test, "loss_train": loss_train}, self.__model_name
+        # )
+        logger.log(f"Saved checkpoint successfully at {self.checkpoint_name}")
 
-# In[259]:
+
+# In[191]:
 
 
 indexed_data = InMemory2DIndexer.create_from_csv(
@@ -991,13 +1032,13 @@ indexed_data = InMemory2DIndexer.create_from_csv(
 )
 
 
-# In[260]:
+# In[192]:
 
 
 indexed_data.plot_data_item_distribution_as_hist(data_item="rating")
 
 
-# In[261]:
+# In[193]:
 
 
 indexed_data.plot_power_low_distribution()
@@ -1005,7 +1046,7 @@ indexed_data.plot_power_low_distribution()
 
 # ## Practical 2: biases only
 
-# In[262]:
+# In[194]:
 
 
 (data_by_user_id__train, data_by_item_id__train), (
@@ -1033,7 +1074,7 @@ assert sum(
 ) == math.floor((1 - TRAIN_TEST_SPLIT_RATIO) * LINES_COUNT_TO_READ)
 
 
-# In[263]:
+# In[195]:
 
 
 als_model = AlternatingLeastSquares(
@@ -1048,7 +1089,7 @@ als_model = AlternatingLeastSquares(
 )
 
 
-# In[264]:
+# In[143]:
 
 
 als_model.fit(
@@ -1059,7 +1100,7 @@ als_model.fit(
 )
 
 
-# In[265]:
+# In[144]:
 
 
 def plot_als_train_test_rmse_evolution(als_model):  # noqa
@@ -1154,7 +1195,7 @@ def plot_error_evolution(
 
 # ### Train and test RMSE
 
-# In[266]:
+# In[145]:
 
 
 plot_als_train_test_rmse_evolution(als_model)
@@ -1173,7 +1214,7 @@ plot_error_evolution(
 
 # ### Train and test loss
 
-# In[267]:
+# In[146]:
 
 
 plot_als_train_test_loss_evolution(als_model)
@@ -1192,7 +1233,7 @@ plot_error_evolution(
 )
 
 
-# In[268]:
+# In[147]:
 
 
 import numpy as np
@@ -1201,13 +1242,13 @@ from matplotlib import pyplot as plt
 u = np.arange(-5, 5, 0.25)
 
 
-# In[269]:
+# In[148]:
 
 
 v = np.arange(-5, 5, 0.25)
 
 
-# In[270]:
+# In[149]:
 
 
 tau = 0.1
@@ -1223,7 +1264,7 @@ P = (
 surf = plt.contourf(U, V, P)
 
 
-# In[271]:
+# In[150]:
 
 
 x = np.arange(0, 100, 0.00001)
@@ -1233,3 +1274,7 @@ plt.savefig("test.svg", format="svg")
 
 
 # In[ ]:
+
+
+
+
