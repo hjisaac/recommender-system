@@ -38,7 +38,7 @@ The algorithm alternates between fixing \( V \) to solve for \( U \), and fixing
 
 2. Install required dependencies:
    ```bash
-   pip install -r requirements.txt
+   poetry install
    ```
 
 ## Usage
@@ -47,7 +47,7 @@ The algorithm alternates between fixing \( V \) to solve for \( U \), and fixing
 
 2. **Run the Model**:
    ```bash
-   python train_als.py
+   python main.py
    ```
 
 3. **Evaluate Results**: The script will output RMSE values for both training and test sets, indicating model performance.
