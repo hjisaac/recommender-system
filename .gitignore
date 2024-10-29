@@ -4,3 +4,5 @@ debug_another_code.ipynb
 train.csv
 test.csv
 dsa_*
+figures/*
+test.svg

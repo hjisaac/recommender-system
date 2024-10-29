@@ -653,7 +653,7 @@ class AlternatingLeastSquares(object):
         self.get_user_id = user_id_getter
         self.get_item_id = item_id_getter
         self.matrix_shape = matrix_shape
-        # Will be different to 0 typically if resume=True
+        # It'll be different to 0 typically if resume=True
         self.starting_epoch = 0
         self.epochs_rmse_train = []
         self.epochs_loss_train = []
