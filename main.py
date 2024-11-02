@@ -820,7 +820,7 @@ class AlternatingLeastSquares(object):
             np.dot(factor, factor) for factor in self.item_factors
         )
 
-    def learn_user_bias_and_factors(self, user_id, user_ratings_data: list):
+    def learn_user_bias_and_factor(self, user_id, user_ratings_data: list):
         """
         Learn or compute the given user_id related bias and factor based on the
         provided ratings data and the actual state of the item biases and factors.
@@ -866,7 +866,7 @@ class AlternatingLeastSquares(object):
 
         return user_factor, user_bias
 
-    def learn_item_bias_and_factors(self, item_id, item_ratings_data: list):
+    def learn_item_bias_and_factor(self, item_id, item_ratings_data: list):
         """
         Learn or compute the given item_id related bias and factor based on the
         provided ratings data and the actual state of the user biases and factors.
@@ -910,21 +910,21 @@ class AlternatingLeastSquares(object):
 
         return item_factor, item_bias
 
-    def update_user_bias_and_factors(self, user_id, user_ratings_data: list):
+    def update_user_bias_and_factor(self, user_id, user_ratings_data: list):
         """
         Side effect method that updates the given user's bias and latent factor
         """
-        user_factor, user_bias = self.learn_user_bias_and_factors(
+        user_factor, user_bias = self.learn_user_bias_and_factor(
             user_id, user_ratings_data
         )
         self.user_biases[user_id] = user_bias
         self.user_factors[user_id] = user_factor
 
-    def update_item_bias_and_factors(self, item_id, item_ratings_data: list):
+    def update_item_bias_and_factor(self, item_id, item_ratings_data: list):
         """
         Side effect method that updates the given item's bias and latent factor
         """
-        item_factor, item_bias = self.learn_item_bias_and_factors(
+        item_factor, item_bias = self.learn_item_bias_and_factor(
             item_id, item_ratings_data
         )
 
@@ -964,12 +964,12 @@ class AlternatingLeastSquares(object):
 
         for epoch in range(self.starting_epoch, self.hyper_n_epochs):
             for user_id in data_by_user_id_train:
-                self.update_user_bias_and_factors(
+                self.update_user_bias_and_factor(
                     user_id, data_by_user_id_train[user_id]
                 )
 
             for item_id in data_by_item_id_train:
-                self.update_item_bias_and_factors(
+                self.update_item_bias_and_factor(
                     item_id, data_by_item_id_train[item_id]
                 )
 
@@ -1264,7 +1264,3 @@ plt.savefig("test.svg", format="svg")
 
 
 # In[ ]:
-
-
-
-
