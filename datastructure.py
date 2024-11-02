@@ -250,7 +250,6 @@ class InMemory2DIndexer(object):
             for item_id in self.id_to_item_bmap
         }
 
-
     def plot_data_item_distribution_as_hist(
         self,
         data_item: str,
