@@ -820,12 +820,23 @@ class AlternatingLeastSquares(object):
             np.dot(factor, factor) for factor in self.item_factors
         )
 
-    def learn_user_bias_and_factor(self, user_id, user_ratings_data: list):
+    def learn_user_bias_and_factor(
+        self, user_id=None, user_ratings_data: Optional[list] = None
+    ):
         """
         Learn or compute the given user_id related bias and factor based on the
         provided ratings data and the actual state of the item biases and factors.
         """
         user_bias = 0
+        user_factor = (
+            self.user_factors[user_id]
+            if user_id
+            else np.random.normal(
+                loc=0.0,
+                scale=1 / math.sqrt(self.hyper_n_factors),
+                size=self.hyper_n_factors,
+            )
+        )
         ratings_count = 0
         _A = np.zeros((self.hyper_n_factors, self.hyper_n_factors))
         _B = np.zeros(self.hyper_n_factors)
@@ -838,7 +849,7 @@ class AlternatingLeastSquares(object):
             user_bias += (
                 user_item_rating
                 - self.item_biases[item_id]
-                - np.dot(self.user_factors[user_id], self.item_factors[item_id])
+                - np.dot(user_factor, self.item_factors[item_id])
             )
             ratings_count += 1
 
@@ -855,10 +866,6 @@ class AlternatingLeastSquares(object):
                 user_item_rating - user_bias - self.item_biases[item_id]
             ) * self.item_factors[item_id]
 
-            self.user_factors[user_id] = np.linalg.solve(
-                self.hyper_lambda * _A + self.hyper_tau * np.eye(self.hyper_n_factors),
-                self.hyper_lambda * _B,
-            )
         user_factor = np.linalg.solve(
             self.hyper_lambda * _A + self.hyper_tau * np.eye(self.hyper_n_factors),
             self.hyper_lambda * _B,
@@ -866,13 +873,24 @@ class AlternatingLeastSquares(object):
 
         return user_factor, user_bias
 
-    def learn_item_bias_and_factor(self, item_id, item_ratings_data: list):
+    def learn_item_bias_and_factor(
+        self, item_id=None, item_ratings_data: Optional[list] = None
+    ):
         """
         Learn or compute the given item_id related bias and factor based on the
         provided ratings data and the actual state of the user biases and factors.
         """
 
         item_bias = 0
+        item_factor = (
+            self.item_factors[item_id]
+            if item_id
+            else np.random.normal(
+                loc=0.0,
+                scale=1 / math.sqrt(self.hyper_n_factors),
+                size=self.hyper_n_factors,
+            )
+        )
         ratings_count = 0
         _A = np.zeros((self.hyper_n_factors, self.hyper_n_factors))
         _B = np.zeros(self.hyper_n_factors)
@@ -884,7 +902,7 @@ class AlternatingLeastSquares(object):
             item_bias += (
                 item_user_rating
                 - self.user_biases[self.get_user_id(user)]
-                - np.dot(self.user_factors[user_id], self.item_factors[item_id])
+                - np.dot(self.user_factors[user_id], item_factor)
             )
             ratings_count += 1
 
@@ -959,8 +977,8 @@ class AlternatingLeastSquares(object):
             "for them respectively."
         )
 
-        loss_test = None
-        loss_train = None
+        loss_test = None # noqa
+        loss_train = None # noqa 
 
         for epoch in range(self.starting_epoch, self.hyper_n_epochs):
             for user_id in data_by_user_id_train:
@@ -1007,7 +1025,19 @@ class AlternatingLeastSquares(object):
         #     {"loss_test": loss_test, "loss_train": loss_train}, self.__model_name
         # )
         logger.log(f"Checkpoint successfully saved at {self._model_name}")
+    
+    def predict_user_ratings(self, item_ratings):
+        # Learn the user factor and then estimate the ratings he would give to each
+        # of the movies using the item learnt items factors of all the movies.
+        if not item_ratings:
+            raise ValueError("Cannot predict user ratings when item_ratings is nil.")
+        user_bias, user_factor = self.learn_user_bias_and_factor(item_ratings)
+        return  np.dot(user_factor, self.item_factors) + user_bias
 
+
+# 
+
+# 
 
 # In[239]:
 
@@ -1049,11 +1079,11 @@ indexed_data.plot_power_low_distribution()
 
 assert len(data_by_user_id__train) == len(
     data_by_user_id__test
-), "The user based matrix should have the save dimension both for the training dataset and the testing dataset. And that dimension should correspond to the visited users' count."
+), "The user based matrix should have the save dimension both for the training dataset and the test dataset. And that dimension should correspond to the visited users' count."
 
 assert len(data_by_item_id__train) == len(
     data_by_item_id__test
-), "The movie based matrix should have the save dimension both for the training dataset and the testing dataset. And that dimension should correspond to the visited movies' count."
+), "The movie based matrix should have the save dimension both for the training dataset and the test dataset. And that dimension should correspond to the visited movies' count."
 
 assert sum(len(data_by_user_id__test[i]) for i in data_by_user_id__test) == math.floor(
     TRAIN_TEST_SPLIT_RATIO * LINES_COUNT_TO_READ
@@ -1170,7 +1200,7 @@ def plot_error_evolution(
 
     # Adding titles and labels
     plt.title(title)
-    plt.xlabel("Iteration")
+    plt.xlabel("Iterations")
     plt.ylabel(ylabel)
 
     # Show legend
@@ -1264,3 +1294,7 @@ plt.savefig("test.svg", format="svg")
 
 
 # In[ ]:
+
+
+
+
