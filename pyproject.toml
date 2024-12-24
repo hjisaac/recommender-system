@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "codes"
+name = "recommender-system"
 version = "0.1.0"
 description = ""
 authors = ["hjisaac <isaac.houngue@imsp-uac.org>"]

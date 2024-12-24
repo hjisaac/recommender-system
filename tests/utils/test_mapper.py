@@ -1,9 +1,10 @@
 import unittest
-from collections import defaultdict
 from contextlib import suppress
 
+from ...src.utils.mapper import SerialBidirectionalMapper, SerialUnidirectionalMapper, AbstractSerialMapper
 
-class TestSerialMappers(unittest.TestCase):
+
+class TestSerialMapper(unittest.TestCase):
     def test_abstract_serial_mapper(self):
         class TestMapper(AbstractSerialMapper):
             def add(self, value, *args, **kwargs):
