@@ -1,7 +1,11 @@
 import unittest
 from contextlib import suppress
 
-from ...src.utils.mapper import SerialBidirectionalMapper, SerialUnidirectionalMapper, AbstractSerialMapper
+from ...src.utils.mapper import (
+    SerialBidirectionalMapper,
+    SerialUnidirectionalMapper,
+    AbstractSerialMapper,
+)
 
 
 class TestSerialMapper(unittest.TestCase):
@@ -70,7 +74,9 @@ class TestSerialMapper(unittest.TestCase):
 
         # Test overwriting inverse data
         mapper.add("data1")  # Add duplicate
-        self.assertEqual(mapper.inverse["data1"], 3)  # Last added index should take precedence
+        self.assertEqual(
+            mapper.inverse["data1"], 3
+        )  # Last added index should take precedence
 
     def test_integration(self):
         """Test integration between unidirectional and bidirectional mappers."""

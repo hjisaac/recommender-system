@@ -1,7 +1,7 @@
-
 import contextlib
 from abc import ABC, abstractmethod
 from collections import defaultdict
+
 
 class AbstractSerialMapper(ABC):
 

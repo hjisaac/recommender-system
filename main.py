@@ -977,8 +977,8 @@ class AlternatingLeastSquares(object):
             "for them respectively."
         )
 
-        loss_test = None # noqa
-        loss_train = None # noqa 
+        loss_test = None  # noqa
+        loss_train = None  # noqa
 
         for epoch in range(self.starting_epoch, self.hyper_n_epochs):
             for user_id in data_by_user_id_train:
@@ -1025,19 +1025,19 @@ class AlternatingLeastSquares(object):
         #     {"loss_test": loss_test, "loss_train": loss_train}, self.__model_name
         # )
         logger.log(f"Checkpoint successfully saved at {self._model_name}")
-    
+
     def predict_user_ratings(self, item_ratings):
         # Learn the user factor and then estimate the ratings he would give to each
         # of the movies using the item learnt items factors of all the movies.
         if not item_ratings:
             raise ValueError("Cannot predict user ratings when item_ratings is nil.")
         user_bias, user_factor = self.learn_user_bias_and_factor(item_ratings)
-        return  np.dot(user_factor, self.item_factors) + user_bias
+        return np.dot(user_factor, self.item_factors) + user_bias
 
 
-# 
+#
 
-# 
+#
 
 # In[239]:
 
@@ -1294,7 +1294,3 @@ plt.savefig("test.svg", format="svg")
 
 
 # In[ ]:
-
-
-
-

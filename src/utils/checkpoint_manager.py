@@ -18,7 +18,7 @@ class CheckpointManager:
         Args:
             checkpoint_folder (str): Path to the folder where checkpoints will be stored.
         """
-        
+
         # Checkpoint folder can not be nil
         assert checkpoint_folder, checkpoint_folder
 
@@ -98,7 +98,8 @@ class CheckpointManager:
             return [
                 file
                 for file in os.listdir(self.checkpoint_folder)
-                if file.endswith(".pkl") and os.path.isfile(os.path.join(self.checkpoint_folder, file))
+                if file.endswith(".pkl")
+                and os.path.isfile(os.path.join(self.checkpoint_folder, file))
             ]
         except Exception as e:
             raise Exception(f"Failed to list checkpoints: {e}")
@@ -121,5 +122,3 @@ class CheckpointManager:
             os.remove(checkpoint_path)
         except Exception as e:
             raise Exception(f"Failed to delete checkpoint '{checkpoint_name}': {e}")
-
-
