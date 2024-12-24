@@ -1,12 +1,11 @@
 import unittest
 from contextlib import suppress
 
-from ...src.utils.mapper import (
+from src.utils.mapper import (
     SerialBidirectionalMapper,
     SerialUnidirectionalMapper,
     AbstractSerialMapper,
 )
-
 
 class TestSerialMapper(unittest.TestCase):
     def test_abstract_serial_mapper(self):

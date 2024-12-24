@@ -5,7 +5,7 @@ from csv import DictReader
 from abc import ABC, abstractmethod
 from typing import Iterable, Callable, Sequence, Optional
 
-from ..utils.mapper import SerialBidirectionalMapper, SerialUnidirectionalMapper
+from src.utils.mapper import SerialBidirectionalMapper, SerialUnidirectionalMapper
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ class AbstractDataLoader(ABC):
         pass
 
 
-class ImplicitFeedbackDataLoader(AbstractDataLoader):
+class DataLoader(AbstractDataLoader):
     """
     We want to load the data as an optimized form of sparse matrices
     """
@@ -117,7 +117,6 @@ class ImplicitFeedbackDataLoader(AbstractDataLoader):
             )
             raise
 
-    @abstractmethod
     def test_train_split(self, ratio: float):
         indexed_data = None  # TODO: FIX THIS
         data_by_user_id__train = SerialUnidirectionalMapper()  # noqa

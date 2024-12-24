@@ -21,6 +21,7 @@ toml = "^0.10.2"
 [tool.poetry.group.dev.dependencies]
 pipdeptree = "^2.23.4"
 black = {extras = ["jupyter"], version = "^24.8.0"}
+coverage = "^7.6.9"
 
 [build-system]
 requires = ["poetry-core"]
