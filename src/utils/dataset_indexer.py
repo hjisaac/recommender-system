@@ -20,7 +20,7 @@ sample_from_bernoulli = partial(np.random.binomial, n=1)
 
 
 @dataclass
-class LoadedDataWrapper:
+class IndexedDatasetWrapper:
     data_by_user_id__train: SerialUnidirectionalMapper
     data_by_item_id__train: SerialUnidirectionalMapper
     data_by_user_id__test: SerialUnidirectionalMapper
@@ -30,16 +30,16 @@ class LoadedDataWrapper:
     id_to_item_bmap: SerialBidirectionalMapper
 
 
-class AbstractDataLoader(ABC):
+class AbstractDatasetIndexer(ABC):
 
     @abstractmethod
-    def load(self):
+    def index(self):
         pass
 
 
-class DataLoader(AbstractDataLoader):
+class DatasetIndexer(AbstractDatasetIndexer):
     """
-    We want to load the data as an optimized form of sparse matrices
+    We want to index the dataset as an optimized form of sparse matrices
     """
 
     LIMIT_TO_LOAD_IN_MEMORY = 1_000_000_000_000
@@ -77,7 +77,7 @@ class DataLoader(AbstractDataLoader):
             else data
         )
 
-    def load(self, approximate_train_ratio: float = 1) -> LoadedDataWrapper:
+    def index(self, approximate_train_ratio: float = 1) -> IndexedDatasetWrapper:
 
         assert (
             0 <= approximate_train_ratio <= 1
@@ -104,7 +104,6 @@ class DataLoader(AbstractDataLoader):
         data_by_item_id__test = SerialUnidirectionalMapper()
 
         belongs_to_test_split: Optional[bool | object]
-        rand_trace = []
         try:
             with open(self._file_path, mode="r", newline="") as csvfile:
                 for line_count, line in enumerate(DictReader(csvfile)):
@@ -127,8 +126,6 @@ class DataLoader(AbstractDataLoader):
                     # in that case.
                     belongs_to_test_split = NOT_PROVIDED
 
-                    # Check if the user and the item already exists.
-
                     if user_id is None:
                         # This user is a new one, so add it
                         id_to_user_bmap.add(user)
@@ -136,12 +133,9 @@ class DataLoader(AbstractDataLoader):
                         # If the user is a new one, run a Bernoulli experiment to
                         # decide whether that new user's data should be used as a
                         # training data of test data.
-                        sample = sample_from_bernoulli(  # monkey_patched_sample_from_bernoulli
+                        belongs_to_test_split = not sample_from_bernoulli(
                             p=approximate_train_ratio
                         )
-                        print("sample => ", sample)
-                        rand_trace.append(sample)
-                        belongs_to_test_split = not sample
 
                     if item_id is None:
                         # This item is a new one, so add it
@@ -158,7 +152,6 @@ class DataLoader(AbstractDataLoader):
                             data_by_item_id__train.add(data=data, key=item_id)
 
                             if item_id is None:
-                                # data_by_user_id__test.add(data=data, key=user_id)
                                 data_by_item_id__test.add(
                                     SerialUnidirectionalMapper.NOTHING
                                 )
@@ -168,7 +161,6 @@ class DataLoader(AbstractDataLoader):
                             data_by_item_id__test.add(data=data, key=item_id)
 
                             if item_id is None:
-                                # data_by_user_id__train.add(data=data, key=user_id)
                                 data_by_item_id__train.add(
                                     SerialUnidirectionalMapper.NOTHING
                                 )
@@ -218,7 +210,7 @@ class DataLoader(AbstractDataLoader):
 
         logger.info(f"Successfully loaded {indexed_count} lines from {self._file_path}")
 
-        return LoadedDataWrapper(
+        return IndexedDatasetWrapper(
             data_by_user_id__train=data_by_user_id__train,
             data_by_item_id__train=data_by_item_id__train,
             data_by_user_id__test=data_by_user_id__test,
