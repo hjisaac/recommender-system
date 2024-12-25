@@ -42,10 +42,11 @@ class TestDataLoader(unittest.TestCase):
             user_header="userId",
             item_header="movieId",
             rating_header="rating",
+            limit=5000,
             verbose=False,
         )
 
-        loaded_data = data_loader.load(approximate_train_ratio=0.8)
+        loaded_data = data_loader.load(approximate_train_ratio=000.1)
         self.assertIsInstance(loaded_data, LoadedDataWrapper)
 
         print(loaded_data.data_by_user_id__train._data)
