@@ -44,7 +44,7 @@ class DatasetIndexer(AbstractDatasetIndexer):
 
     LIMIT_TO_INDEX_IN_MEMORY = 1_000_000_000_000
 
-    DataLoadingError = type("InvalidStateError", (Exception,), {})
+    DatasetIndexerError = type("DatasetIndexerError", (Exception,), {})
 
     def __init__(
         self,
@@ -112,7 +112,8 @@ class DatasetIndexer(AbstractDatasetIndexer):
                     # Unlikely in this dataset but better have this guard
                     if not user or not item:
                         logger.warning(
-                            f"Cannot process the line {line_count}, cause expects `user` and `item` to be defined but got {user} and {item} for them respectively, skipping..."
+                            f"Cannot process the line {line_count}, cause expects `user` and `item` "
+                            f"to be defined but got {user} and {item} for them respectively, skipping..."
                         )
                         continue
 
@@ -195,22 +196,24 @@ class DatasetIndexer(AbstractDatasetIndexer):
 
                     if self._verbose:
                         logger.info(
-                            f"Load the line {indexed_count} of {self._file_path} successfully"
+                            f"Indexed the line {indexed_count} of {self._file_path} successfully"
                         )
 
                     indexed_count += 1
                     if indexed_count == self._limit:
                         logger.warning(
-                            f"Limit of lines (.i.e {self._limit}) to load has been reached. Exiting without loading the rest... "
+                            f"Limit of lines (.i.e {self._limit}) to index has been reached. Exiting without loading the rest... "
                         )
                         break
-        except (FileNotFoundError, KeyError) as exc:
+        except (FileNotFoundError,) as exc:
             logger.error(
-                f"Cannot load data from the given `file_path` .i.e {self._file_path}. Attempt failed with exception {exc}"
+                f"Cannot index data from the given `file_path` .i.e {self._file_path}. Attempt failed with exception {exc}"
             )
-            raise self.DataLoadingError() from exc
+            raise self.DatasetIndexerError() from exc
 
-        logger.info(f"Successfully loaded {indexed_count} lines from {self._file_path}")
+        logger.info(
+            f"Successfully indexed {indexed_count} lines from {self._file_path}"
+        )
 
         return IndexedDatasetWrapper(
             data_by_user_id__train=data_by_user_id__train,
