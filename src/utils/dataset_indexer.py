@@ -12,7 +12,7 @@ from src.utils.serial_mapper import (
     SerialBidirectionalMapper,
     SerialUnidirectionalMapper,
 )
-from src.utils.constants import NOT_PROVIDED, NOT_DEFINED
+from src.utils.constants import NOT_DEFINED
 
 logger = logging.getLogger(__name__)
 
@@ -121,11 +121,11 @@ class DatasetIndexer(AbstractDatasetIndexer):
                     item_id = id_to_item_bmap.inverse[item]
 
                     # Whether the current entry should be pushed into the training set
-                    # or not. Set to `NOT_PROVIDED` to express the fact that the user
+                    # or not. Set to `NOT_DEFINED` to express the fact that the user
                     # has already been seeing once and then already belongs to the test
                     # set or the training set, no need to sample from Bernoulli distro
                     # in that case.
-                    belongs_to_test_split = NOT_PROVIDED
+                    belongs_to_test_split = NOT_DEFINED
 
                     if user_id is None:
                         # This user is a new one, so add it

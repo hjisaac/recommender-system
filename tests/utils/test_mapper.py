@@ -80,7 +80,3 @@ class TestSerialBidirectionalMapper(unittest.TestCase):
         self.assertEqual(
             mapper.inverse["data1"], 3
         )  # Last added index should take precedence
-
-
-if __name__ == "__main__":
-    unittest.main()
