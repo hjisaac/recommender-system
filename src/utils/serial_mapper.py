@@ -5,7 +5,7 @@ from collections import defaultdict
 
 class AbstractSerialMapper(ABC):
 
-    NOTHING = object()
+    EMPTY = object()
 
     def __init__(self):
         self._data = []
@@ -32,7 +32,7 @@ class SerialUnidirectionalMapper(AbstractSerialMapper):
 
     def add(self, data, *args, key=None, **kwargs):
         if key is None:
-            self._data.append([] if data is self.NOTHING else [data])
+            self._data.append([] if data is self.EMPTY else [data])
         else:
             self._data[key].append(data)
 

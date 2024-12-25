@@ -49,8 +49,8 @@ class TestUnidirectionalMapper(unittest.TestCase):
         mapper.add("data3", key=0)
         self.assertListEqual(mapper[0], ["data1", "data3"])
 
-        # Test adding NOTHING
-        mapper.add(SerialUnidirectionalMapper.NOTHING)
+        # Test adding EMPTY
+        mapper.add(SerialUnidirectionalMapper.EMPTY)
         self.assertEqual(len(mapper), 3)
         self.assertListEqual(mapper[2], [])
 

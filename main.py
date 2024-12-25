@@ -53,7 +53,7 @@ from collections import defaultdict, Counter
 
 class AbstractSerialMapper(ABC):
 
-    NOTHING = object()
+    EMPTY = object()
 
     def __init__(self):
         self._data = []
@@ -80,7 +80,7 @@ class SerialUnidirectionalMapper(AbstractSerialMapper):
 
     def add(self, data, *args, key=None, **kwargs):
         if key is None:
-            self._data.append([] if data is self.NOTHING else [data])
+            self._data.append([] if data is self.EMPTY else [data])
         else:
             self._data[key].append(data)
 
@@ -379,7 +379,7 @@ class InMemory2DIndexer(object):
                     )
                     # Add the user_id but with an empty array; this helps to ensure that
                     # the test set and the training set will have the same dimension
-                    data_by_user_id__train.add(SerialUnidirectionalMapper.NOTHING)
+                    data_by_user_id__train.add(SerialUnidirectionalMapper.EMPTY)
                     visited_user_ids.add(user_id)
                 else:
                     # The user has already been added
@@ -396,7 +396,7 @@ class InMemory2DIndexer(object):
                             self._rating_header: rating,
                         }
                     )
-                    data_by_item_id__train.add(SerialUnidirectionalMapper.NOTHING)
+                    data_by_item_id__train.add(SerialUnidirectionalMapper.EMPTY)
                     visited_item_ids.add(item_id)
                 else:
                     # The item has already been added both in the training and the test dataset
@@ -415,7 +415,7 @@ class InMemory2DIndexer(object):
                         indexed_data.data_by_user_id[user_id][user_item_id]
                     )
                     # Add the user entry, but with an empty array
-                    data_by_user_id__test.add(SerialUnidirectionalMapper.NOTHING)
+                    data_by_user_id__test.add(SerialUnidirectionalMapper.EMPTY)
                     visited_user_ids.add(user_id)
                 else:
                     data_by_user_id__train.add(
@@ -425,7 +425,7 @@ class InMemory2DIndexer(object):
                 # DEAL WITH ITEMS
 
                 if item_id not in visited_item_ids:
-                    data_by_item_id__test.add(SerialUnidirectionalMapper.NOTHING)
+                    data_by_item_id__test.add(SerialUnidirectionalMapper.EMPTY)
 
                     data_by_item_id__train.add(
                         {

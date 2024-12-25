@@ -30,7 +30,7 @@ from collections import defaultdict, Counter
 
 class AbstractSerialMapper(ABC):
 
-    NOTHING = object()
+    EMPTY = object()
 
     def __init__(self):
         self._data = []
@@ -57,7 +57,7 @@ class SerialUnidirectionalMapper(AbstractSerialMapper):
 
     def add(self, data, *args, key=None, **kwargs):
         if key is None:
-            self._data.append([] if data is self.NOTHING else [data])
+            self._data.append([] if data is self.EMPTY else [data])
         else:
             self._data[key].append(data)
 
@@ -382,7 +382,7 @@ for user_id, user_movie_id in dataset_indices_based_representation:
             )
             # Add the user_id but with an empty array; this helps to ensure that
             # the test set and the training set will have the same dimension
-            data_by_user_id__train.add(SerialUnidirectionalMapper.NOTHING)
+            data_by_user_id__train.add(SerialUnidirectionalMapper.EMPTY)
             visited_user_ids.add(user_id)
         else:
             # The user has already been added
@@ -396,7 +396,7 @@ for user_id, user_movie_id in dataset_indices_based_representation:
             data_by_item_id__test.add(
                 {"userId": indexed_data.id_to_user_bmap[user_id], "rating": rating}
             )
-            data_by_item_id__train.add(SerialUnidirectionalMapper.NOTHING)
+            data_by_item_id__train.add(SerialUnidirectionalMapper.EMPTY)
             visited_movie_ids.add(movie_id)
         else:
             # The movie has already been added both in the training and the test dataset
@@ -412,7 +412,7 @@ for user_id, user_movie_id in dataset_indices_based_representation:
                 indexed_data.data_by_user_id[user_id][user_movie_id]
             )
             # Add the user entry, but with an empty array
-            data_by_user_id__test.add(SerialUnidirectionalMapper.NOTHING)
+            data_by_user_id__test.add(SerialUnidirectionalMapper.EMPTY)
             visited_user_ids.add(user_id)
         else:
             data_by_user_id__train.add(
@@ -422,7 +422,7 @@ for user_id, user_movie_id in dataset_indices_based_representation:
         # DEAL WITH MOVIES
 
         if movie_id not in visited_movie_ids:
-            data_by_item_id__test.add(SerialUnidirectionalMapper.NOTHING)
+            data_by_item_id__test.add(SerialUnidirectionalMapper.EMPTY)
 
             data_by_item_id__train.add(
                 {"userId": indexed_data.id_to_user_bmap[user_id], "rating": rating}

@@ -156,7 +156,7 @@ class DatasetIndexer(AbstractDatasetIndexer):
 
                             if item_id is None:
                                 data_by_item_id__test.add(
-                                    SerialUnidirectionalMapper.NOTHING
+                                    SerialUnidirectionalMapper.EMPTY
                                 )
 
                         else:
@@ -165,7 +165,7 @@ class DatasetIndexer(AbstractDatasetIndexer):
 
                             if item_id is None:
                                 data_by_item_id__train.add(
-                                    SerialUnidirectionalMapper.NOTHING
+                                    SerialUnidirectionalMapper.EMPTY
                                 )
 
                     elif belongs_to_test_split is True:
@@ -174,11 +174,11 @@ class DatasetIndexer(AbstractDatasetIndexer):
 
                         # Add the user_id to the training set but without the data to
                         # keep the same dimension between the training and test set
-                        data_by_user_id__train.add(SerialUnidirectionalMapper.NOTHING)
+                        data_by_user_id__train.add(SerialUnidirectionalMapper.EMPTY)
                         # But if the item_id already exists do nothing
                         if item_id is None:
                             data_by_item_id__train.add(
-                                SerialUnidirectionalMapper.NOTHING
+                                SerialUnidirectionalMapper.EMPTY
                             )
 
                     else:
@@ -186,12 +186,12 @@ class DatasetIndexer(AbstractDatasetIndexer):
                         data_by_item_id__train.add(data=data, key=item_id)
                         # Add the user_id to the test set but without the data to
                         # keep the same dimension between the training and test set
-                        data_by_user_id__test.add(SerialUnidirectionalMapper.NOTHING)
+                        data_by_user_id__test.add(SerialUnidirectionalMapper.EMPTY)
 
                         # But if the item_id already exists do nothing
                         if item_id is None:
                             data_by_item_id__test.add(
-                                SerialUnidirectionalMapper.NOTHING
+                                SerialUnidirectionalMapper.EMPTY
                             )
 
                     if self._verbose:
