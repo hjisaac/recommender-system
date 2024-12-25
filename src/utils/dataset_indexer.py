@@ -42,7 +42,7 @@ class DatasetIndexer(AbstractDatasetIndexer):
     We want to index the dataset as an optimized form of sparse matrices
     """
 
-    LIMIT_TO_LOAD_IN_MEMORY = 1_000_000_000_000
+    LIMIT_TO_INDEX_IN_MEMORY = 1_000_000_000_000
 
     DataLoadingError = type("InvalidStateError", (Exception,), {})
 
@@ -65,7 +65,7 @@ class DatasetIndexer(AbstractDatasetIndexer):
         self._data_headers = data_headers
         self._data_constructor = data_constructor
         self._verbose = verbose
-        self._limit = limit or self.LIMIT_TO_LOAD_IN_MEMORY
+        self._limit = limit or self.LIMIT_TO_INDEX_IN_MEMORY
 
     def _construct_data(self, data, items):  # noqa
         """
