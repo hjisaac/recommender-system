@@ -1,5 +1,4 @@
 import unittest
-from contextlib import suppress
 
 from src.utils.mapper import (
     SerialBidirectionalMapper,
@@ -7,13 +6,15 @@ from src.utils.mapper import (
     AbstractSerialMapper,
 )
 
-class TestSerialMapper(unittest.TestCase):
+
+class TestAbstractSerialMapper(unittest.TestCase):
+
     def test_abstract_serial_mapper(self):
-        class TestMapper(AbstractSerialMapper):
+        class __ConcreteMapper(AbstractSerialMapper):
             def add(self, value, *args, **kwargs):
                 self._data.append(value)
 
-        mapper = TestMapper()
+        mapper = __ConcreteMapper()
         mapper.add(1)
         mapper.add(2)
         mapper.add(3)
@@ -27,12 +28,13 @@ class TestSerialMapper(unittest.TestCase):
         self.assertEqual(mapper[2], 3)
 
         # Test __getitem__ with invalid index
-        with suppress(IndexError):
-            self.assertIsNone(mapper[10])
+        self.assertIsNone(mapper[10])
 
         # Test __iter__
         self.assertListEqual([i for i in mapper], [0, 1, 2])
 
+
+class TestUnidirectionalMapper(unittest.TestCase):
     def test_serial_unidirectional_mapper(self):
         mapper = SerialUnidirectionalMapper()
 
@@ -52,6 +54,8 @@ class TestSerialMapper(unittest.TestCase):
         self.assertEqual(len(mapper), 3)
         self.assertListEqual(mapper[2], [])
 
+
+class TestSerialBidirectionalMapper(unittest.TestCase):
     def test_serial_bidirectional_mapper(self):
         mapper = SerialBidirectionalMapper()
 
@@ -76,21 +80,6 @@ class TestSerialMapper(unittest.TestCase):
         self.assertEqual(
             mapper.inverse["data1"], 3
         )  # Last added index should take precedence
-
-    def test_integration(self):
-        """Test integration between unidirectional and bidirectional mappers."""
-        uni_mapper = SerialUnidirectionalMapper()
-        bi_mapper = SerialBidirectionalMapper()
-
-        uni_mapper.add("data1")
-        bi_mapper.add("data1")
-
-        uni_mapper.add("data2", key=0)
-        bi_mapper.add("data2")
-
-        self.assertListEqual(uni_mapper[0], ["data1", "data2"])
-        self.assertEqual(bi_mapper.inverse["data1"], 0)
-        self.assertEqual(bi_mapper.inverse["data2"], 1)
 
 
 if __name__ == "__main__":

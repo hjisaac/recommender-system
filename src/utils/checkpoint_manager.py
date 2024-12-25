@@ -3,7 +3,7 @@ import dill as pickle
 from typing import Optional, Dict, List
 
 
-class CheckpointManager:
+class CheckpointManager(object):
     """
     A manager for saving, loading, listing, and deleting serialized checkpoints.
 
