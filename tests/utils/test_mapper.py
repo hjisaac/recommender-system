@@ -1,6 +1,6 @@
 import unittest
 
-from src.utils.mapper import (
+from src.utils.serial_mapper import (
     SerialBidirectionalMapper,
     SerialUnidirectionalMapper,
     AbstractSerialMapper,

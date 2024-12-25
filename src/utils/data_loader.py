@@ -8,7 +8,10 @@ from dataclasses import dataclass
 from functools import partial
 from typing import Iterable, Callable, Sequence, Optional
 
-from src.utils.mapper import SerialBidirectionalMapper, SerialUnidirectionalMapper
+from src.utils.serial_mapper import (
+    SerialBidirectionalMapper,
+    SerialUnidirectionalMapper,
+)
 from src.utils.constants import NOT_PROVIDED, NOT_DEFINED
 
 logger = logging.getLogger(__name__)
@@ -81,8 +84,8 @@ class DataLoader(AbstractDataLoader):
         ), f"Expected `train_ratio` to be in [0, 1] but got {approximate_train_ratio}"
 
         logger.warning(
-            "The current implementation does not split the data into train and test sets exactly with the provided ration. "
-            "We use the provided ratio as a probability for a Bernoulli distribution to know either the data point should "
+            "The current implementation does not split the data into train and test sets exactly with the provided ratio. "
+            "We use the provided ratio as a probability for a Bernoulli distribution to know whether the data point should "
             "be used as a training data or a test data."
         )
 
@@ -117,8 +120,11 @@ class DataLoader(AbstractDataLoader):
                     user_id = id_to_user_bmap.inverse[user]
                     item_id = id_to_item_bmap.inverse[item]
 
-                    # Whether the current entry should be pushed into the training
-                    # set or not.
+                    # Whether the current entry should be pushed into the training set
+                    # or not. Set to `NOT_PROVIDED` to express the fact that the user
+                    # has already been seeing once and then already belongs to the test
+                    # set or the training set, no need to sample from Bernoulli distro
+                    # in that case.
                     belongs_to_test_split = NOT_PROVIDED
 
                     # Check if the user and the item already exists.
@@ -130,9 +136,10 @@ class DataLoader(AbstractDataLoader):
                         # If the user is a new one, run a Bernoulli experiment to
                         # decide whether that new user's data should be used as a
                         # training data of test data.
-                        sample = sample_from_bernoulli(
+                        sample = sample_from_bernoulli(  # monkey_patched_sample_from_bernoulli
                             p=approximate_train_ratio
                         )
+                        print("sample => ", sample)
                         rand_trace.append(sample)
                         belongs_to_test_split = not sample
 
@@ -143,26 +150,53 @@ class DataLoader(AbstractDataLoader):
                     # Add the data without the useless items for indexing
                     data = self._construct_data(line, self._data_headers)
 
+                    # Like if the user have already been seen once
                     if belongs_to_test_split is NOT_DEFINED:
                         # Search for where the user is and add the data there
                         if data_by_user_id__train[user_id]:
                             data_by_user_id__train.add(data=data, key=user_id)
                             data_by_item_id__train.add(data=data, key=item_id)
+
+                            if item_id is None:
+                                # data_by_user_id__test.add(data=data, key=user_id)
+                                data_by_item_id__test.add(
+                                    SerialUnidirectionalMapper.NOTHING
+                                )
+
                         else:
                             data_by_user_id__test.add(data=data, key=user_id)
                             data_by_item_id__test.add(data=data, key=item_id)
+
+                            if item_id is None:
+                                # data_by_user_id__train.add(data=data, key=user_id)
+                                data_by_item_id__train.add(
+                                    SerialUnidirectionalMapper.NOTHING
+                                )
+
                     elif belongs_to_test_split is True:
                         data_by_user_id__test.add(data=data, key=user_id)
                         data_by_item_id__test.add(data=data, key=item_id)
+
+                        # Add the user_id to the training set but without the data to
+                        # keep the same dimension between the training and test set
+                        data_by_user_id__train.add(SerialUnidirectionalMapper.NOTHING)
+                        # But if the item_id already exists do nothing
+                        if item_id is None:
+                            data_by_item_id__train.add(
+                                SerialUnidirectionalMapper.NOTHING
+                            )
+
                     else:
                         data_by_user_id__train.add(data=data, key=user_id)
-                        try:
-                            data_by_item_id__train.add(data=data, key=item_id)
-                        except IndexError:
-                            print("rand_trace => ", rand_trace)
-                            np.save("./_rand.npy", np.array(rand_trace))
-                            logger.warning(
-                                f"Cannot add the data {data} to the data_by_item_id__train because the item_id {item_id} is not defined yet. Skipping..."
+                        data_by_item_id__train.add(data=data, key=item_id)
+                        # Add the user_id to the test set but without the data to
+                        # keep the same dimension between the training and test set
+                        data_by_user_id__test.add(SerialUnidirectionalMapper.NOTHING)
+
+                        # But if the item_id already exists do nothing
+                        if item_id is None:
+                            data_by_item_id__test.add(
+                                SerialUnidirectionalMapper.NOTHING
                             )
 
                     if self._verbose:
@@ -173,7 +207,7 @@ class DataLoader(AbstractDataLoader):
                     indexed_count += 1
                     if indexed_count == self._limit:
                         logger.warning(
-                            f"Limit of entries (.i.e {self._limit}) to load has been reached. Exiting without loading the rest... "
+                            f"Limit of lines (.i.e {self._limit}) to load has been reached. Exiting without loading the rest... "
                         )
                         break
         except (FileNotFoundError, KeyError) as exc:
@@ -182,9 +216,8 @@ class DataLoader(AbstractDataLoader):
             )
             raise self.DataLoadingError() from exc
 
-        logger.info(
-            f"Successfully loaded {indexed_count} lines from {self._file_path}"
-        )
+        logger.info(f"Successfully loaded {indexed_count} lines from {self._file_path}")
+
         return LoadedDataWrapper(
             data_by_user_id__train=data_by_user_id__train,
             data_by_item_id__train=data_by_item_id__train,
@@ -193,4 +226,3 @@ class DataLoader(AbstractDataLoader):
             id_to_user_bmap=id_to_user_bmap,
             id_to_item_bmap=id_to_item_bmap,
         )
-
