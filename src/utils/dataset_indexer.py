@@ -146,7 +146,9 @@ class DatasetIndexer(AbstractDatasetIndexer):
 
                     # Like if the user have already been seen once
                     if belongs_to_test_split is NOT_DEFINED:
-                        # Search for where the user is and add the data there
+                        # Now, search for where the user is and add the data there
+
+                        # This means the user is in the traning set
                         if data_by_user_id__train[user_id]:
                             data_by_user_id__train.add(data=data, key=user_id)
                             data_by_item_id__train.add(data=data, key=item_id)
