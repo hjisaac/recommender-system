@@ -1,12 +1,8 @@
 import box
 
 
-ModelState = type(
-    "ModelState",
+AlgorithmState = type(
+    "AlgoState",
     (box.Box,),
-    {},)
-
-AlsState = type(
-    "ModelState",
-    (box.Box,),
-    {},)
+    {},
+)

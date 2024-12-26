@@ -1,6 +1,8 @@
+import logging
 from abc import abstractmethod, ABC
 
-from main import indexed_data, logger
+
+logger = logging.getLogger(__name__)
 
 
 class Recommender(object):
@@ -27,7 +29,7 @@ class CollaborativeFilteringRecommenderBuilder(AbstractRecommenderBuilder):
     def __init__(self, backend, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def build(self, data=indexed_data):
+    def build(self, data):
         # Run the model backend code .i.e fit the model and return the prediction capable object
         logger.log(
             f"Starting the build of the recommender using {self.backend.algorithm.__class__.__name__}..."
