@@ -79,7 +79,7 @@ class DatasetIndexer(AbstractDatasetIndexer):
 
         assert (
             0 <= approximate_train_ratio <= 1
-        ), f"Expected `train_ratio` to be in [0, 1] but got {approximate_train_ratio}"
+        ), approximate_train_ratio
 
         logger.warning(
             "The current implementation does not split the data into train and test sets exactly with the provided ratio. "
