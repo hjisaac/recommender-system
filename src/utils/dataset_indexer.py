@@ -55,7 +55,6 @@ class DatasetIndexer(AbstractDatasetIndexer):
         rating_header: str,
         data_headers: Iterable = None,
         data_constructor: Callable = None,
-        verbose=True,
         limit: int = None,
     ):
         self._user_header = user_header
@@ -64,7 +63,6 @@ class DatasetIndexer(AbstractDatasetIndexer):
         self._file_path = file_path
         self._data_headers = data_headers
         self._data_constructor = data_constructor
-        self._verbose = verbose
         self._limit = limit or self.LIMIT_TO_INDEX_IN_MEMORY
 
     def _construct_data(self, data, items):  # noqa
@@ -149,7 +147,7 @@ class DatasetIndexer(AbstractDatasetIndexer):
                     if belongs_to_test_split is NOT_DEFINED:
                         # Now, search for where the user is and add the data there
 
-                        # This means the user is in the traning set
+                        # This means the user is in the training set
                         if data_by_user_id__train[user_id]:
                             data_by_user_id__train.add(data=data, key=user_id)
                             data_by_item_id__train.add(data=data, key=item_id)
@@ -193,11 +191,6 @@ class DatasetIndexer(AbstractDatasetIndexer):
                             data_by_item_id__test.add(
                                 SerialUnidirectionalMapper.EMPTY
                             )
-
-                    if self._verbose:
-                        logger.info(
-                            f"Indexed the line {indexed_count} of {self._file_path} successfully"
-                        )
 
                     indexed_count += 1
                     if indexed_count == self._limit:
