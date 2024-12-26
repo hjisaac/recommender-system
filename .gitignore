@@ -7,3 +7,4 @@ dsa_*
 figures/*
 test.svg
 **/__pycache__/
+dataset/*
