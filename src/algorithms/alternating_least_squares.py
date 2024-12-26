@@ -73,6 +73,7 @@ class AlternatingLeastSquares(Algorithm):
     ):
         users_count = len(data_by_user_id__train)
         items_count = len(data_by_item_id__train)
+
         # If we know user factors and user biases but item factors and biases are
         # not defined, we can learn item factors and biases using user factors and
         # user biases. And inversely, if we know item factors and biases but user
@@ -207,7 +208,7 @@ class AlternatingLeastSquares(Algorithm):
     def _compute_rmse(
         accumulated_squared_residual: float, residuals_count: int
     ) -> float:
-        return math.sqrt(accumulated_squared_residual / residuals_count)
+        return np.sqrt(accumulated_squared_residual / residuals_count)
 
     def _compute_loss(self, accumulated_squared_residual: float) -> float:
         return (
