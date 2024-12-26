@@ -75,7 +75,7 @@ class AlternatingLeastSquares(Algorithm):
         items_count = len(data_by_item_id__train)
 
         # If we know user factors and user biases but item factors and biases are
-        # not defined, we can learn item factors and biases using user factors and
+        # not known, we can learn item factors and biases using user factors and
         # user biases. And inversely, if we know item factors and biases but user
         # factors and biases are unknown we can learn them too.
         if not (
@@ -189,7 +189,7 @@ class AlternatingLeastSquares(Algorithm):
 
     def _get_factor_sample(self, size) -> np.ndarray:
         """
-        Returns a factors sample using a normal distribution 0 as
+        Returns a factor sample using a normal distribution 0 as
         mean and `1 / np.sqrt(self.hyper_n_factors)` as scale.
         """
         np.random.normal(
