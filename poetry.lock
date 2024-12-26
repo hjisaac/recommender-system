@@ -1598,6 +1598,41 @@ files = [
 diagrams = ["jinja2", "railroad-diagrams"]
 
 [[package]]
+name = "python-box"
+version = "7.3.0"
+description = "Advanced Python dictionaries with dot notation access"
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "python_box-7.3.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:a2131477ed02aa3609b348dad0697b70d84968d6440387898bb9075f461ef9bf"},
+    {file = "python_box-7.3.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:3284cf583476af63c4f24168b6e1307503322dccd9b3dc2c924f5e69f79e7ab5"},
+    {file = "python_box-7.3.0-cp310-cp310-win_amd64.whl", hash = "sha256:2718cf4c8dcc091d1c56a1a297804ab7973271391a2d2d34d37740820bbd1fda"},
+    {file = "python_box-7.3.0-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:e40fe08b218b3d07a50d6eb1c62edce8d0636d6bd1e563907bc86018a78e5826"},
+    {file = "python_box-7.3.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:bd13e2b964ed527e03409cb1fb386d8723e0e69caf0f507af60d64102c13d363"},
+    {file = "python_box-7.3.0-cp311-cp311-win_amd64.whl", hash = "sha256:d661fb9c6ff6c730b53fe859754624baa14e37ee3d593525382b20194efad367"},
+    {file = "python_box-7.3.0-cp312-cp312-macosx_10_13_universal2.whl", hash = "sha256:6c3809f78f7c829e45626990a891d93214748938b9c0236dc6d0f2e8c400d325"},
+    {file = "python_box-7.3.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:c233b94bf3b95d7d9dc01ed1ee5636800174345810b319eb87219b760edbb54f"},
+    {file = "python_box-7.3.0-cp312-cp312-win_amd64.whl", hash = "sha256:9a22cc82e78225a419c4da02f53d6beb5c5cbd2fe5f63c13dab81e4f27b8c929"},
+    {file = "python_box-7.3.0-cp313-cp313-macosx_10_13_universal2.whl", hash = "sha256:1f7b93c5ab4027b12ba67baffa8db903557e557250e01b91226d7a1b9688cf77"},
+    {file = "python_box-7.3.0-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:71ed234c1cff7f7197103bb11d98559032c0beac34db0c62dd5bd53e2b2a6963"},
+    {file = "python_box-7.3.0-cp313-cp313-win_amd64.whl", hash = "sha256:1144c9e5d40a2cbe34d1ec9a13abfc557e8e9e2fbf15f14314c87b6113de178f"},
+    {file = "python_box-7.3.0-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:df77730baabf45b1682ead1c470e84a530f8ceb0295263a89f0ebc04ef7f363c"},
+    {file = "python_box-7.3.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:36bef944e61672b300c1d56d16db8a43ee4af9ab5678492a5e003368d2c64a6e"},
+    {file = "python_box-7.3.0-cp39-cp39-win_amd64.whl", hash = "sha256:b35a2262a4e1ccfba90ce8e2018aa367f8a46a519632884006fa3153b266f184"},
+    {file = "python_box-7.3.0-py3-none-any.whl", hash = "sha256:b1139bffe91bd317fd686c4c29ffc84115c1967af14112c5c4a8ac51937d530c"},
+    {file = "python_box-7.3.0.tar.gz", hash = "sha256:39a85ba457d07122226ca60597882d763549713ab56ac7d55da41c4ad0e89a05"},
+]
+
+[package.extras]
+all = ["msgpack", "ruamel.yaml (>=0.17)", "toml"]
+msgpack = ["msgpack"]
+pyyaml = ["PyYAML"]
+ruamel-yaml = ["ruamel.yaml (>=0.17)"]
+toml = ["toml"]
+tomli = ["tomli", "tomli-w"]
+yaml = ["ruamel.yaml (>=0.17)"]
+
+[[package]]
 name = "python-dateutil"
 version = "2.9.0.post0"
 description = "Extensions to the standard Python datetime module"
@@ -2209,4 +2244,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "738de4d5ad326b94a8abc67de5f7302eedec19f8b26c9b4db12d9da87d5c985c"
+content-hash = "b3d7141bfec7b1a49efe555451be876daf96adb4f8777099a98df297f43836b4"

@@ -175,9 +175,7 @@ class DatasetIndexer(AbstractDatasetIndexer):
                         data_by_user_id__train.add(SerialUnidirectionalMapper.EMPTY)
                         # But if the item_id already exists do nothing
                         if item_id is None:
-                            data_by_item_id__train.add(
-                                SerialUnidirectionalMapper.EMPTY
-                            )
+                            data_by_item_id__train.add(SerialUnidirectionalMapper.EMPTY)
 
                     else:
                         data_by_user_id__train.add(data=data, key=user_id)
@@ -188,9 +186,7 @@ class DatasetIndexer(AbstractDatasetIndexer):
 
                         # But if the item_id already exists do nothing
                         if item_id is None:
-                            data_by_item_id__test.add(
-                                SerialUnidirectionalMapper.EMPTY
-                            )
+                            data_by_item_id__test.add(SerialUnidirectionalMapper.EMPTY)
 
                     indexed_count += 1
                     if indexed_count == self._limit:
