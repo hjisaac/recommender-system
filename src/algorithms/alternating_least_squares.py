@@ -99,9 +99,7 @@ class AlternatingLeastSquares(Algorithm):
             self.item_biases = np.zeros(items_count)
 
         elif self.user_factors and self.user_biases:
-            # Initialize item factors and biases to zeros
-            # Update the factors and biases via learning
-
+            # Initialize item factors and biases to zeros then update the factors and biases via learning
             logger.info(
                 "Learning item factors and biases using the provided `user_factors` and `user_biases`..."
             )
@@ -114,8 +112,7 @@ class AlternatingLeastSquares(Algorithm):
                     item_id, data_by_item_id__train[item_id]
                 )
         elif self.item_factors and self.item_biases:
-            # Initialize user factors and biases to zeros
-            # Update the factors and biases via learning
+            # Initialize user factors and biases to zeros then update the factors and biases via learning
             logger.info(
                 "Learning user factors and biases using the provided `item_factors` and `item_biases`..."
             )
