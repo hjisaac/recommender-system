@@ -55,8 +55,9 @@ class AlternatingLeastSquares(Algorithm):
         self.user_biases = user_biases
         self.item_biases = item_biases
 
-        # The two following are two methods that rely on the data to get
-        # a user's id or an item's id if we know the user or the item.
+        # The two following methods rely on the data (indexed data) that will be
+        # passed to the `fit` method. And they are used to get a user's id or an
+        # item's id if we know the user or the item.
         self.__get_user_id: Optional[defaultdict] = None
         self.__get_item_id: Optional[defaultdict] = None
 
@@ -83,10 +84,10 @@ class AlternatingLeastSquares(Algorithm):
         users_count = len(data_by_user_id__train)
         items_count = len(data_by_item_id__train)
 
-        # If we know user factors and user biases but item factors and biases are
-        # not known, we can learn item factors and biases using user factors and
-        # user biases. And inversely, if we know item factors and biases but user
-        # factors and biases are unknown we can learn them too.
+        # If we know user factors and user biases but item factors and biases are not known,
+        # we can learn them using user factors and  user biases that we know. And inversely,
+        # if we know item factors and item biases but user factors and biases are unknown we
+        # can learn them too.
         if not (
             (self.user_factors and self.user_biases)
             or (self.item_factors and self.item_biases)
