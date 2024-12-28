@@ -2,7 +2,7 @@ import itertools
 import unittest
 from unittest.mock import patch
 
-from src.utils.dataset_indexer import (
+from src.helpers.dataset_indexer import (
     AbstractDatasetIndexer,
     DatasetIndexer,
     IndexedDatasetWrapper,
@@ -98,7 +98,7 @@ class TestDatasetIndexer(unittest.TestCase):
             len(indexed_data.id_to_item_bmap),
         )
 
-    @patch("src.utils.dataset_indexer.sample_from_bernoulli")
+    @patch("src.helpers.dataset_indexer.sample_from_bernoulli")
     def test_dataset_indexer_using_half_deterministic_bernoulli(
         self, mocked_sample_from_bernoulli
     ):
@@ -175,7 +175,7 @@ class TestDatasetIndexer(unittest.TestCase):
             len(indexed_data.id_to_item_bmap),
         )
 
-    @patch("src.utils.dataset_indexer.sample_from_bernoulli")
+    @patch("src.helpers.dataset_indexer.sample_from_bernoulli")
     def test_dataset_indexer_lower_approximate_ration_parameter(
         self, mocked_sample_from_bernoulli
     ):
@@ -206,7 +206,7 @@ class TestDatasetIndexer(unittest.TestCase):
 
         self.assertLessEqual(len(user_ids__train), len(user_ids__test))
 
-    @patch("src.utils.dataset_indexer.sample_from_bernoulli")
+    @patch("src.helpers.dataset_indexer.sample_from_bernoulli")
     def test_dataset_indexer_higher_approximate_ration_parameter(
         self, mocked_sample_from_bernoulli
     ):

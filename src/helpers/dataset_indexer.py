@@ -8,11 +8,11 @@ from dataclasses import dataclass
 from functools import partial
 from typing import Iterable, Callable, Sequence, Optional
 
-from src.utils.serial_mapper import (
+from src.helpers.serial_mapper import (
     SerialBidirectionalMapper,
     SerialUnidirectionalMapper,
 )
-from src.utils.constants import NOT_DEFINED
+from src.helpers.constants import NOT_DEFINED
 
 logger = logging.getLogger(__name__)
 

@@ -1,4 +1,3 @@
-import box
 import logging
 import numpy as np
 from enum import Enum
@@ -7,9 +6,10 @@ from typing import Optional, Literal
 from collections import defaultdict
 
 from src.algorithms.core import Algorithm
-from src.utils.dataset_indexer import IndexedDatasetWrapper
-from src.utils.state_manager import AlgorithmState
-from src.utils.serial_mapper import SerialUnidirectionalMapper
+from src.utils import cached_class_property
+from src.helpers.dataset_indexer import IndexedDatasetWrapper
+from src.helpers.state_manager import AlgorithmState
+from src.helpers.serial_mapper import SerialUnidirectionalMapper
 
 logger = logging.getLogger(__name__)
 
@@ -19,10 +19,9 @@ class LearningTargetEnum(str, Enum):
     USER = "user"
     ITEM = "item"
 
-    @classmethod
-    @lru_cache()
-    def members(cls):
-        [member.value for member in cls]
+    @cached_class_property
+    def members(self):
+        [member.value for member in self]
 
 
 class AlternatingLeastSquares(Algorithm):
