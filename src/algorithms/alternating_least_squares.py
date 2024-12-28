@@ -141,7 +141,7 @@ class AlternatingLeastSquares(Algorithm):
 
     def _learn_bias_and_factor(
         self,
-        target: Literal["user" | "item"],
+        target: Literal["user", "item"],
         target_id=None,
         ratings_data: Optional[list] = None,
     ):
