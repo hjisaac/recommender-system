@@ -3,8 +3,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-something_else = ""
-
 
 class Backend(object):
     """
