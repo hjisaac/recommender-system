@@ -39,7 +39,7 @@ class AbstractDatasetIndexer(ABC):
 
 class DatasetIndexer(AbstractDatasetIndexer):
     """
-    We want to index the dataset as an optimized form of sparse matrices
+    We want to index the datasets as an optimized form of sparse matrices
     """
 
     LIMIT_TO_INDEX_IN_MEMORY = 1_000_000_000_000
@@ -106,7 +106,7 @@ class DatasetIndexer(AbstractDatasetIndexer):
                 for line_count, line in enumerate(DictReader(csvfile)):
                     user, item = line[self._user_header], line[self._item_header]
 
-                    # Unlikely in this dataset but better have this guard
+                    # Unlikely in this datasets but better have this guard
                     if not user or not item:
                         logger.warning(
                             f"Cannot process the line {line_count}, cause expects `user` and `item` "
