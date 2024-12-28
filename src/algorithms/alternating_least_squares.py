@@ -1,17 +1,28 @@
 import box
-import enum
 import logging
 import numpy as np
+from enum import Enum
+from functools import lru_cache
 from typing import Optional, Literal
 from collections import defaultdict
 
 from src.algorithms.core import Algorithm
 from src.utils.dataset_indexer import IndexedDatasetWrapper
 from src.utils.state_manager import AlgorithmState
-from src.utils.constants import LEARNING_TARGETS
 from src.utils.serial_mapper import SerialUnidirectionalMapper
 
 logger = logging.getLogger(__name__)
+
+
+# Centralize this if needed somewhere else.
+class LearningTargetEnum(str, Enum):
+    USER = "user"
+    ITEM = "item"
+
+    @classmethod
+    @lru_cache()
+    def members(cls):
+        [member.value for member in cls]
 
 
 class AlternatingLeastSquares(Algorithm):
@@ -136,13 +147,13 @@ class AlternatingLeastSquares(Algorithm):
         else:
             # We have all the factors and biases defined, so nothing to do
             logger.info(
-                "All factors and biases are already provided. No initialization is required."
+                "All factors and biases are already provided, so no initialization is needed."
             )
 
     def _learn_bias_and_factor(
         self,
-        target: Literal["user", "item"],
-        target_id=None,
+        target: LearningTargetEnum,
+        target_id: Optional[int] = None,
         ratings_data: Optional[list] = None,
     ):
         """
@@ -154,18 +165,26 @@ class AlternatingLeastSquares(Algorithm):
         """
 
         mapping_ = {
-            "user": (self.user_factors, self.user_biases, self.__get_user_id),
-            "item": (self.item_factors, self.item_biases, self.__get_item_id),
+            LearningTargetEnum.USER: (
+                self.user_factors,
+                self.user_biases,
+                self.__get_user_id,
+            ),
+            LearningTargetEnum.ITEM: (
+                self.item_factors,
+                self.item_biases,
+                self.__get_item_id,
+            ),
         }
 
-        target_index = LEARNING_TARGETS.index(target)
+        target_index = LearningTargetEnum.members.index(target)
 
         # Get the target factors to attempt to retrieve the old factor from
         # which we want to learn the bias and them the updated version of the
         # factor.
-        target_factors, _, __ = mapping_[LEARNING_TARGETS[target_index]]
+        target_factors, _, __ = mapping_[LearningTargetEnum.members[target_index]]
         (other_target_factors, other_target_biases, _get_other_target_id) = mapping_[
-            LEARNING_TARGETS[1 - target_index]
+            LearningTargetEnum.members[1 - target_index]
         ]
 
         bias = 0
@@ -215,7 +234,7 @@ class AlternatingLeastSquares(Algorithm):
         return factor, bias
 
     def learn_user_bias_and_factor(
-        self, user_id=None, user_ratings_data: Optional[list] = None
+        self, user_id: Optional[int] = None, user_ratings_data: Optional[list] = None
     ):
         """
         Learn or compute the given user_id related bias and factor based on the
@@ -223,11 +242,13 @@ class AlternatingLeastSquares(Algorithm):
         """
 
         return self._learn_bias_and_factor(
-            target="user", target_id=user_id, ratings_data=user_ratings_data
+            target=LearningTargetEnum.USER,
+            target_id=user_id,
+            ratings_data=user_ratings_data,
         )
 
     def learn_item_bias_and_factor(
-        self, item_id=None, item_ratings_data: Optional[list] = None
+        self, item_id: Optional[int] = None, item_ratings_data: Optional[list] = None
     ):
         """
         Learn or compute the given item_id related bias and factor based on the
@@ -235,7 +256,9 @@ class AlternatingLeastSquares(Algorithm):
         """
 
         return self._learn_bias_and_factor(
-            target="item", target_id=item_id, ratings_data=item_ratings_data
+            target=LearningTargetEnum.ITEM,
+            target_id=item_id,
+            ratings_data=item_ratings_data,
         )
 
     def _get_factor_sample(self, size) -> np.ndarray:
@@ -260,6 +283,9 @@ class AlternatingLeastSquares(Algorithm):
     def _compute_rmse(
         accumulated_squared_residual: float, residuals_count: int
     ) -> float:
+        """
+        Returns the Root Mean Squared Error
+        """
         return np.sqrt(accumulated_squared_residual / residuals_count)
 
     def _compute_loss(self, accumulated_squared_residual: float) -> float:
@@ -272,6 +298,9 @@ class AlternatingLeastSquares(Algorithm):
     def _get_accumulated_squared_residual_and_residuals_count(
         self, data_by_user_id: SerialUnidirectionalMapper
     ) -> tuple[float, int]:
+        """
+        Compute the accumulated squared residuals and their count for the given data.
+        """
         accumulated_squared_residuals = 0
         residuals_count = 0
         for user_id in data_by_user_id:
@@ -292,6 +321,7 @@ class AlternatingLeastSquares(Algorithm):
         return accumulated_squared_residuals, residuals_count
 
     def _get_accumulated_squared_biases(self):
+
         return sum(bias**2 for bias in self.user_biases), sum(
             bias**2 for bias in self.item_biases
         )
@@ -355,11 +385,15 @@ class AlternatingLeastSquares(Algorithm):
             # the metrics for both the training and test set.
 
             accumulated_squared_residual_train, residuals_count_train = (
-                self._get_accumulated_squared_residual_and_residuals_count(data_by_user_id__train)
+                self._get_accumulated_squared_residual_and_residuals_count(
+                    data_by_user_id__train
+                )
             )
 
             accumulated_squared_residual_test, residuals_count_test = (
-                self._get_accumulated_squared_residual_and_residuals_count(data_by_user_id__test)
+                self._get_accumulated_squared_residual_and_residuals_count(
+                    data_by_user_id__test
+                )
             )
 
             loss_train = self._compute_loss(accumulated_squared_residual_train)
