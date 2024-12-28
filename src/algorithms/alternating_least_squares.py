@@ -268,7 +268,7 @@ class AlternatingLeastSquares(Algorithm):
             - self.hyper_gamma * sum(self._get_accumulated_squared_biases())
         )
 
-    def _get_accumulated_squared_residual_and_count(
+    def _get_accumulated_squared_residual_and_residuals_count(
         self, data_by_user_id: SerialUnidirectionalMapper
     ) -> tuple[float, int]:
         accumulated_squared_residuals = 0
@@ -354,11 +354,11 @@ class AlternatingLeastSquares(Algorithm):
             # the metrics for both the training and test set.
 
             accumulated_squared_residual_train, residuals_count_train = (
-                self._get_accumulated_squared_residual_and_count(data_by_user_id__train)
+                self._get_accumulated_squared_residual_and_residuals_count(data_by_user_id__train)
             )
 
             accumulated_squared_residual_test, residuals_count_test = (
-                self._get_accumulated_squared_residual_and_count(data_by_user_id__test)
+                self._get_accumulated_squared_residual_and_residuals_count(data_by_user_id__test)
             )
 
             loss_train = self._compute_loss(accumulated_squared_residual_train)
