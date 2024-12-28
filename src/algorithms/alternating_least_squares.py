@@ -141,7 +141,7 @@ class AlternatingLeastSquares(Algorithm):
     def _learn_bias_and_factor(
         self,
         target: Literal["user" | "item"],
-        id_=None,
+        target_id=None,
         ratings_data: Optional[list] = None,
     ):
         """
@@ -159,8 +159,6 @@ class AlternatingLeastSquares(Algorithm):
 
         target_index = LEARNING_TARGETS.index[target]
 
-        assert target_index, target_index
-
         # Get the target factors to attempt to retrieve the old factor from
         # which we want to learn the bias and them the updated version of the
         # factor.
@@ -172,8 +170,8 @@ class AlternatingLeastSquares(Algorithm):
         bias = 0
         # The old factor that we want to use in other to learn a new one
         factor = (
-            target_factors[id_]
-            if id_
+            target_factors[target_id]
+            if target_id
             else self._get_factor_sample(size=self.hyper_n_factors)
         )
         ratings_count = 0
@@ -222,47 +220,22 @@ class AlternatingLeastSquares(Algorithm):
         Learn or compute the given user_id related bias and factor based on the
         provided ratings data and the actual state of the item biases and factors.
         """
-        user_bias = 0
-        user_factor = (
-            self.user_factors[user_id]
-            if user_id
-            else self._get_factor_sample(size=self.hyper_n_factors)
-        )
-        ratings_count = 0
-        _A = np.zeros((self.hyper_n_factors, self.hyper_n_factors))
-        _B = np.zeros(self.hyper_n_factors)
 
-        for data in user_ratings_data:
-            item, user_item_rating = data["movieId"], data["rating"]
-            user_item_rating = float(user_item_rating)
-            item_id = self.__get_item_id(item)
-
-            user_bias += (
-                user_item_rating
-                - self.item_biases[item_id]
-                - np.dot(user_factor, self.item_factors[item_id])
-            )
-            ratings_count += 1
-
-        user_bias = (self.hyper_lambda * user_bias) / (
-            self.hyper_lambda * ratings_count + self.hyper_gamma
+        return self._learn_bias_and_factor(
+            target="user", target_id=user_id, ratings_data=user_ratings_data
         )
 
-        for data in user_ratings_data:
-            item, user_item_rating = data["movieId"], data["rating"]
-            user_item_rating = float(user_item_rating)
-            item_id = self.__get_item_id(item)
-            _A += np.outer(self.item_factors[item_id], self.item_factors[item_id])
-            _B += (
-                user_item_rating - user_bias - self.item_biases[item_id]
-            ) * self.item_factors[item_id]
+    def learn_item_bias_and_factor(
+        self, item_id=None, item_ratings_data: Optional[list] = None
+    ):
+        """
+        Learn or compute the given item_id related bias and factor based on the
+        provided ratings data and the actual state of the user biases and factors.
+        """
 
-        user_factor = np.linalg.solve(
-            self.hyper_lambda * _A + self.hyper_tau * np.eye(self.hyper_n_factors),
-            self.hyper_lambda * _B,
+        return self._learn_bias_and_factor(
+            target="item", target_id=item_id, ratings_data=item_ratings_data
         )
-
-        return user_factor, user_bias
 
     def _get_factor_sample(self, size) -> np.ndarray:
         """
@@ -327,56 +300,6 @@ class AlternatingLeastSquares(Algorithm):
             np.dot(factor, factor) for factor in self.item_factors
         )
 
-    def learn_item_bias_and_factor(
-        self, item_id=None, item_ratings_data: Optional[list] = None
-    ):
-        """
-        Learn or compute the given item_id related bias and factor based on the
-        provided ratings data and the actual state of the user biases and factors.
-        """
-
-        item_bias = 0
-        item_factor = (
-            self.item_factors[item_id]
-            if item_id
-            else self._get_factor_sample(size=self.hyper_n_factors)
-        )
-        ratings_count = 0
-        _A = np.zeros((self.hyper_n_factors, self.hyper_n_factors))
-        _B = np.zeros(self.hyper_n_factors)
-
-        for data in item_ratings_data:
-            user, item_user_rating = data["userId"], data["rating"]
-            item_user_rating = float(item_user_rating)
-            user_id = self.__get_user_id(user)
-            item_bias += (
-                item_user_rating
-                - self.user_biases[user_id]
-                - np.dot(self.user_factors[user_id], item_factor)
-            )
-            ratings_count += 1
-
-        item_bias = (self.hyper_lambda * item_bias) / (
-            self.hyper_lambda * ratings_count + self.hyper_gamma
-        )
-
-        for data in item_ratings_data:
-            user, item_user_rating = data["userId"], data["rating"]
-            item_user_rating = float(item_user_rating)
-            user_id = self.__get_user_id(user)
-
-            _A += np.outer(self.user_factors[user_id], self.user_factors[user_id])
-            _B += (
-                item_user_rating - self.user_biases[user_id] - item_bias
-            ) * self.user_factors[user_id]
-
-        item_factor = np.linalg.solve(
-            self.hyper_lambda * _A + self.hyper_tau * np.eye(self.hyper_n_factors),
-            self.hyper_lambda * _B,
-        )
-
-        return item_factor, item_bias
-
     def update_user_bias_and_factor(self, user_id, user_ratings_data: list):
         """
         Side effect method that updates the given user's bias and latent factor
@@ -394,7 +317,6 @@ class AlternatingLeastSquares(Algorithm):
         item_factor, item_bias = self.learn_item_bias_and_factor(
             item_id, item_ratings_data
         )
-
         self.item_biases[item_id] = item_bias
         self.item_factors[item_id] = item_factor
 
