@@ -77,9 +77,7 @@ class DatasetIndexer(AbstractDatasetIndexer):
 
     def index(self, approximate_train_ratio: float = 1) -> IndexedDatasetWrapper:
 
-        assert (
-            0 <= approximate_train_ratio <= 1
-        ), approximate_train_ratio
+        assert 0 <= approximate_train_ratio <= 1, approximate_train_ratio
 
         logger.warning(
             "The current implementation does not split the data into train and test sets exactly with the provided ratio. "

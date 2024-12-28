@@ -1,1 +1,4 @@
 NOT_PROVIDED = NOT_APPLICABLE = NOT_DEFINED = object()
+
+
+LEARNING_TARGETS = ["user", "item"]
