@@ -158,7 +158,7 @@ class AlternatingLeastSquares(Algorithm):
             "item": (self.item_factors, self.item_biases, self.__get_item_id),
         }
 
-        target_index = LEARNING_TARGETS.index[target]
+        target_index = LEARNING_TARGETS.index(target)
 
         # Get the target factors to attempt to retrieve the old factor from
         # which we want to learn the bias and them the updated version of the
