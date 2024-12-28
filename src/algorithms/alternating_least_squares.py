@@ -94,7 +94,7 @@ class AlternatingLeastSquares(Algorithm):
             or (self.item_factors and self.item_biases)
         ):
             logger.info(
-                "Initializing user and item factors and biases, as none of them is provided."
+                "Initializing user and item's factors and biases, as none of them is provided."
             )
             self.user_factors = self._get_factor_sample(
                 size=(users_count, self.hyper_n_factors)
@@ -119,7 +119,7 @@ class AlternatingLeastSquares(Algorithm):
                     item_id, data_by_item_id__train[item_id]
                 )
         elif self.item_factors and self.item_biases:
-            # Initialize user factors and biases zeros then update the factors and biases via learning
+            # Initialize user factors and biases and then update the factors and biases via learning
             logger.info(
                 "Learning user factors and biases using the provided `item_factors` and `item_biases`..."
             )
