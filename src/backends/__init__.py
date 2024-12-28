@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 class Backend(object):
     """
     This class is the director of all the other classes. It mainly interconnects
-    all the component together and ensure their communication with each other.
+    all the component together and ensure their communicate with each other.
     """
 
     def __init__(self, algorithm, checkpoint_manager):

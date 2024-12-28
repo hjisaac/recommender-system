@@ -24,7 +24,7 @@ class TestAbstractDataLoader(unittest.TestCase):
         data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         indexer = __ConcreteDataLoader(data)
 
-        # Test the `load` method
+        # Test the `index` method
         self.assertEqual(indexer.index(), data)
 
     def test_abstract_dataset_indexer_instantiation(self):

@@ -173,7 +173,7 @@ class DatasetIndexer(AbstractDatasetIndexer):
                         # Add the user_id to the training set but without the data to
                         # keep the same dimension between the training and test set
                         data_by_user_id__train.add(SerialUnidirectionalMapper.EMPTY)
-                        # But if the item_id already exists do nothing
+                        # But if the item_id already exists, do nothing
                         if item_id is None:
                             data_by_item_id__train.add(SerialUnidirectionalMapper.EMPTY)
 
@@ -184,7 +184,7 @@ class DatasetIndexer(AbstractDatasetIndexer):
                         # keep the same dimension between the training and test set
                         data_by_user_id__test.add(SerialUnidirectionalMapper.EMPTY)
 
-                        # But if the item_id already exists do nothing
+                        # But if the item_id already exists, do nothing
                         if item_id is None:
                             data_by_item_id__test.add(SerialUnidirectionalMapper.EMPTY)
 
