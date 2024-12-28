@@ -99,6 +99,7 @@ class DatasetIndexer(AbstractDatasetIndexer):
         data_by_user_id__test = SerialUnidirectionalMapper()  # subjective mapping
         data_by_item_id__test = SerialUnidirectionalMapper()
 
+        # Whether the line should be used for test set or not
         belongs_to_test_split: Optional[bool | object]
         try:
             with open(self._file_path, mode="r", newline="") as csvfile:
