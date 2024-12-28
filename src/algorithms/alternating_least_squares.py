@@ -57,7 +57,7 @@ class AlternatingLeastSquares(Algorithm):
 
         # The two following methods rely on the data (indexed data) that will be
         # passed to the `fit` method. And they are used to get a user's id or an
-        # item's id if we know the user or the item.
+        # item's id if we know the user or the item. We want them to be private.
         self.__get_user_id: Optional[defaultdict] = None
         self.__get_item_id: Optional[defaultdict] = None
 
@@ -88,6 +88,7 @@ class AlternatingLeastSquares(Algorithm):
         # we can learn them using user factors and  user biases that we know. And inversely,
         # if we know item factors and item biases but user factors and biases are unknown we
         # can learn them too.
+
         if not (
             (self.user_factors and self.user_biases)
             or (self.item_factors and self.item_biases)
@@ -105,7 +106,7 @@ class AlternatingLeastSquares(Algorithm):
             self.item_biases = self._get_bias_sample(items_count)
 
         elif self.user_factors and self.user_biases:
-            # Initialize item factors and biases to and then update the factors and biases via learning
+            # Initialize item factors and biases and then update the factors and biases via learning
             logger.info(
                 "Learning item factors and biases using the provided `user_factors` and `user_biases`..."
             )
@@ -118,7 +119,7 @@ class AlternatingLeastSquares(Algorithm):
                     item_id, data_by_item_id__train[item_id]
                 )
         elif self.item_factors and self.item_biases:
-            # Initialize user factors and biases to zeros then update the factors and biases via learning
+            # Initialize user factors and biases zeros then update the factors and biases via learning
             logger.info(
                 "Learning user factors and biases using the provided `item_factors` and `item_biases`..."
             )
@@ -249,7 +250,7 @@ class AlternatingLeastSquares(Algorithm):
         )
 
     @staticmethod
-    def _get_bias_sample(size) -> np.ndarray:  # noqa
+    def _get_bias_sample(size) -> np.ndarray:
         """
         Returns a bias sample initialized to zeros with the given size.
         """
