@@ -8,6 +8,7 @@ from src.algorithms.core import Algorithm
 from src.helpers.dataset_indexer import IndexedDatasetWrapper
 from src.helpers.state_manager import AlgorithmState
 from src.helpers.serial_mapper import SerialUnidirectionalMapper
+from src.helpers.predictor import Predictor
 
 logger = logging.getLogger(__name__)
 
@@ -27,18 +28,26 @@ class LearningTargetEnum(str, Enum):
         return [member.value for member in cls]
 
 
+class AlternatingLeastSquaresState(AlgorithmState):
+
+    @staticmethod
+    def to_predictor():
+        return Predictor(
+            func=lambda x: print("Prediction made")
+        )
+
+
 class AlternatingLeastSquares(Algorithm):
     """
-    Alternating Least Squares algorithm. In the design we assume that
-    an instance of an algorithm is a process that is just waiting for
-    data to run. And that process state be changed as it is being run.
-    So one need to instance another algorithm instance each time.
+    Alternating Least Squares algorithm. In the design we assume that an instance of an
+    algorithm is a process that is just waiting for data to run. And that process state
+    be changed as it is being run. So one need to instance another algorithm instance
+    each time.
 
-    This way of thinking makes the implementation easier than assuming
-    that states of an instance of algorithm should not change in terms
-    of its extrinsic states (the intrinsic states of an algorithm are
-    the hyperparameters), which will require us to expose the states
-    change using another pattern and that seems more complex.
+    This way of thinking makes the implementation easier than assuming that states of an
+    instance of algorithm should not change in terms of its extrinsic states (the intrinsic
+    states of an algorithm are the hyperparameters), which will require us to expose the
+    states change using another pattern and that seems more complex.
     """
 
     def __init__(
@@ -75,8 +84,6 @@ class AlternatingLeastSquares(Algorithm):
         self.hyper_n_epochs = hyper_n_epochs
         self.hyper_n_factors = hyper_n_factors
 
-        # TODO: This should not be attributes of the algo class (as for the two methods bellow)
-        # Fix this by using "s" .i.e algo_instance.s|state.user_factors or another way ?
         self.user_factors = user_factors
         self.item_factors = item_factors
         self.user_biases = user_biases
@@ -96,7 +103,7 @@ class AlternatingLeastSquares(Algorithm):
     @property
     def state(self) -> AlgorithmState:
 
-        return AlgorithmState(
+        return AlternatingLeastSquaresState(
             {
                 # Non changing states (intrinsic)
                 "hyper_lambda": self.hyper_lambda,
@@ -399,7 +406,7 @@ class AlternatingLeastSquares(Algorithm):
 
     def run(self, data: IndexedDatasetWrapper):
         """
-        Executes the main training and validation loop of the model.
+        Runs the algorithm on the indexed data, `IndexedDatasetWrapper`.
         """
 
         assert isinstance(
