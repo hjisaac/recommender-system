@@ -12,7 +12,7 @@ from src.helpers.serial_mapper import SerialUnidirectionalMapper
 logger = logging.getLogger(__name__)
 
 
-# Centralize this if needed somewhere else.
+# Centralize this if needed somewhere else
 class LearningTargetEnum(str, Enum):
     USER = "user"
     ITEM = "item"
@@ -63,6 +63,8 @@ class AlternatingLeastSquares(Algorithm):
         self.hyper_n_epochs = hyper_n_epochs
         self.hyper_n_factors = hyper_n_factors
 
+        # TODO: This should not be attributes of the algo class (as for the two methods bellow)
+        # Fix this by using "s" .i.e algo_instance.s|state.user_factors or another way ?
         self.user_factors = user_factors
         self.item_factors = item_factors
         self.user_biases = user_biases
@@ -397,6 +399,10 @@ class AlternatingLeastSquares(Algorithm):
         self.item_factors[item_id] = item_factor
 
     def fit(self, indexed_data: IndexedDatasetWrapper):
+        epochs_loss_train = []
+        epochs_loss_test = []
+        epochs_rmse_train = []
+        epochs_rmse_test = []
 
         data_by_user_id__train = indexed_data.data_by_user_id__train
         data_by_item_id__train = indexed_data.data_by_item_id__train
@@ -451,8 +457,8 @@ class AlternatingLeastSquares(Algorithm):
                 accumulated_squared_residual_test, residuals_count_test
             )
 
-            self.epochs_loss_train.append(loss_train)
-            self.epochs_loss_test.append(loss_test)
-            self.epochs_rmse_train.append(rmse_train)
-            self.epochs_rmse_test.append(rmse_test)
+            epochs_loss_train.append(loss_train)
+            epochs_loss_test.append(loss_test)
+            epochs_rmse_train.append(rmse_train)
+            epochs_rmse_test.append(rmse_test)
 
