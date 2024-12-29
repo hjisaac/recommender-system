@@ -245,7 +245,7 @@ class TestDatasetIndexer(unittest.TestCase):
         every item and every user from the provided dataset.
         """
         # Load the CSV file to inspect its contents
-        file_path = "./../../ml-32m/ratings.csv" # "./../fixtures/1000_ratings.csv"
+        file_path = "./../../ml-32m/ratings.csv"  # "./../fixtures/1000_ratings.csv"
         limit_to_read = 2000000
 
         data = pd.read_csv(file_path, nrows=limit_to_read)
@@ -291,4 +291,3 @@ class TestDatasetIndexer(unittest.TestCase):
         self.assertNotIn(
             None, [indexed_data.id_to_user_bmap.inverse[user] for user in users]
         )
-

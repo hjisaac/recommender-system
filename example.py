@@ -60,7 +60,3 @@ recommender = recommender_builder.build(data=indexed_data)
 
 
 # In[23]:
-
-
-
-

@@ -204,9 +204,6 @@ class AlternatingLeastSquares(Algorithm):
             _targets[1 - _index]
         ]
 
-        print("target => ", target)
-        print("_get_other_target_id => ", _get_other_target_id)
-
         bias = 0
         # The old factor that we want to use in other to learn a new one
         factor = (
@@ -218,28 +215,13 @@ class AlternatingLeastSquares(Algorithm):
         _A = np.zeros((self.hyper_n_factors, self.hyper_n_factors))
         _B = np.zeros(self.hyper_n_factors)
 
-        print("=======================================")
-
-        print("other_target_factors => ", other_target_factors.shape)
-
         for data in ratings_data:
-            other_target, rating = data[_target_to_other_target_header[target]], data["rating"]
+            other_target, rating = (
+                data[_target_to_other_target_header[target]],
+                data["rating"],
+            )
             rating = float(rating)
             other_target_id = _get_other_target_id(other_target)
-            # debug
-            if other_target_id is None:
-                print("About to breakpoint")
-                pass # breakpoint()
-
-            if other_target_factors[other_target_id].shape == (1, 66, 10):
-                pass # breakpoint()
-
-            print("other_target_id => ", other_target_id)
-
-            print(
-                "other_target_factors[other_target_id] => ",
-                other_target_factors[other_target_id].shape,
-            )
 
             bias += (
                 rating
@@ -253,17 +235,12 @@ class AlternatingLeastSquares(Algorithm):
         )
 
         for data in ratings_data:
-            other_target, rating = data[_target_to_other_target_header[target]], data["rating"]
+            other_target, rating = (
+                data[_target_to_other_target_header[target]],
+                data["rating"],
+            )
             rating = float(rating)
             other_target_id = _get_other_target_id(other_target)
-
-            # debug
-            if other_target_id is None:
-                print("About to breakpoint")
-                pass # breakpoint()
-
-            if other_target_factors[other_target_id].shape == (1, 66, 10):
-                pass # breakpoint()
 
             _A += np.outer(
                 other_target_factors[other_target_id],
@@ -352,6 +329,7 @@ class AlternatingLeastSquares(Algorithm):
         residuals_count = 0
         for user_id in data_by_user_id:
             for data in data_by_user_id[user_id]:
+                # TODO: Deal with "movieId", and clarify why only "movieId" is being used
                 item, user_item_rating = data["movieId"], data["rating"]
                 user_item_rating = float(user_item_rating)
                 item_id = self.__get_item_id(item)
@@ -368,12 +346,13 @@ class AlternatingLeastSquares(Algorithm):
         return accumulated_squared_residuals, residuals_count
 
     def _get_accumulated_squared_biases(self):
-
+        # TODO: Improve this (numpy first)
         return sum(bias**2 for bias in self.user_biases), sum(
             bias**2 for bias in self.item_biases
         )
 
     def _get_accumulated_factors_product(self):
+        # TODO: Improve this (numpy first)
         return sum(np.dot(factor, factor) for factor in self.user_factors), sum(
             np.dot(factor, factor) for factor in self.item_factors
         )
@@ -417,8 +396,12 @@ class AlternatingLeastSquares(Algorithm):
             data_by_user_id__train, data_by_item_id__train
         )
 
-        self.__get_user_id = lambda user: indexed_data.id_to_user_bmap.inverse[user]  # noqa
-        self.__get_item_id = lambda item: indexed_data.id_to_item_bmap.inverse[item]  # noqa
+        self.__get_user_id = lambda user: indexed_data.id_to_user_bmap.inverse[
+            user
+        ]  # noqa
+        self.__get_item_id = lambda item: indexed_data.id_to_item_bmap.inverse[
+            item
+        ]  # noqa
 
         for epoch in range(self.hyper_n_epochs):
 
@@ -461,4 +444,3 @@ class AlternatingLeastSquares(Algorithm):
             epochs_loss_test.append(loss_test)
             epochs_rmse_train.append(rmse_train)
             epochs_rmse_test.append(rmse_test)
-
