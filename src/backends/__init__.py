@@ -26,7 +26,7 @@ class Backend(object):
         return self._instance_name
 
     def __call__(self, data):
-        self.algorithm.fit(indexed_data=data)
+        self.algorithm.run(data=data)
         # Save the current state of the training from the algorithm object
         # self.checkpoint_manager.save(self.algorithm.state, self._instance_name)
         # TODO: Clean this

@@ -28,6 +28,18 @@ class LearningTargetEnum(str, Enum):
 
 
 class AlternatingLeastSquares(Algorithm):
+    """
+    Alternating Least Squares algorithm. In the design we assume that
+    an instance of an algorithm is a process that is just waiting for
+    data to run. And that process state be changed as it is being run.
+    So one need to instance another algorithm instance each time.
+
+    This way of thinking makes the implementation easier than assuming
+    that states of an instance of algorithm should not change in terms
+    of its extrinsic states (the intrinsic states of an algorithm are
+    the hyperparameters), which will require us to expose the states
+    change using another pattern and that seems more complex.
+    """
 
     def __init__(
         self,
@@ -70,29 +82,37 @@ class AlternatingLeastSquares(Algorithm):
         self.user_biases = user_biases
         self.item_biases = item_biases
 
+        self._epochs_loss_train = []
+        self._epochs_loss_test = []
+        self._epochs_rmse_train = []
+        self._epochs_rmse_test = []
+
         # The two following methods rely on the data (indexed data) that will be
-        # passed to the `fit` method. And they are used to get a user's id or an
+        # passed to the `run` method. And they are used to get a user's id or an
         # item's id if we know the user or the item. We want them to be private.
-        # In fact, they don't really depend on this class's instance but rather
-        # depend on the data. That said we could try in the future to not make
-        # them this class's behaviours.
-        self.__get_user_id: Optional[defaultdict]
-        self.__get_item_id: Optional[defaultdict]
+        self._get_user_id: Optional[defaultdict] = None
+        self._get_item_id: Optional[defaultdict] = None
 
     @property
     def state(self) -> AlgorithmState:
 
         return AlgorithmState(
             {
+                # Non changing states (intrinsic)
                 "hyper_lambda": self.hyper_lambda,
                 "hyper_tau": self.hyper_tau,
                 "hyper_gamma": self.hyper_gamma,
                 "hyper_n_epochs": self.hyper_n_epochs,
                 "hyper_n_factors": self.hyper_n_factors,
+                # The states that change (extrinsic)
                 "user_factors": self.user_factors,
                 "item_factors": self.item_factors,
                 "user_biases": self.user_biases,
                 "item_biases": self.item_biases,
+                "loss_train": self._epochs_loss_train,
+                "loss_test": self._epochs_loss_test,
+                "rmse_train": self._epochs_rmse_train,
+                "rmse_test": self._epochs_rmse_test,
             }
         )
 
@@ -172,7 +192,7 @@ class AlternatingLeastSquares(Algorithm):
 
         # TODO: Find an elegant way to do this `_target_to_other_target_header` thing
         #  according to whether the `_construct_data`. Because headers need to be dynamic
-        # of the DatasetIndexer will be kept or not.
+        #  of the DatasetIndexer will be kept or not.
 
         _target_to_other_target_header = {
             LearningTargetEnum.USER: "movieId",
@@ -185,12 +205,12 @@ class AlternatingLeastSquares(Algorithm):
             LearningTargetEnum.USER: (
                 self.user_factors,
                 self.user_biases,
-                self.__get_user_id,
+                self._get_user_id,
             ),
             LearningTargetEnum.ITEM: (
                 self.item_factors,
                 self.item_biases,
-                self.__get_item_id,
+                self._get_item_id,
             ),
         }
 
@@ -332,7 +352,7 @@ class AlternatingLeastSquares(Algorithm):
                 # TODO: Deal with "movieId", and clarify why only "movieId" is being used
                 item, user_item_rating = data["movieId"], data["rating"]
                 user_item_rating = float(user_item_rating)
-                item_id = self.__get_item_id(item)
+                item_id = self._get_item_id(item)
                 accumulated_squared_residuals += (
                     user_item_rating
                     - (
@@ -377,31 +397,31 @@ class AlternatingLeastSquares(Algorithm):
         self.item_biases[item_id] = item_bias
         self.item_factors[item_id] = item_factor
 
-    def fit(self, indexed_data: IndexedDatasetWrapper):
-        epochs_loss_train = []
-        epochs_loss_test = []
-        epochs_rmse_train = []
-        epochs_rmse_test = []
+    def run(self, data: IndexedDatasetWrapper):
+        """
+        Executes the main training and validation loop of the model.
+        """
 
-        data_by_user_id__train = indexed_data.data_by_user_id__train
-        data_by_item_id__train = indexed_data.data_by_item_id__train
+        assert isinstance(
+            data, IndexedDatasetWrapper
+        ), "The provided `indexed_data` must be an instance of `IndexedDatasetWrapper`."
+
+        data_by_user_id__train = data.data_by_user_id__train
+        data_by_item_id__train = data.data_by_item_id__train
 
         # The validation data, just to compute the loss for the validation data too.
         # But here we're not distinguishing the validation set from the training's one.
-        data_by_user_id__test = indexed_data.data_by_user_id__test
+        data_by_user_id__test = data.data_by_user_id__test
 
+        # TODO: Needs doc
         # data_by_item_id__test = indexed_data.data_by_item_id__test
 
         self._initialize_factors_and_biases(
             data_by_user_id__train, data_by_item_id__train
         )
 
-        self.__get_user_id = lambda user: indexed_data.id_to_user_bmap.inverse[
-            user
-        ]  # noqa
-        self.__get_item_id = lambda item: indexed_data.id_to_item_bmap.inverse[
-            item
-        ]  # noqa
+        self._get_user_id = lambda user: data.id_to_user_bmap.inverse[user]
+        self._get_item_id = lambda item: data.id_to_item_bmap.inverse[item]
 
         for epoch in range(self.hyper_n_epochs):
 
@@ -440,7 +460,9 @@ class AlternatingLeastSquares(Algorithm):
                 accumulated_squared_residual_test, residuals_count_test
             )
 
-            epochs_loss_train.append(loss_train)
-            epochs_loss_test.append(loss_test)
-            epochs_rmse_train.append(rmse_train)
-            epochs_rmse_test.append(rmse_test)
+            self._epochs_loss_train.append(loss_train)
+            self._epochs_loss_test.append(loss_test)
+            self._epochs_rmse_train.append(rmse_train)
+            self._epochs_rmse_test.append(rmse_test)
+
+        return self.state
