@@ -5,7 +5,6 @@ from typing import Optional
 from collections import defaultdict
 
 from src.algorithms.core import Algorithm
-from src.utils import cached_class_property
 from src.helpers.dataset_indexer import IndexedDatasetWrapper
 from src.helpers.state_manager import AlgorithmState
 from src.helpers.serial_mapper import SerialUnidirectionalMapper
@@ -18,9 +17,14 @@ class LearningTargetEnum(str, Enum):
     USER = "user"
     ITEM = "item"
 
-    @cached_class_property
-    def members(self):
-        [member.value for member in self]
+    # No need to cache this method because the caching overhead
+    # will compensate the 0(2) of the direct method call.
+    @classmethod
+    def targets(cls):
+        """
+        Returns the list of the entries' values
+        """
+        return [member.value for member in cls]
 
 
 class AlternatingLeastSquares(Algorithm):
@@ -67,8 +71,11 @@ class AlternatingLeastSquares(Algorithm):
         # The two following methods rely on the data (indexed data) that will be
         # passed to the `fit` method. And they are used to get a user's id or an
         # item's id if we know the user or the item. We want them to be private.
-        self.__get_user_id: Optional[defaultdict] = None
-        self.__get_item_id: Optional[defaultdict] = None
+        # In fact, they don't really depend on this class's instance but rather
+        # depend on the data. That said we could try in the future to not make
+        # them this class's behaviours.
+        self.__get_user_id: Optional[defaultdict]
+        self.__get_item_id: Optional[defaultdict]
 
     @property
     def state(self) -> AlgorithmState:
@@ -98,9 +105,8 @@ class AlternatingLeastSquares(Algorithm):
         # if we know item factors and item biases but user factors and biases are unknown we
         # can learn them too.
 
-        if not (
-            (self.user_factors and self.user_biases)
-            or (self.item_factors and self.item_biases)
+        if (self.user_factors is None or self.user_biases is None) and (
+            self.item_factors is None or self.item_biases is None
         ):
             logger.info(
                 "Initializing user and item's factors and biases, as none of them is provided."
@@ -114,7 +120,7 @@ class AlternatingLeastSquares(Algorithm):
             self.user_biases = self._get_bias_sample(users_count)
             self.item_biases = self._get_bias_sample(items_count)
 
-        elif self.user_factors and self.user_biases:
+        elif not (self.user_factors is None or self.user_biases is None):
             # Initialize item factors and biases and then update the factors and biases via learning
             logger.info(
                 "Learning item factors and biases using the provided `user_factors` and `user_biases`..."
@@ -127,7 +133,7 @@ class AlternatingLeastSquares(Algorithm):
                 self.update_item_bias_and_factor(
                     item_id, data_by_item_id__train[item_id]
                 )
-        elif self.item_factors and self.item_biases:
+        elif not (self.item_factors is None or self.item_biases is None):
             # Initialize user factors and biases and then update the factors and biases via learning
             logger.info(
                 "Learning user factors and biases using the provided `item_factors` and `item_biases`..."
@@ -162,7 +168,18 @@ class AlternatingLeastSquares(Algorithm):
         "other_target" to designate both of them.
         """
 
-        mapping_ = {
+        # TODO: Find an elegant way to do this `_target_to_other_target_header` thing
+        #  according to whether the `_construct_data`. Because headers need to be dynamic
+        # of the DatasetIndexer will be kept or not.
+
+        _target_to_other_target_header = {
+            LearningTargetEnum.USER: "movieId",
+            LearningTargetEnum.ITEM: "userId",
+        }
+
+        _targets = LearningTargetEnum.targets()
+
+        _mapping = {
             LearningTargetEnum.USER: (
                 self.user_factors,
                 self.user_biases,
@@ -175,15 +192,18 @@ class AlternatingLeastSquares(Algorithm):
             ),
         }
 
-        target_index = LearningTargetEnum.members.index(target)
+        _index = _targets.index(target)
 
         # Get the target factors to attempt to retrieve the old factor from
         # which we want to learn the bias and them the updated version of the
         # factor.
-        target_factors, _, __ = mapping_[LearningTargetEnum.members[target_index]]
-        (other_target_factors, other_target_biases, _get_other_target_id) = mapping_[
-            LearningTargetEnum.members[1 - target_index]
+        target_factors, _, _ = _mapping[_targets[_index]]
+        (other_target_factors, other_target_biases, _get_other_target_id) = _mapping[
+            _targets[1 - _index]
         ]
+
+        print("target => ", target)
+        print("_get_other_target_id => ", _get_other_target_id)
 
         bias = 0
         # The old factor that we want to use in other to learn a new one
@@ -196,10 +216,28 @@ class AlternatingLeastSquares(Algorithm):
         _A = np.zeros((self.hyper_n_factors, self.hyper_n_factors))
         _B = np.zeros(self.hyper_n_factors)
 
+        print("=======================================")
+
+        print("other_target_factors => ", other_target_factors.shape)
+
         for data in ratings_data:
-            other_target, rating = data["movieId"], data["rating"]
+            other_target, rating = data[_target_to_other_target_header[target]], data["rating"]
             rating = float(rating)
-            other_target_id = _get_other_target_id(target)
+            other_target_id = _get_other_target_id(other_target)
+            # debug
+            if other_target_id is None:
+                print("About to breakpoint")
+                pass # breakpoint()
+
+            if other_target_factors[other_target_id].shape == (1, 66, 10):
+                pass # breakpoint()
+
+            print("other_target_id => ", other_target_id)
+
+            print(
+                "other_target_factors[other_target_id] => ",
+                other_target_factors[other_target_id].shape,
+            )
 
             bias += (
                 rating
@@ -213,9 +251,18 @@ class AlternatingLeastSquares(Algorithm):
         )
 
         for data in ratings_data:
-            other_target, rating = data["movieId"], data["rating"]
+            other_target, rating = data[_target_to_other_target_header[target]], data["rating"]
             rating = float(rating)
             other_target_id = _get_other_target_id(other_target)
+
+            # debug
+            if other_target_id is None:
+                print("About to breakpoint")
+                pass # breakpoint()
+
+            if other_target_factors[other_target_id].shape == (1, 66, 10):
+                pass # breakpoint()
+
             _A += np.outer(
                 other_target_factors[other_target_id],
                 other_target_factors[other_target_id],
@@ -364,8 +411,8 @@ class AlternatingLeastSquares(Algorithm):
             data_by_user_id__train, data_by_item_id__train
         )
 
-        self.__get_user_id = lambda user: indexed_data.id_to_user_bmap.inverse[user]
-        self.__get_item_id = lambda item: indexed_data.id_to_item_bmap.inverse[item]
+        self.__get_user_id = lambda user: indexed_data.id_to_user_bmap.inverse[user]  # noqa
+        self.__get_item_id = lambda item: indexed_data.id_to_item_bmap.inverse[item]  # noqa
 
         for epoch in range(self.hyper_n_epochs):
 
@@ -408,3 +455,4 @@ class AlternatingLeastSquares(Algorithm):
             self.epochs_loss_test.append(loss_test)
             self.epochs_rmse_train.append(rmse_train)
             self.epochs_rmse_test.append(rmse_test)
+
