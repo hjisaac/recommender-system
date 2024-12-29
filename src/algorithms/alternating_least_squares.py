@@ -373,10 +373,7 @@ class AlternatingLeastSquares(Algorithm):
         return accumulated_squared_residuals, residuals_count
 
     def _get_accumulated_squared_biases(self):
-        # TODO: Improve this (numpy first)
-        return sum(bias**2 for bias in self.user_biases), sum(
-            bias**2 for bias in self.item_biases
-        )
+        return np.sum(self.user_biases ** 2), np.sum(self.item_biases ** 2)
 
     def _get_accumulated_factors_product(self):
         # TODO: Improve this (numpy first)

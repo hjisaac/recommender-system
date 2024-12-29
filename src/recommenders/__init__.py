@@ -7,14 +7,16 @@ logger = logging.getLogger(__name__)
 
 
 class Recommender(object):
-    def __init__(self, predictor):
+    def __init__(self, predictor, after_predict=None):
         self.predictor = predictor
+        # self._after_predict = after_predict
 
-    def recommend(self, input):  # to be defined
+    def recommend(self, input):  # noqa
         predictions = self.predictor.predict(input)
+        # self.predictor.render(predictions)
+        # self._after_predict(predictions)
         print("Recommending", predictions)
         return predictions
-
 
 
 class AbstractRecommenderBuilder(ABC):
