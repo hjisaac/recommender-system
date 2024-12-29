@@ -44,8 +44,8 @@ class AlternatingLeastSquares(Algorithm):
     be changed as it is being run. So one need to instance another algorithm instance
     each time.
 
-    This way of thinking makes the implementation easier than assuming that states of an
-    instance of algorithm should not change in terms of its extrinsic states (the intrinsic
+    This way of thinking makes the implementation easier than assuming that an algorithm
+    instance' states should not change in terms of its extrinsic states (the intrinsic
     states of an algorithm are the hyperparameters), which will require us to expose the
     states change using another pattern and that seems more complex.
     """
