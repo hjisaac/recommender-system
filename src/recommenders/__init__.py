@@ -7,13 +7,16 @@ logger = logging.getLogger(__name__)
 
 
 class Recommender(object):
-    def __init__(self, predictor):
+    def __init__(self, predictor, after_predict=None):
         self.predictor = predictor
+        # self._after_predict = after_predict
 
-    def recommend(self, input, fallback_cb):  # to be defined
+    def recommend(self, input):  # noqa
         predictions = self.predictor.predict(input)
-        print("Recommending")
-        pass
+        # self.predictor.render(predictions)
+        # self._after_predict(predictions)
+        print("Recommending", predictions)
+        return predictions
 
 
 class AbstractRecommenderBuilder(ABC):
@@ -38,9 +41,9 @@ class CollaborativeFilteringRecommenderBuilder(AbstractRecommenderBuilder):
         logger.info(
             f"Starting a model fitting using the backend {self.backend.algorithm.__class__.__name__}..."
         )
-        self.backend(data=data)
+        predictor = self.backend(data=data)
         logger.info(
             f"Successfully built the recommender using {self.backend.algorithm.__class__.__name__}"
         )
 
-        return Recommender(predictor=self.backend.predictor)
+        return Recommender(predictor=predictor)

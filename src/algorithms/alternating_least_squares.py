@@ -1,31 +1,54 @@
-import box
 import logging
 import numpy as np
 from enum import Enum
-from functools import lru_cache
-from typing import Optional, Literal
+from typing import Optional
 from collections import defaultdict
 
 from src.algorithms.core import Algorithm
-from src.utils.dataset_indexer import IndexedDatasetWrapper
-from src.utils.state_manager import AlgorithmState
-from src.utils.serial_mapper import SerialUnidirectionalMapper
+from src.helpers.dataset_indexer import IndexedDatasetWrapper
+from src.helpers.state_manager import AlgorithmState
+from src.helpers.serial_mapper import SerialUnidirectionalMapper
+from src.helpers.predictor import Predictor
 
 logger = logging.getLogger(__name__)
 
 
-# Centralize this if needed somewhere else.
+# Centralize this if needed somewhere else
 class LearningTargetEnum(str, Enum):
     USER = "user"
     ITEM = "item"
 
+    # No need to cache this method because the caching overhead
+    # will compensate the 0(2) of the direct method call.
     @classmethod
-    @lru_cache()
-    def members(cls):
-        [member.value for member in cls]
+    def targets(cls):
+        """
+        Returns the list of the entries' values
+        """
+        return [member.value for member in cls]
+
+
+class AlternatingLeastSquaresState(AlgorithmState):
+
+    @staticmethod
+    def to_predictor():
+        return Predictor(
+            func=lambda x: print("Prediction made")
+        )
 
 
 class AlternatingLeastSquares(Algorithm):
+    """
+    Alternating Least Squares algorithm. In the design we assume that an instance of an
+    algorithm is a process that is just waiting for data to run. And that process state
+    be changed as it is being run. So one need to instance another algorithm instance
+    each time.
+
+    This way of thinking makes the implementation easier than assuming that an algorithm
+    instance' states should not change in terms of its extrinsic states (the intrinsic
+    states of an algorithm are the hyperparameters), which will require us to expose the
+    states change using another pattern and that seems more complex.
+    """
 
     def __init__(
         self,
@@ -66,26 +89,37 @@ class AlternatingLeastSquares(Algorithm):
         self.user_biases = user_biases
         self.item_biases = item_biases
 
+        self._epochs_loss_train = []
+        self._epochs_loss_test = []
+        self._epochs_rmse_train = []
+        self._epochs_rmse_test = []
+
         # The two following methods rely on the data (indexed data) that will be
-        # passed to the `fit` method. And they are used to get a user's id or an
+        # passed to the `run` method. And they are used to get a user's id or an
         # item's id if we know the user or the item. We want them to be private.
-        self.__get_user_id: Optional[defaultdict] = None
-        self.__get_item_id: Optional[defaultdict] = None
+        self._get_user_id: Optional[defaultdict] = None
+        self._get_item_id: Optional[defaultdict] = None
 
     @property
     def state(self) -> AlgorithmState:
 
-        return AlgorithmState(
+        return AlternatingLeastSquaresState(
             {
+                # Non changing states (intrinsic)
                 "hyper_lambda": self.hyper_lambda,
                 "hyper_tau": self.hyper_tau,
                 "hyper_gamma": self.hyper_gamma,
                 "hyper_n_epochs": self.hyper_n_epochs,
                 "hyper_n_factors": self.hyper_n_factors,
+                # The states that change (extrinsic)
                 "user_factors": self.user_factors,
                 "item_factors": self.item_factors,
                 "user_biases": self.user_biases,
                 "item_biases": self.item_biases,
+                "loss_train": self._epochs_loss_train,
+                "loss_test": self._epochs_loss_test,
+                "rmse_train": self._epochs_rmse_train,
+                "rmse_test": self._epochs_rmse_test,
             }
         )
 
@@ -100,9 +134,8 @@ class AlternatingLeastSquares(Algorithm):
         # if we know item factors and item biases but user factors and biases are unknown we
         # can learn them too.
 
-        if not (
-            (self.user_factors and self.user_biases)
-            or (self.item_factors and self.item_biases)
+        if (self.user_factors is None or self.user_biases is None) and (
+            self.item_factors is None or self.item_biases is None
         ):
             logger.info(
                 "Initializing user and item's factors and biases, as none of them is provided."
@@ -116,7 +149,7 @@ class AlternatingLeastSquares(Algorithm):
             self.user_biases = self._get_bias_sample(users_count)
             self.item_biases = self._get_bias_sample(items_count)
 
-        elif self.user_factors and self.user_biases:
+        elif not (self.user_factors is None or self.user_biases is None):
             # Initialize item factors and biases and then update the factors and biases via learning
             logger.info(
                 "Learning item factors and biases using the provided `user_factors` and `user_biases`..."
@@ -129,7 +162,7 @@ class AlternatingLeastSquares(Algorithm):
                 self.update_item_bias_and_factor(
                     item_id, data_by_item_id__train[item_id]
                 )
-        elif self.item_factors and self.item_biases:
+        elif not (self.item_factors is None or self.item_biases is None):
             # Initialize user factors and biases and then update the factors and biases via learning
             logger.info(
                 "Learning user factors and biases using the provided `item_factors` and `item_biases`..."
@@ -164,27 +197,38 @@ class AlternatingLeastSquares(Algorithm):
         "other_target" to designate both of them.
         """
 
-        mapping_ = {
+        # TODO: Find an elegant way to do this `_target_to_other_target_header` thing
+        #  according to whether the `_construct_data`. Because headers need to be dynamic
+        #  of the DatasetIndexer will be kept or not.
+
+        _target_to_other_target_header = {
+            LearningTargetEnum.USER: "movieId",
+            LearningTargetEnum.ITEM: "userId",
+        }
+
+        _targets = LearningTargetEnum.targets()
+
+        _mapping = {
             LearningTargetEnum.USER: (
                 self.user_factors,
                 self.user_biases,
-                self.__get_user_id,
+                self._get_user_id,
             ),
             LearningTargetEnum.ITEM: (
                 self.item_factors,
                 self.item_biases,
-                self.__get_item_id,
+                self._get_item_id,
             ),
         }
 
-        target_index = LearningTargetEnum.members.index(target)
+        _index = _targets.index(target)
 
         # Get the target factors to attempt to retrieve the old factor from
         # which we want to learn the bias and them the updated version of the
         # factor.
-        target_factors, _, __ = mapping_[LearningTargetEnum.members[target_index]]
-        (other_target_factors, other_target_biases, _get_other_target_id) = mapping_[
-            LearningTargetEnum.members[1 - target_index]
+        target_factors, _, _ = _mapping[_targets[_index]]
+        (other_target_factors, other_target_biases, _get_other_target_id) = _mapping[
+            _targets[1 - _index]
         ]
 
         bias = 0
@@ -199,9 +243,12 @@ class AlternatingLeastSquares(Algorithm):
         _B = np.zeros(self.hyper_n_factors)
 
         for data in ratings_data:
-            other_target, rating = data["movieId"], data["rating"]
+            other_target, rating = (
+                data[_target_to_other_target_header[target]],
+                data["rating"],
+            )
             rating = float(rating)
-            other_target_id = _get_other_target_id(target)
+            other_target_id = _get_other_target_id(other_target)
 
             bias += (
                 rating
@@ -215,9 +262,13 @@ class AlternatingLeastSquares(Algorithm):
         )
 
         for data in ratings_data:
-            other_target, rating = data["movieId"], data["rating"]
+            other_target, rating = (
+                data[_target_to_other_target_header[target]],
+                data["rating"],
+            )
             rating = float(rating)
             other_target_id = _get_other_target_id(other_target)
+
             _A += np.outer(
                 other_target_factors[other_target_id],
                 other_target_factors[other_target_id],
@@ -305,9 +356,10 @@ class AlternatingLeastSquares(Algorithm):
         residuals_count = 0
         for user_id in data_by_user_id:
             for data in data_by_user_id[user_id]:
+                # TODO: Deal with "movieId", and clarify why only "movieId" is being used
                 item, user_item_rating = data["movieId"], data["rating"]
                 user_item_rating = float(user_item_rating)
-                item_id = self.__get_item_id(item)
+                item_id = self._get_item_id(item)
                 accumulated_squared_residuals += (
                     user_item_rating
                     - (
@@ -321,12 +373,10 @@ class AlternatingLeastSquares(Algorithm):
         return accumulated_squared_residuals, residuals_count
 
     def _get_accumulated_squared_biases(self):
-
-        return sum(bias**2 for bias in self.user_biases), sum(
-            bias**2 for bias in self.item_biases
-        )
+        return np.sum(self.user_biases ** 2), np.sum(self.item_biases ** 2)
 
     def _get_accumulated_factors_product(self):
+        # TODO: Improve this (numpy first)
         return sum(np.dot(factor, factor) for factor in self.user_factors), sum(
             np.dot(factor, factor) for factor in self.item_factors
         )
@@ -351,23 +401,31 @@ class AlternatingLeastSquares(Algorithm):
         self.item_biases[item_id] = item_bias
         self.item_factors[item_id] = item_factor
 
-    def fit(self, indexed_data: IndexedDatasetWrapper):
+    def run(self, data: IndexedDatasetWrapper):
+        """
+        Runs the algorithm on the indexed data, `IndexedDatasetWrapper`.
+        """
 
-        data_by_user_id__train = indexed_data.data_by_user_id__train
-        data_by_item_id__train = indexed_data.data_by_item_id__train
+        assert isinstance(
+            data, IndexedDatasetWrapper
+        ), "The provided `indexed_data` must be an instance of `IndexedDatasetWrapper`."
+
+        data_by_user_id__train = data.data_by_user_id__train
+        data_by_item_id__train = data.data_by_item_id__train
 
         # The validation data, just to compute the loss for the validation data too.
         # But here we're not distinguishing the validation set from the training's one.
-        data_by_user_id__test = indexed_data.data_by_user_id__test
+        data_by_user_id__test = data.data_by_user_id__test
 
+        # TODO: Needs doc
         # data_by_item_id__test = indexed_data.data_by_item_id__test
 
         self._initialize_factors_and_biases(
             data_by_user_id__train, data_by_item_id__train
         )
 
-        self.__get_user_id = lambda user: indexed_data.id_to_user_bmap.inverse[user]
-        self.__get_item_id = lambda item: indexed_data.id_to_item_bmap.inverse[item]
+        self._get_user_id = lambda user: data.id_to_user_bmap.inverse[user]
+        self._get_item_id = lambda item: data.id_to_item_bmap.inverse[item]
 
         for epoch in range(self.hyper_n_epochs):
 
@@ -406,7 +464,9 @@ class AlternatingLeastSquares(Algorithm):
                 accumulated_squared_residual_test, residuals_count_test
             )
 
-            self.epochs_loss_train.append(loss_train)
-            self.epochs_loss_test.append(loss_test)
-            self.epochs_rmse_train.append(rmse_train)
-            self.epochs_rmse_test.append(rmse_test)
+            self._epochs_loss_train.append(loss_train)
+            self._epochs_loss_test.append(loss_test)
+            self._epochs_rmse_train.append(rmse_train)
+            self._epochs_rmse_test.append(rmse_test)
+
+        return self.state

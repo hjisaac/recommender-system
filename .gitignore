@@ -6,6 +6,6 @@ test.csv
 dsa_*
 figures/*
 test.svg
-**/__pycache__/
-dataset/*
+**/__pycache__
+datasets/*
 .idea
