@@ -11,16 +11,22 @@ class CheckpointManager(object):
         checkpoint_folder (str): The directory where checkpoints are stored.
     """
 
-    def __init__(self, checkpoint_folder: str):
+    CheckpointManagerError = type("CheckpointManagerError", (Exception,), {})
+
+    def __init__(self, checkpoint_folder: str, sub_folder: str = None) -> None:
         """
         Initialize the CheckpointManager.
 
         Args:
             checkpoint_folder (str): Path to the folder where checkpoints will be stored.
         """
-
-        # Checkpoint folder can not be nil
         assert checkpoint_folder, checkpoint_folder
+
+        checkpoint_folder = (
+            os.path.join(checkpoint_folder, sub_folder)
+            if sub_folder
+            else checkpoint_folder
+        )
 
         self.checkpoint_folder = checkpoint_folder
         os.makedirs(self.checkpoint_folder, exist_ok=True)
@@ -50,7 +56,7 @@ class CheckpointManager(object):
 
         Raises:
             ValueError: If the state is not a dictionary.
-            Exception: If saving the checkpoint fails.
+            CheckpointManagerError: If saving the checkpoint fails.
         """
         if not isinstance(state, dict):
             raise ValueError("State must be a dictionary.")
@@ -58,8 +64,10 @@ class CheckpointManager(object):
         try:
             with open(checkpoint_path, "wb") as f:
                 pickle.dump(state, f)
-        except Exception as e:
-            raise Exception(f"Failed to save checkpoint '{checkpoint_name}': {e}")
+        except Exception as exc:
+            raise self.CheckpointManagerError(
+                f"Failed to save checkpoint '{checkpoint_name}': {e}"
+            ) from exc
 
     def load(self, checkpoint_name: str) -> Optional[Dict]:
         """
@@ -72,20 +80,22 @@ class CheckpointManager(object):
             dict: The loaded state dictionary.
 
         Raises:
-            FileNotFoundError: If the checkpoint file does not exist.
-            Exception: If loading the checkpoint fails.
+            CheckpointManagerError: If loading the checkpoint fails.
         """
         # Checkpoint name cannot be nil
         assert checkpoint_name, checkpoint_name
 
         checkpoint_path = self._get_checkpoint_path(checkpoint_name)
-        if not os.path.exists(checkpoint_path):
-            raise FileNotFoundError(f"Checkpoint '{checkpoint_name}' not found.")
+
+        # Use EAFP style rather than checking if the file exists and so on...
         try:
+
             with open(checkpoint_path, "rb") as f:
                 return pickle.load(f)
-        except Exception as e:
-            raise Exception(f"Failed to load checkpoint '{checkpoint_name}': {e}")
+        except Exception as exc:
+            raise self.CheckpointManagerError(
+                f"Failed to load checkpoint '{checkpoint_name}'"
+            ) from exc
 
     def list(self) -> List[str]:
         """
@@ -101,24 +111,38 @@ class CheckpointManager(object):
                 if file.endswith(".pkl")
                 and os.path.isfile(os.path.join(self.checkpoint_folder, file))
             ]
-        except Exception as e:
-            raise Exception(f"Failed to list checkpoints: {e}")
+        except Exception as exc:
+            raise self.CheckpointManagerError(
+                f"Failed to list checkpoints: {exc}"
+            ) from exc
 
-    def delete(self, checkpoint_name: str) -> None:
+    def delete(self, checkpoint_name: Optional[str] = None) -> None:
         """
         Delete a checkpoint file.
 
         Args:
-            checkpoint_name (str): The name of the checkpoint file to delete.
+            checkpoint_name (str, optional): The name of the checkpoint file to delete.
+                Defaults to the last saved checkpoint if not provided.
 
         Raises:
-            FileNotFoundError: If the checkpoint file does not exist.
-            Exception: If deleting the checkpoint fails.
+            CheckpointManagerError: If deleting the checkpoint fails or no checkpoints exist.
         """
+        if not checkpoint_name:
+            checkpoints = self.list()
+            if not checkpoints:
+                raise self.CheckpointManagerError("No checkpoints available to delete.")
+
+            # Assuming the last checkpoint is the one with the most recent modification time.
+            checkpoint_name = max(
+                checkpoints,
+                key=lambda x: os.path.getmtime(self._get_checkpoint_path(x)),
+            )
+
         checkpoint_path = self._get_checkpoint_path(checkpoint_name)
-        if not os.path.exists(checkpoint_path):
-            raise FileNotFoundError(f"Checkpoint '{checkpoint_name}' not found.")
+
         try:
             os.remove(checkpoint_path)
-        except Exception as e:
-            raise Exception(f"Failed to delete checkpoint '{checkpoint_name}': {e}")
+        except Exception as exc:
+            raise self.CheckpointManagerError(
+                f"Failed to delete checkpoint '{checkpoint_name}'"
+            ) from exc

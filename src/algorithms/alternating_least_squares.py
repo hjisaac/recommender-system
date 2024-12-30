@@ -32,14 +32,16 @@ class AlternatingLeastSquaresState(AlgorithmState):
 
     @staticmethod
     def to_predictor():
-        return Predictor(
-            func=lambda x: print("Prediction made")
-        )
+        return Predictor(func=lambda x: print("Prediction made"))
+
+    @property
+    def intrinsic_attrs(self) -> list:
+        return []
 
 
 class AlternatingLeastSquares(Algorithm):
     """
-    Alternating Least Squares algorithm. In the design we assume that an instance of an
+    Alternating Least Squares algorithm. In the design, we assume that an instance of an
     algorithm is a process that is just waiting for data to run. And that process state
     be changed as it is being run. So one need to instance another algorithm instance
     each time.
@@ -70,7 +72,7 @@ class AlternatingLeastSquares(Algorithm):
             and hyper_n_factors
             and hyper_n_epochs
         ), (
-            # Serves as message
+            # Serves as a message
             hyper_lambda,
             hyper_gamma,
             hyper_tau,
@@ -373,7 +375,7 @@ class AlternatingLeastSquares(Algorithm):
         return accumulated_squared_residuals, residuals_count
 
     def _get_accumulated_squared_biases(self):
-        return np.sum(self.user_biases ** 2), np.sum(self.item_biases ** 2)
+        return np.sum(self.user_biases**2), np.sum(self.item_biases**2)
 
     def _get_accumulated_factors_product(self):
         # TODO: Improve this (numpy first)
@@ -401,11 +403,11 @@ class AlternatingLeastSquares(Algorithm):
         self.item_biases[item_id] = item_bias
         self.item_factors[item_id] = item_factor
 
-    def run(self, data: IndexedDatasetWrapper):
+    def run(self, data: IndexedDatasetWrapper, resume: bool = False):
         """
         Runs the algorithm on the indexed data, `IndexedDatasetWrapper`.
         """
-
+        # TODO: "resume" ?
         assert isinstance(
             data, IndexedDatasetWrapper
         ), "The provided `indexed_data` must be an instance of `IndexedDatasetWrapper`."
@@ -468,5 +470,3 @@ class AlternatingLeastSquares(Algorithm):
             self._epochs_loss_test.append(loss_test)
             self._epochs_rmse_train.append(rmse_train)
             self._epochs_rmse_test.append(rmse_test)
-
-        return self.state
