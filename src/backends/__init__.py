@@ -31,8 +31,7 @@ class Backend(object):
 
         return self.algorithm.state.to_predictor()
 
-
-def _get_checkpoint_name(self):
-    return convert_flat_dict_to_string(
-        self.algorithm.state.intrinsic,
-    )
+    def _get_checkpoint_name(self):
+        return convert_flat_dict_to_string(
+            self.algorithm.state.intrinsic,
+        )

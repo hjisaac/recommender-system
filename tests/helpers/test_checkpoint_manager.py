@@ -9,10 +9,10 @@ from src.helpers.checkpoint_manager import CheckpointManager
 class TestCheckpointManager(unittest.TestCase):
 
     def setUp(self):
-        self.test_folder = "/tmp/my_recommender_checkpoints_RchuF1gvMY"
-        self.sub_folder = "my_subfolder"
+        self.test_folder = "/tmp/recommender_checkpoints_RchuF1gvMY"
+        self.sub_folder = "subfolder_k3xjct5D4l"
         self.manager = CheckpointManager(self.test_folder, self.sub_folder)
-        self.test_file_name = "my_checkpoint"
+        self.test_file_name = "checkpoint_MjVRNIiRii"
         self.state = {"key1": "value1", "key2": "value2"}
         self.test_checkpoint_path = os.path.join(
             self.test_folder, self.sub_folder, f"{self.test_file_name}.pkl"

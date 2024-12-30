@@ -34,10 +34,14 @@ class AlternatingLeastSquaresState(AlgorithmState):
     def to_predictor():
         return Predictor(func=lambda x: print("Prediction made"))
 
+    @property
+    def intrinsic_attrs(self) -> list:
+        return []
+
 
 class AlternatingLeastSquares(Algorithm):
     """
-    Alternating Least Squares algorithm. In the design we assume that an instance of an
+    Alternating Least Squares algorithm. In the design, we assume that an instance of an
     algorithm is a process that is just waiting for data to run. And that process state
     be changed as it is being run. So one need to instance another algorithm instance
     each time.
@@ -68,7 +72,7 @@ class AlternatingLeastSquares(Algorithm):
             and hyper_n_factors
             and hyper_n_epochs
         ), (
-            # Serves as message
+            # Serves as a message
             hyper_lambda,
             hyper_gamma,
             hyper_tau,
@@ -403,7 +407,7 @@ class AlternatingLeastSquares(Algorithm):
         """
         Runs the algorithm on the indexed data, `IndexedDatasetWrapper`.
         """
-
+        # TODO: "resume" ?
         assert isinstance(
             data, IndexedDatasetWrapper
         ), "The provided `indexed_data` must be an instance of `IndexedDatasetWrapper`."
