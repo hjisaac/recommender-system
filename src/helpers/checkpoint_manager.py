@@ -11,16 +11,20 @@ class CheckpointManager(object):
         checkpoint_folder (str): The directory where checkpoints are stored.
     """
 
-    def __init__(self, checkpoint_folder: str):
+    def __init__(self, checkpoint_folder: str, sub_folder: str = None) -> None:
         """
         Initialize the CheckpointManager.
 
         Args:
             checkpoint_folder (str): Path to the folder where checkpoints will be stored.
         """
-
-        # Checkpoint folder can not be nil
         assert checkpoint_folder, checkpoint_folder
+
+        checkpoint_folder = (
+            os.path.join(checkpoint_folder, sub_folder)
+            if sub_folder
+            else checkpoint_folder
+        )
 
         self.checkpoint_folder = checkpoint_folder
         os.makedirs(self.checkpoint_folder, exist_ok=True)

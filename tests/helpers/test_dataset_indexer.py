@@ -37,7 +37,7 @@ class TestAbstractDataLoader(unittest.TestCase):
 class TestDatasetIndexer(unittest.TestCase):
     """
     The indexer is a fundamental component of our system. It is important
-    to make sure that it is working as expected. So we're trying  to test
+    to make sure that it is working as expected. So we're trying to test
     it seriously.
     """
 
@@ -110,9 +110,9 @@ class TestDatasetIndexer(unittest.TestCase):
         """
         This test is not equivalent to the first one. This one by using
         the mocked version of Bernoulli distribution guaranty that certain
-        parts of the codes is covered independently of the randomness encoded
+        parts of the codes are covered independently of the randomness encoded
         by Bernoulli distribution usage. TO BE FACTORIZED LATER OR JUST RELY
-        ON SEEDED RANDOM AFTER A GOOD NUMBER OF RUN.
+        ON SEEDED RANDOM AFTER A GOOD NUMBER OF RUNS.
         """
 
         cycle_iter = itertools.cycle(self.HIGH_COVERAGE_SEQUENCE)

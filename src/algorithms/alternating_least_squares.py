@@ -32,9 +32,7 @@ class AlternatingLeastSquaresState(AlgorithmState):
 
     @staticmethod
     def to_predictor():
-        return Predictor(
-            func=lambda x: print("Prediction made")
-        )
+        return Predictor(func=lambda x: print("Prediction made"))
 
 
 class AlternatingLeastSquares(Algorithm):
@@ -373,7 +371,7 @@ class AlternatingLeastSquares(Algorithm):
         return accumulated_squared_residuals, residuals_count
 
     def _get_accumulated_squared_biases(self):
-        return np.sum(self.user_biases ** 2), np.sum(self.item_biases ** 2)
+        return np.sum(self.user_biases**2), np.sum(self.item_biases**2)
 
     def _get_accumulated_factors_product(self):
         # TODO: Improve this (numpy first)
@@ -468,5 +466,3 @@ class AlternatingLeastSquares(Algorithm):
             self._epochs_loss_test.append(loss_test)
             self._epochs_rmse_train.append(rmse_train)
             self._epochs_rmse_test.append(rmse_test)
-
-        return self.state
