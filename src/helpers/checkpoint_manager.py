@@ -65,7 +65,7 @@ class CheckpointManager(object):
                 pickle.dump(state, f)
         except Exception as exc:
             raise self.CheckpointManagerError(
-                f"Failed to save checkpoint '{checkpoint_name}': {exc}"
+                f"Failed to save checkpoint '{checkpoint_name}'"
             ) from exc
 
     def load(self, checkpoint_name: str) -> Optional[Dict]:

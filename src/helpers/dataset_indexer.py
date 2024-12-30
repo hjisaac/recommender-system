@@ -191,7 +191,7 @@ class DatasetIndexer(AbstractDatasetIndexer):
                     indexed_count += 1
                     if indexed_count == self._limit:
                         logger.warning(
-                            f"Limit of lines (.i.e {self._limit}) to index has been reached. Exiting without loading the rest... "
+                            f"The limit of lines (.i.e {self._limit}) to index has been reached. Exiting without loading the rest... "
                         )
                         break
         except (FileNotFoundError,) as exc:
