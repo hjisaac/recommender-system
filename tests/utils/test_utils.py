@@ -13,7 +13,7 @@ class TestConvertFlatDictToString(unittest.TestCase):
 
         kwargs = {"lambda": 0.1, "gamma": 0.5, "tau": 0.2}
         result = convert_flat_dict_to_string(
-            kwargs_dict=kwargs, prefix="checkpoint", extension="pt", timestamp=True
+            input_dict=kwargs, prefix="checkpoint", extension="pt", timestamp=True
         )
         expected = "checkpoint_20241230-152433_lambda0.1_gamma0.5_tau0.2.pt"
         self.assertEqual(result, expected)
@@ -21,14 +21,14 @@ class TestConvertFlatDictToString(unittest.TestCase):
     def test_without_timestamp(self):
         kwargs = {"width": 800, "height": 600}
         result = convert_flat_dict_to_string(
-            kwargs_dict=kwargs, prefix="plot", extension="svg", timestamp=False
+            input_dict=kwargs, prefix="plot", extension="svg", timestamp=False
         )
         expected = "plot_width800_height600.svg"
         self.assertEqual(result, expected)
 
     def test_empty_dict(self):
         result = convert_flat_dict_to_string(
-            kwargs_dict={}, prefix="empty", extension="txt", timestamp=True
+            input_dict={}, prefix="empty", extension="txt", timestamp=True
         )
         # The result should only include the prefix, timestamp, and extension
         self.assertTrue(result.startswith("empty_"))
@@ -42,20 +42,20 @@ class TestConvertFlatDictToString(unittest.TestCase):
         mock_datetime.strftime = datetime.strftime
 
         kwargs = {"key1": "value1", "key2": "value2"}
-        result = convert_flat_dict_to_string(kwargs_dict=kwargs, timestamp=True)
+        result = convert_flat_dict_to_string(input_dict=kwargs, timestamp=True)
         expected = "20241230-152433_key1value1_key2value2"
         self.assertEqual(result, expected)
 
     def test_no_timestamp_no_prefix_no_extension(self):
         kwargs = {"key1": "value1", "key2": "value2"}
-        result = convert_flat_dict_to_string(kwargs_dict=kwargs, timestamp=False)
+        result = convert_flat_dict_to_string(input_dict=kwargs, timestamp=False)
         expected = "key1value1_key2value2"
         self.assertEqual(result, expected)
 
     def test_special_characters_in_prefix_and_extension(self):
         kwargs = {"key": "value"}
         result = convert_flat_dict_to_string(
-            kwargs_dict=kwargs,
+            input_dict=kwargs,
             prefix="my:prefix",
             extension="data-file",
             timestamp=False,
@@ -66,10 +66,10 @@ class TestConvertFlatDictToString(unittest.TestCase):
     def test_non_primitive_values_in_dict(self):
         kwargs = {"key1": [1, 2, 3], "key2": {"nested": "dict"}}
         with self.assertRaises(TypeError):
-            convert_flat_dict_to_string(kwargs_dict=kwargs)
+            convert_flat_dict_to_string(input_dict=kwargs)
 
     def test_empty_prefix_and_extension(self):
         kwargs = {"key": "value"}
-        result = convert_flat_dict_to_string(kwargs_dict=kwargs, timestamp=False)
+        result = convert_flat_dict_to_string(input_dict=kwargs, timestamp=False)
         expected = "keyvalue"
         self.assertEqual(result, expected)
