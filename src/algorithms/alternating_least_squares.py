@@ -399,7 +399,7 @@ class AlternatingLeastSquares(Algorithm):
         self.item_biases[item_id] = item_bias
         self.item_factors[item_id] = item_factor
 
-    def run(self, data: IndexedDatasetWrapper):
+    def run(self, data: IndexedDatasetWrapper, resume: bool = False):
         """
         Runs the algorithm on the indexed data, `IndexedDatasetWrapper`.
         """

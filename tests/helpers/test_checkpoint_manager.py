@@ -9,9 +9,7 @@ from src.helpers.checkpoint_manager import CheckpointManager
 class TestCheckpointManager(unittest.TestCase):
 
     def setUp(self):
-        """Set up test environment"""
         self.test_folder = "/tmp/my_recommender_checkpoints_RchuF1gvMY"
-        self.test_folder_prime = "/tmp/my_recommender_checkpoints_k3xjct5D4l"
         self.sub_folder = "my_subfolder"
         self.manager = CheckpointManager(self.test_folder, self.sub_folder)
         self.test_file_name = "my_checkpoint"
@@ -24,7 +22,6 @@ class TestCheckpointManager(unittest.TestCase):
         os.makedirs(os.path.join(self.test_folder, self.sub_folder), exist_ok=True)
 
     def tearDown(self):
-        """Clean up after tests"""
         if os.path.exists(self.test_checkpoint_path):
             os.remove(self.test_checkpoint_path)
 

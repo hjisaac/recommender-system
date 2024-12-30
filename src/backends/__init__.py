@@ -18,7 +18,9 @@ class Backend(object):
     def __call__(self, data):
 
         if self.resume_enabled:
-            self.algorithm.set_state(self.checkpoint_manager.load())
+            # TODO:
+            # self.algorithm.set_state(self.checkpoint_manager.load())
+            pass
 
         self.algorithm.run(data=data, resume=self.resume_enabled)
         # Save the current state of the training from the algorithm object
