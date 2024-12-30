@@ -23,15 +23,23 @@ class Backend(object):
             pass
 
         self.algorithm.run(data=data, resume=self.resume_enabled)
+        checkpoint_name=self._get_checkpoint_name()
         # Save the current state of the training from the algorithm object
         self.checkpoint_manager.save(
             self.algorithm.state, checkpoint_name=self._get_checkpoint_name()
         )
-        logger.info(f"Checkpoint successfully saved at {self._instance_id}")
+        logger.info(f"Checkpoint successfully saved at {checkpoint_name}")
 
         return self.algorithm.state.to_predictor()
 
     def _get_checkpoint_name(self):
+        """Side effect method that returns a different string made
+        of the hyperparameters for each call
+        """
         return convert_flat_dict_to_string(
-            self.algorithm.state.intrinsic,
+            {
+                k.removeprefix("hyper_"): v
+                for k, v in self.algorithm.state.to_dict().items()
+                if k in self.algorithm.hyper_parameters
+            }
         )

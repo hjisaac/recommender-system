@@ -43,11 +43,11 @@ class AlternatingLeastSquares(Algorithm):
     """
     Alternating Least Squares algorithm. In the design, we assume that an instance of an
     algorithm is a process that is just waiting for data to run. And that process state
-    be changed as it is being run. So one need to instance another algorithm instance
+    be changed as it is being run. So one needs to instance another algorithm instance
     each time.
 
     This way of thinking makes the implementation easier than assuming that an algorithm
-    instance' states should not change in terms of its extrinsic states (the intrinsic
+    instance's states should not change in terms of its extrinsic states (the intrinsic
     states of an algorithm are the hyperparameters), which will require us to expose the
     states change using another pattern and that seems more complex.
     """
@@ -85,6 +85,15 @@ class AlternatingLeastSquares(Algorithm):
         self.hyper_tau = hyper_tau
         self.hyper_n_epochs = hyper_n_epochs
         self.hyper_n_factors = hyper_n_factors
+
+        # The client code needs this in other to pull intrinsic params dynamically
+        self.hyper_parameters = [
+            "hyper_lambda",
+            "hyper_gamma",
+            "hyper_tau",
+            "hyper_n_epochs",
+            "hyper_n_factors",
+        ]
 
         self.user_factors = user_factors
         self.item_factors = item_factors
@@ -132,8 +141,8 @@ class AlternatingLeastSquares(Algorithm):
         items_count = len(data_by_item_id__train)
 
         # If we know user factors and user biases but item factors and biases are not known,
-        # we can learn them using user factors and  user biases that we know. And inversely,
-        # if we know item factors and item biases but user factors and biases are unknown we
+        # we can learn them using user factors and user biases that we know. And inversely,
+        # if we know item factors and item biases but user factors and biases are unknown, we
         # can learn them too.
 
         if (self.user_factors is None or self.user_biases is None) and (
@@ -379,6 +388,7 @@ class AlternatingLeastSquares(Algorithm):
 
     def _get_accumulated_factors_product(self):
         # TODO: Improve this (numpy first)
+        # https://mathworld.wolfram.com/FrobeniusNorm.html#:~:text=The%20Frobenius%20norm%2C%20sometimes%20also,considered%20as%20a%20vector%20norm.
         return sum(np.dot(factor, factor) for factor in self.user_factors), sum(
             np.dot(factor, factor) for factor in self.item_factors
         )
