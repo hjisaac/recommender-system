@@ -17,9 +17,6 @@ class cached_class_property:  # noqa
         return getattr(cls, self._cache_name)
 
 
-import re
-
-
 def convert_flat_dict_to_string(
     kwargs_dict: dict, prefix="", extension="", timestamp=True
 ):
@@ -42,13 +39,10 @@ def convert_flat_dict_to_string(
     extension = extension.removeprefix(".")
     dotted_extension = f".{extension}" if extension else ""
 
-    # Create a readable timestamp if required
-    readable_timestamp = datetime.now().strftime("%Y%m%d-%H%M%S") if timestamp else ""
-
-    # Start constructing the string with optional timestamp
+    # Start constructing the string
     string_parts = []
-    if readable_timestamp:
-        string_parts.append(readable_timestamp)
+    if timestamp:
+        string_parts.append(datetime.now().strftime("%Y%m%d-%H%M%S"))
 
     # Add the key-value pairs from kwargs_dict
     for key, value in kwargs_dict.items():
