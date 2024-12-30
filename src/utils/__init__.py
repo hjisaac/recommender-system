@@ -18,7 +18,7 @@ class cached_class_property:  # noqa
 
 
 def convert_flat_dict_to_string(
-    kwargs_dict: dict, prefix="", extension="", timestamp=True
+    input_dict: dict, prefix="", extension="", timestamp=True
 ):
     """
     Convert a flat dictionary into a string with optional prefix, extension,
@@ -26,7 +26,7 @@ def convert_flat_dict_to_string(
     configuration.
 
     Parameters:
-        kwargs_dict (dict): A flat dictionary containing key-value pairs with primitive types.
+        input_dict (dict): A flat dictionary containing key-value pairs with primitive types.
         prefix (str): Optional prefix to add at the beginning of the string.
         extension (str): Optional file extension to add at the end of the string.
         timestamp (bool): Whether to include a timestamp in the string.
@@ -44,8 +44,8 @@ def convert_flat_dict_to_string(
     if timestamp:
         string_parts.append(datetime.now().strftime("%Y%m%d-%H%M%S"))
 
-    # Add the key-value pairs from kwargs_dict
-    for key, value in kwargs_dict.items():
+    # Add the key-value pairs from input_dict
+    for key, value in input_dict.items():
         if not isinstance(value, (str, int, float, bool)):
             raise TypeError(
                 f"Value for key '{key}' must be a primitive type (str, int, float, bool)."
@@ -55,7 +55,6 @@ def convert_flat_dict_to_string(
     if prefix:
         string_parts.insert(0, prefix)
 
-    # Join all parts with underscores, ensuring no leading or trailing underscores
     joined_string = "_".join(filter(None, string_parts))
 
     return f"{joined_string}{dotted_extension}" if dotted_extension else joined_string
