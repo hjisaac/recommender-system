@@ -31,48 +31,38 @@ class LearningTargetEnum(str, Enum):
 
 class AlternatingLeastSquaresState(AlgorithmState):
 
-    def to_predictor(self):
+    def to_predictor(self, als, *args):  # noqa
 
-        # We still need the algorithm in other to do prediction
-        # Attention to circular imports
-        _als = AlternatingLeastSquares(
-            hyper_tau=self.hyper_tau,
-            hyper_gamma=self.hyper_gamma,
-            hyper_lambda=self.hyper_lambda,
-            hyper_n_epochs=self.hyper_n_epochs,
-            hyper_n_factors=self.hyper_n_factors,
-            user_factors=self.user_factors,
-            item_factors=self.item_factors,
-            user_biases=self.user_biases,
-            item_biases=self.item_biases,
-        )
+        # We still need the algorithm in other to do prediction. But attention
+        # to circular dependencies issues as the algorithm class is using the
+        # state class too.
 
         def predict(user_ratings_data: list):
             """
-            Predict ratings for a user based on user and item factors and biases.
+            Predict ratings for a user based on user and item factors and biases
+            and his historical ratings' data'.
 
             Args:
-                user_ratings_data (array-like): User's historical ratings' data.
+                user_ratings_data (list): User's historical ratings' data.
 
             Returns:
                 np.ndarray: Predicted ratings for all items.
             """
 
-            user_factor, user_bias = _als.learn_user_bias_and_factor(user_ratings_data)
+            user_factor, user_bias = als.learn_user_bias_and_factor(
+                user_id=None, user_ratings_data=user_ratings_data
+            )
 
-            # The order of the vectors in the matrix product matters
-            # as they have the following shape respectively:
-            # (`items_count`, hyper_n_factors) and (hyper_n_factors, 1)
-            # Broadcasting is used for the biases additions.
-            return np.dot(_als.item_factors, user_factor) + user_bias + _als.item_biases
+            # The order of the vectors in the matrix product matters as they have
+            # the following shape respectively: (`items_count`, hyper_n_factors)
+            # and (hyper_n_factors, 1). Broadcasting is used for the biases' additions
+            return np.dot(als.item_factors, user_factor) + user_bias + als.item_biases
 
         def render(prediction: np.ndarray):
             # TODO:
             return prediction
 
-        return Predictor(
-            predict_func=predict, render_func=render
-        )
+        return Predictor(predict_func=predict, render_func=render)
 
 
 class AlternatingLeastSquares(Algorithm):
@@ -505,6 +495,15 @@ class AlternatingLeastSquares(Algorithm):
             loss_train = self._compute_loss(accumulated_squared_residual_train)
             loss_test = self._compute_loss(accumulated_squared_residual_test)
 
+            # We are assuming that this code neither runs in production .i.e is not end client code.
+            # If that assumption changes, the following line should be replaced by a proper raise
+            # of an exception.
+            assert residuals_count_train and residuals_count_test, (
+                "None of `residuals_count_train` or `residuals_count_test` should be zero but "
+                f"got {residuals_count_train} and {residuals_count_test} respectively for them. "
+                "It happens because the data for which that count comes from is empty."
+            )
+
             rmse_train = self._compute_rmse(
                 accumulated_squared_residual_train, residuals_count_train
             )
@@ -516,4 +515,3 @@ class AlternatingLeastSquares(Algorithm):
             self._epochs_loss_test.append(loss_test)
             self._epochs_rmse_train.append(rmse_train)
             self._epochs_rmse_test.append(rmse_test)
-

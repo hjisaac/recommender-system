@@ -29,7 +29,12 @@ class Backend(object):
             self.algorithm.state, checkpoint_name=self._get_checkpoint_name()
         )
         logger.info(f"Checkpoint successfully saved at {checkpoint_name}")
-        return self.algorithm.state.to_predictor()
+        # Here, we're again passing the algorithm to the `to_predictor`
+        # method, because to do prediction we still need the algorithm.
+        # Instantiating a new one won't be okay because we will need
+        # some context built upon only the one that generate state from
+        # which we're getting the predictor
+        return self.algorithm.state.to_predictor(self.algorithm)
 
     def _get_checkpoint_name(self):
         """Side effect method that returns a different string made

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[9]:
+# In[5]:
 
 
 from src.algorithms.alternating_least_squares import AlternatingLeastSquares
@@ -13,7 +13,7 @@ from src.backends import Backend
 from src.settings import settings
 
 
-# In[10]:
+# In[6]:
 
 
 dataset_indexer = DatasetIndexer(
@@ -21,16 +21,16 @@ dataset_indexer = DatasetIndexer(
     user_header="userId",
     item_header="movieId",
     rating_header="rating",
-    limit=10000,
+    limit=5000,
 )
 
 indexed_data = dataset_indexer.index(approximate_train_ratio=0.8)
 
 
-# In[11]:
+# In[7]:
 
 
-alternating_least_squares = AlternatingLeastSquares(
+als_instance = AlternatingLeastSquares(
     hyper_lambda=settings.als.HYPER_LAMBDA,
     hyper_gamma=settings.als.HYPER_GAMMA,
     hyper_tau=settings.als.HYPER_TAU,
@@ -40,23 +40,30 @@ alternating_least_squares = AlternatingLeastSquares(
 
 als_backend = Backend(
     # Define the algorithm
-    algorithm=alternating_least_squares,
+    algorithm=als_instance,
     checkpoint_manager=CheckpointManager(
         checkpoint_folder=settings.als.CHECKPOINT_FOLDER,
     ),
+    resume_enabled=True,
 )
 
 
-# In[12]:
+# In[8]:
 
 
 recommender_builder = CollaborativeFilteringRecommenderBuilder(
     backend=als_backend,
 )
 
+# This might take some moment before finishing
 recommender = recommender_builder.build(data=indexed_data)
 
-# recommenders.recommend(None)
+
+# In[5]:
 
 
-# In[23]:
+prediction_input = [{"rating": "4", "movieId": "17", "userId": "1"}]
+recommender.recommend(prediction_input)
+
+
+# In[ ]:
