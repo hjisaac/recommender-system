@@ -1,6 +1,7 @@
 import logging
 import numpy as np
 from enum import Enum
+from tqdm import tqdm
 from typing import Optional
 from collections import defaultdict
 
@@ -30,13 +31,48 @@ class LearningTargetEnum(str, Enum):
 
 class AlternatingLeastSquaresState(AlgorithmState):
 
-    @staticmethod
-    def to_predictor():
-        return Predictor(func=lambda x: print("Prediction made"))
+    def to_predictor(self):
 
-    @property
-    def intrinsic_attrs(self) -> list:
-        return []
+        # We still need the algorithm in other to do prediction
+        # Attention to circular imports
+        _als = AlternatingLeastSquares(
+            hyper_tau=self.hyper_tau,
+            hyper_gamma=self.hyper_gamma,
+            hyper_lambda=self.hyper_lambda,
+            hyper_n_epochs=self.hyper_n_epochs,
+            hyper_n_factors=self.hyper_n_factors,
+            user_factors=self.user_factors,
+            item_factors=self.item_factors,
+            user_biases=self.user_biases,
+            item_biases=self.item_biases,
+        )
+
+        def predict(user_ratings_data: list):
+            """
+            Predict ratings for a user based on user and item factors and biases.
+
+            Args:
+                user_ratings_data (array-like): User's historical ratings' data.
+
+            Returns:
+                np.ndarray: Predicted ratings for all items.
+            """
+
+            user_factor, user_bias = _als.learn_user_bias_and_factor(user_ratings_data)
+
+            # The order of the vectors in the matrix product matters
+            # as they have the following shape respectively:
+            # (`items_count`, hyper_n_factors) and (hyper_n_factors, 1)
+            # Broadcasting is used for the biases additions.
+            return np.dot(_als.item_factors, user_factor) + user_bias + _als.item_biases
+
+        def render(prediction: np.ndarray):
+            # TODO:
+            return prediction
+
+        return Predictor(
+            predict_func=predict, render_func=render
+        )
 
 
 class AlternatingLeastSquares(Algorithm):
@@ -51,6 +87,15 @@ class AlternatingLeastSquares(Algorithm):
     states of an algorithm are the hyperparameters), which will require us to expose the
     states change using another pattern and that seems more complex.
     """
+
+    # The client code needs this in other to pull intrinsic params dynamically
+    HYPER_PARAMETERS = [
+        "hyper_lambda",
+        "hyper_gamma",
+        "hyper_tau",
+        "hyper_n_epochs",
+        "hyper_n_factors",
+    ]
 
     def __init__(
         self,
@@ -85,15 +130,6 @@ class AlternatingLeastSquares(Algorithm):
         self.hyper_tau = hyper_tau
         self.hyper_n_epochs = hyper_n_epochs
         self.hyper_n_factors = hyper_n_factors
-
-        # The client code needs this in other to pull intrinsic params dynamically
-        self.hyper_parameters = [
-            "hyper_lambda",
-            "hyper_gamma",
-            "hyper_tau",
-            "hyper_n_epochs",
-            "hyper_n_factors",
-        ]
 
         self.user_factors = user_factors
         self.item_factors = item_factors
@@ -439,7 +475,7 @@ class AlternatingLeastSquares(Algorithm):
         self._get_user_id = lambda user: data.id_to_user_bmap.inverse[user]
         self._get_item_id = lambda item: data.id_to_item_bmap.inverse[item]
 
-        for epoch in range(self.hyper_n_epochs):
+        for __ in tqdm(range(self.hyper_n_epochs), desc="Epochs", unit="epoch"):
 
             for user_id in data_by_user_id__train:
                 self.update_user_bias_and_factor(
@@ -480,3 +516,4 @@ class AlternatingLeastSquares(Algorithm):
             self._epochs_loss_test.append(loss_test)
             self._epochs_rmse_train.append(rmse_train)
             self._epochs_rmse_test.append(rmse_test)
+

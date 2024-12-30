@@ -92,21 +92,21 @@ class DatasetIndexer(AbstractDatasetIndexer):
         id_to_item_bmap = SerialBidirectionalMapper()  # bijective mapping
         id_to_user_bmap = SerialBidirectionalMapper()
 
-        # This two next variables are used to group data by item_id and user_id
+        # The next two variables are used to group data by item_id and user_id
         data_by_user_id__train = SerialUnidirectionalMapper()  # subjective mapping
         data_by_item_id__train = SerialUnidirectionalMapper()
 
         data_by_user_id__test = SerialUnidirectionalMapper()  # subjective mapping
         data_by_item_id__test = SerialUnidirectionalMapper()
 
-        # Whether the line should be used for test set or not
+        # Whether the line should be used for test or not
         belongs_to_test_split: Optional[bool | object]
         try:
             with open(self._file_path, mode="r", newline="") as csvfile:
                 for line_count, line in enumerate(DictReader(csvfile)):
                     user, item = line[self._user_header], line[self._item_header]
 
-                    # Unlikely in this datasets but better have this guard
+                    # Unlikely in this dataset but better have this guard
                     if not user or not item:
                         logger.warning(
                             f"Cannot process the line {line_count}, cause expects `user` and `item` "
@@ -125,10 +125,10 @@ class DatasetIndexer(AbstractDatasetIndexer):
                     belongs_to_test_split = NOT_DEFINED
 
                     if user_id is None:
-                        # This user is a new one, so add it
+                        # This user is new, so add it
                         id_to_user_bmap.add(user)
 
-                        # If the user is a new one, run a Bernoulli experiment to
+                        # If the user is new, run a Bernoulli experiment to
                         # decide whether that new user's data should be used as a
                         # training data of test data.
                         belongs_to_test_split = not sample_from_bernoulli(
@@ -136,13 +136,13 @@ class DatasetIndexer(AbstractDatasetIndexer):
                         )
 
                     if item_id is None:
-                        # This item is a new one, so add it
+                        # This item is new, so add it
                         id_to_item_bmap.add(item)
 
                     # Add the data without the useless items for indexing
                     data = self._construct_data(line, self._data_headers)
 
-                    # Like if the user have already been seen once
+                    # Like if the user has already been seen once
                     # Now, search for where the user is and add the data there
 
                     if belongs_to_test_split is NOT_DEFINED:

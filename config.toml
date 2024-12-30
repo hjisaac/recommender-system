@@ -13,7 +13,7 @@ HYPER_N_FACTOR = 10
 HYPER_GAMMA = 0.01
 HYPER_LAMBDA = 0.1
 HYPER_TAU = 1
-CHECKPOINT_FOLDER = "./artifacts/checkpoints"
+CHECKPOINT_FOLDER = "./artifacts/checkpoints/als"
 
 [figures]
 PLT_FIGURE_FOLDER = "./figures"
