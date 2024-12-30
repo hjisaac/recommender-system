@@ -58,15 +58,14 @@ class CheckpointManager(object):
             ValueError: If the state is not a dictionary.
             CheckpointManagerError: If saving the checkpoint fails.
         """
-        if not isinstance(state, dict):
-            raise ValueError("State must be a dictionary.")
+
         checkpoint_path = self._get_checkpoint_path(checkpoint_name)
         try:
             with open(checkpoint_path, "wb") as f:
                 pickle.dump(state, f)
         except Exception as exc:
             raise self.CheckpointManagerError(
-                f"Failed to save checkpoint '{checkpoint_name}': {e}"
+                f"Failed to save checkpoint '{checkpoint_name}': {exc}"
             ) from exc
 
     def load(self, checkpoint_name: str) -> Optional[Dict]:

@@ -23,13 +23,12 @@ class Backend(object):
             pass
 
         self.algorithm.run(data=data, resume=self.resume_enabled)
-        checkpoint_name=self._get_checkpoint_name()
+        checkpoint_name = self._get_checkpoint_name()
         # Save the current state of the training from the algorithm object
         self.checkpoint_manager.save(
-            self.algorithm.state, checkpoint_name=self._get_checkpoint_name()
+            self.algorithm.state.to_dict(), checkpoint_name=self._get_checkpoint_name()
         )
         logger.info(f"Checkpoint successfully saved at {checkpoint_name}")
-
         return self.algorithm.state.to_predictor()
 
     def _get_checkpoint_name(self):
