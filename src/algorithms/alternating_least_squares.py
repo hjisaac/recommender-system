@@ -31,11 +31,8 @@ class LearningTargetEnum(str, Enum):
 
 class AlternatingLeastSquaresState(AlgorithmState):
 
+    # We still need the algorithm in other to do prediction
     def to_predictor(self, als, *args):  # noqa
-
-        # We still need the algorithm in other to do prediction. But attention
-        # to circular dependencies issues as the algorithm class is using the
-        # state class too.
 
         def predict(user_ratings_data: list):
             """
