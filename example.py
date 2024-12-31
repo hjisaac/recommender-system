@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[5]:
+# In[1]:
 
 
 from src.algorithms.alternating_least_squares import AlternatingLeastSquares
@@ -13,7 +13,7 @@ from src.backends import Backend
 from src.settings import settings
 
 
-# In[6]:
+# In[2]:
 
 
 dataset_indexer = DatasetIndexer(
@@ -21,10 +21,10 @@ dataset_indexer = DatasetIndexer(
     user_header="userId",
     item_header="movieId",
     rating_header="rating",
-    limit=5000,
+    limit=settings.general.LINES_COUNT_TO_READ,
 )
 
-indexed_data = dataset_indexer.index(approximate_train_ratio=0.8)
+indexed_data = dataset_indexer.index(approximate_train_ratio=settings.general.APPROXIMATE_TRAIN_RATIO)
 
 
 # In[7]:
@@ -42,7 +42,7 @@ als_backend = Backend(
     # Define the algorithm
     algorithm=als_instance,
     checkpoint_manager=CheckpointManager(
-        checkpoint_folder=settings.als.CHECKPOINT_FOLDER,
+        checkpoint_folder=settings.als.CHECKPOINT_FOLDER, sub_folder=settings.als.LIMIT_TO_READ_DATASET
     ),
     resume_enabled=True,
 )
@@ -67,3 +67,7 @@ recommender.recommend(prediction_input)
 
 
 # In[ ]:
+
+
+
+

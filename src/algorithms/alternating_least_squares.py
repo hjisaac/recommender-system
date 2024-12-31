@@ -55,9 +55,12 @@ class AlternatingLeastSquaresState(AlgorithmState):
             # and (hyper_n_factors, 1). Broadcasting is used for the biases' additions
             return np.dot(als.item_factors, user_factor) + user_bias + als.item_biases
 
-        def render(prediction: np.ndarray):
-            # TODO:
-            return prediction
+        def render(predictions: np.ndarray):
+            # TODO: Display the movie instead of their ids
+            print("predictions =>", predictions)
+            items_ids = np.argsort(predictions)
+            print("items_ids =>", items_ids)
+            return items_ids
 
         return Predictor(predict_func=predict, render_func=render)
 
