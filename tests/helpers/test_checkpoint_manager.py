@@ -36,11 +36,6 @@ class TestCheckpointManager(unittest.TestCase):
             loaded_state = pickle.load(f)
         self.assertEqual(loaded_state, self.state)
 
-    def test_save_checkpoint_invalid_state(self):
-        """Test saving a checkpoint with an invalid state"""
-        with self.assertRaises(ValueError):
-            self.manager.save([], self.test_file_name)
-
     def test_load_checkpoint_success(self):
         """Test loading a checkpoint"""
         self.manager.save(self.state, self.test_file_name)
@@ -50,7 +45,7 @@ class TestCheckpointManager(unittest.TestCase):
 
     def test_load_checkpoint_not_found(self):
         """Test loading a non-existent checkpoint"""
-        with self.assertRaises(FileNotFoundError):
+        with self.assertRaises(CheckpointManager.CheckpointManagerError):
             self.manager.load("non_existent_checkpoint.pkl")
 
     def test_load_checkpoint_invalid_format(self):

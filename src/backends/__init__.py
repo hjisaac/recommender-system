@@ -10,28 +10,39 @@ class Backend(object):
     all the components together and ensures their communication with each other.
     """
 
-    def __init__(self, algorithm, checkpoint_manager, resume_enabled=False):
+    def __init__(self, algorithm, checkpoint_manager, resume=False):
         self.algorithm = algorithm
         self.checkpoint_manager = checkpoint_manager
-        self.resume_enabled = resume_enabled
+        self.resume = resume
 
     def __call__(self, data):
 
-        if self.resume_enabled:
+        if self.resume:
             # TODO:
-            # self.algorithm.set_state(self.checkpoint_manager.load())
+            self.algorithm.set_state(self.checkpoint_manager.load())
             pass
 
-        self.algorithm.run(data=data, resume=self.resume_enabled)
+        self.algorithm.run(data=data, resume=self.resume)
+        checkpoint_name = self._get_checkpoint_name()
         # Save the current state of the training from the algorithm object
         self.checkpoint_manager.save(
             self.algorithm.state, checkpoint_name=self._get_checkpoint_name()
         )
-        logger.info(f"Checkpoint successfully saved at {self._instance_id}")
-
-        return self.algorithm.state.to_predictor()
+        logger.info(f"Checkpoint successfully saved at {checkpoint_name}")
+        # Here, we're again passing the algorithm to the `to_predictor`
+        # method, because to do prediction we still need the algorithm.
+        # Instantiating a new one won't be okay because we will need
+        # some context built upon only the one that generate state from
+        # which we're getting the predictor
+        return self.algorithm.state.to_predictor(self.algorithm)
 
     def _get_checkpoint_name(self):
+        """Side effect method that returns a different string made
+        of the hyperparameters for each call
+        """
         return convert_flat_dict_to_string(
-            self.algorithm.state.intrinsic,
+            {
+                k.removeprefix("hyper_"): getattr(self.algorithm.state, k)
+                for k in self.algorithm.HYPER_PARAMETERS
+            }
         )

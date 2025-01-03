@@ -13,9 +13,8 @@ class Recommender(object):
 
     def recommend(self, input):  # noqa
         predictions = self.predictor.predict(input)
-        # self.predictor.render(predictions)
-        # self._after_predict(predictions)
-        print("Recommending", predictions)
+        self.predictor.render(predictions)
+        print("Recommending", self.predictor.render(predictions))
         return predictions
 
 
