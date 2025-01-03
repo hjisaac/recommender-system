@@ -13,7 +13,7 @@ from src.backends import Backend
 from src.settings import settings
 
 
-# In[2]:
+# In[3]:
 
 
 dataset_indexer = DatasetIndexer(
@@ -24,10 +24,12 @@ dataset_indexer = DatasetIndexer(
     limit=settings.general.LINES_COUNT_TO_READ,
 )
 
-indexed_data = dataset_indexer.index(approximate_train_ratio=settings.general.APPROXIMATE_TRAIN_RATIO)
+indexed_data = dataset_indexer.index(
+    approximate_train_ratio=settings.general.APPROXIMATE_TRAIN_RATIO
+)
 
 
-# In[7]:
+# In[18]:
 
 
 als_instance = AlternatingLeastSquares(
@@ -42,13 +44,14 @@ als_backend = Backend(
     # Define the algorithm
     algorithm=als_instance,
     checkpoint_manager=CheckpointManager(
-        checkpoint_folder=settings.als.CHECKPOINT_FOLDER, sub_folder=settings.als.LIMIT_TO_READ_DATASET
+        checkpoint_folder=settings.als.CHECKPOINT_FOLDER,
+        sub_folder=str(settings.general.LINES_COUNT_TO_READ),
     ),
     resume_enabled=True,
 )
 
 
-# In[8]:
+# In[19]:
 
 
 recommender_builder = CollaborativeFilteringRecommenderBuilder(
@@ -59,7 +62,7 @@ recommender_builder = CollaborativeFilteringRecommenderBuilder(
 recommender = recommender_builder.build(data=indexed_data)
 
 
-# In[5]:
+# In[20]:
 
 
 prediction_input = [{"rating": "4", "movieId": "17", "userId": "1"}]
@@ -67,7 +70,3 @@ recommender.recommend(prediction_input)
 
 
 # In[ ]:
-
-
-
-

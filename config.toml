@@ -1,11 +1,11 @@
 [general]
 # Original: LINES_COUNT_TO_READ = 1_000_000_000
-LINES_COUNT_TO_READ = 1_000_000
+LINES_COUNT_TO_READ = 1_000
 APPROXIMATE_TRAIN_RATIO = 0.85
 
 [als]
 # Original: HYPER_N_EPOCH = 20
-HYPER_N_EPOCH = 4
+HYPER_N_EPOCH = 0 # Just want to revive the objects
 
 # Original: HYPER_N_FACTOR = 10
 HYPER_N_FACTOR = 10

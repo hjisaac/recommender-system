@@ -10,19 +10,19 @@ class Backend(object):
     all the components together and ensures their communication with each other.
     """
 
-    def __init__(self, algorithm, checkpoint_manager, resume_enabled=False):
+    def __init__(self, algorithm, checkpoint_manager, resume=False):
         self.algorithm = algorithm
         self.checkpoint_manager = checkpoint_manager
-        self._resume = resume_enabled
+        self.resume = resume
 
     def __call__(self, data):
 
-        if self._resume:
+        if self.resume:
             # TODO:
-            # self.algorithm.set_state(self.checkpoint_manager.load())
+            self.algorithm.set_state(self.checkpoint_manager.load())
             pass
 
-        self.algorithm.run(data=data, resume=self._resume)
+        self.algorithm.run(data=data, resume=self.resume)
         checkpoint_name = self._get_checkpoint_name()
         # Save the current state of the training from the algorithm object
         self.checkpoint_manager.save(

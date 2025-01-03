@@ -87,6 +87,10 @@ class AlternatingLeastSquares(Algorithm):
         "hyper_n_factors",
     ]
 
+    AlternatingLeastSquaresError = type("AlternatingLeastSquaresError", (Exception,), {})
+
+
+
     def __init__(
         self,
         hyper_lambda: float = 0.1,
@@ -137,6 +141,108 @@ class AlternatingLeastSquares(Algorithm):
         self._get_user_id: Optional[defaultdict] = None
         self._get_item_id: Optional[defaultdict] = None
 
+    def _initialize_hyper_parameters(self):
+        pass
+
+    def _validate_dimension_equality(self, *arrays):
+        """
+        Validates that all provided arrays or sequences are of the same type and have matching dimensions.
+
+        Parameters:
+            arrays: A variable number of arrays or sequences to compare.
+
+        Raises:
+            AlternatingLeastSquaresError: If the arrays have mismatched types, shapes, or lengths.
+        """
+        if len(arrays) < 2:
+            raise ValueError("At least two arrays must be provided for validation.")
+
+        # Ensure all arrays are of the same type
+        reference_type = type(arrays[0])
+        if not all(isinstance(arr, reference_type) for arr in arrays):
+            raise self.AlternatingLeastSquaresError(
+                "All arrays or sequences must be of the same type."
+            )
+
+        # Determine whether to use .shape or len based on the first array
+        reference = arrays[0]
+        use_shape = hasattr(reference, "shape")
+
+        for arr in arrays[1:]:
+            if use_shape:
+                if not hasattr(arr, "shape") or reference.shape != arr.shape:
+                    raise self.AlternatingLeastSquaresError(
+                        "Arrays have mismatched shapes. Ensure all inputs are ndarrays with the same shape."
+                    )
+            else:
+                if len(reference) != len(arr):
+                    raise self.AlternatingLeastSquaresError(
+                        "Lists have mismatched lengths. Ensure all inputs are lists with the same length."
+                    )
+
+    def _validate_factors_and_biases(self, user_factors, item_factors, user_biases, item_biases):
+        """
+        Validates that user and item factors have the same shape,
+        and user and item biases have the same shape.
+        """
+        try:
+            self._validate_dimension_equality(user_factors, item_factors)
+        except self.AlternatingLeastSquaresError:
+            raise self.AlternatingLeastSquaresError(
+                f"Expected user_factors and item_factors to have the same shape, "
+                f"but got {user_factors.shape} and {item_factors.shape}."
+            )
+
+        try:
+            self._validate_dimension_equality(user_biases, item_biases)
+        except self.AlternatingLeastSquaresError:
+            raise self.AlternatingLeastSquaresError(
+                f"Expected user_biases and item_biases to have the same shape, "
+                f"but got {user_biases.shape} and {item_biases.shape}."
+            )
+
+    def _validate_epochs_losses(self, loss_train, loss_test, rmse_train, rmse_test):
+        """
+        Validates that all epoch-related lists (loss and RMSE) have the same length.
+        """
+        try:
+            self._validate_dimension_equality(loss_train, loss_test, rmse_train, rmse_test)
+        except self.AlternatingLeastSquaresError:
+            raise self.AlternatingLeastSquaresError(
+                f"Expected loss_train, loss_test, rmse_train, and rmse_test to have the same length, "
+                f"but got lengths {len(loss_train)}, {len(loss_test)}, {len(rmse_train)}, and {len(rmse_test)}."
+            )
+    def _initialize_factors_and_biases(self, user_factors, item_factors, user_biases, item_biases):
+        self._validate_factors_and_biases(user_factors, item_factors, user_biases, item_biases)
+
+        self.user_factors = user_factors
+        self.item_factors = item_factors
+        self.user_biases = user_biases
+        self.item_biases = item_biases
+
+
+
+    @_state.setter
+    def _state(self, state):
+        self.hyper_lambda = hyper_lambda
+        self.hyper_gamma = hyper_gamma
+        self.hyper_tau = hyper_tau
+        self.hyper_n_epochs = hyper_n_epochs
+        self.hyper_n_factors = hyper_n_factors
+
+        self.user_factors = user_factors
+        self.item_factors = item_factors
+        self.user_biases = user_biases
+        self.item_biases = item_biases
+
+        self._epochs_loss_train = []
+        self._epochs_loss_test = []
+        self._epochs_rmse_train = []
+        self._epochs_rmse_test = []
+
+    @property
+    def state(self) -> AlgorithmState:
+        retutn self._state
     @property
     def state(self) -> AlgorithmState:
 
@@ -160,9 +266,22 @@ class AlternatingLeastSquares(Algorithm):
             }
         )
 
+    def _validate_initial_state(self, initial_state):
+        # Safety checks
+        if not all([getattr(self, hyper_param) == getattr(initial_state, hyper_param) for hyper_param in self.HYPER_PARAMETERS]):
+            raise self.AlternatingLeastSquaresError(
+                "Initial state does not match the instance state, cannot resume. Failing..."
+            )
+
+
     def _initialize_factors_and_biases(
         self, data_by_user_id__train, data_by_item_id__train
     ):
+        """
+        Initialize factors and biases based on the information provided while
+        creating an instance of the algorithm. Like either learn factors and biases
+        or initialize using the respective distributions they are coming from.
+        """
         users_count = len(data_by_user_id__train)
         items_count = len(data_by_item_id__train)
 
@@ -439,10 +558,11 @@ class AlternatingLeastSquares(Algorithm):
         self.item_biases[item_id] = item_bias
         self.item_factors[item_id] = item_factor
 
-    def run(self, data: IndexedDatasetWrapper, resume: bool = False):
+    def run(self, data: IndexedDatasetWrapper, initial_state: bool = False):
         """
         Runs the algorithm on the indexed data, `IndexedDatasetWrapper`.
         """
+
         # TODO: "resume" ?
         assert isinstance(
             data, IndexedDatasetWrapper
@@ -458,6 +578,19 @@ class AlternatingLeastSquares(Algorithm):
         # TODO: Needs doc
         # data_by_item_id__test = indexed_data.data_by_item_id__test
 
+        if initial_state:
+            initial_state = (
+                AlternatingLeastSquaresState(initial_state)
+                if isinstance(initial_state, dict)
+                else initial_state
+            )
+            self._validate_initial_state(
+                initial_state
+            )
+            self._state = initial_state
+
+
+        # Make sure to
         self._initialize_factors_and_biases(
             data_by_user_id__train, data_by_item_id__train
         )
