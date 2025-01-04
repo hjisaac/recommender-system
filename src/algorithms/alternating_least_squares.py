@@ -587,7 +587,7 @@ class AlternatingLeastSquares(Algorithm):
 
             self._load_state(state)
 
-        # Check if factors biases are set, and learn them if applicable
+        # Check if factors and biases are set or learn them if applicable
         self._finalize_factors_and_biases_initialization(
             data_by_user_id__train, data_by_item_id__train
         )
