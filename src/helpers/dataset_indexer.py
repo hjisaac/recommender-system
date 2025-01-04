@@ -11,7 +11,7 @@ from src.helpers.serial_mapper import (
     SerialUnidirectionalMapper,
 )
 from src.helpers.constants import NOT_DEFINED
-from src.helpers._logging import logger # noqa
+from src.helpers._logging import logger  # noqa
 
 sample_from_bernoulli = partial(np.random.binomial, n=1)
 

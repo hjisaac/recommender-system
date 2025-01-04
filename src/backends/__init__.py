@@ -1,5 +1,5 @@
 from src.utils import convert_flat_dict_to_string
-from src.helpers._logging import logger # noqa
+from src.helpers._logging import logger  # noqa
 
 
 class Backend(object):
@@ -14,11 +14,20 @@ class Backend(object):
         self.resume = resume
 
     def __call__(self, data):
-        logger.error(f"Checkpoint list : { self.checkpoint_manager.list()}")
+        initial_state = None
+
+        if self.resume:
+            initial_state = self.checkpoint_manager.load(
+                self.checkpoint_manager.LAST_CREATED_NAME,
+            )
+            logger.info(
+                f"Checkpoint {self.checkpoint_manager.last_created_name} loaded with success",
+            )
+
         # Run the algorithm
         self.algorithm.run(
             data=data,
-            initial_state=self.checkpoint_manager.load() if self.resume else None,
+            initial_state=initial_state,
         )
 
         # Get the checkpoint name under which to save the finalized state of the algorithm

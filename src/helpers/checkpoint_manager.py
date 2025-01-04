@@ -1,6 +1,6 @@
 import os
 import dill as pickle
-from typing import Optional, Dict, List
+from typing import Optional
 
 
 class CheckpointManager(object):
@@ -12,6 +12,8 @@ class CheckpointManager(object):
     """
 
     CheckpointManagerError = type("CheckpointManagerError", (Exception,), {})
+
+    LAST_CREATED_NAME = object()
 
     def __init__(self, checkpoint_folder: str, sub_folder: str = None) -> None:
         """
@@ -46,7 +48,7 @@ class CheckpointManager(object):
             checkpoint_name += ".pkl"
         return os.path.join(self.checkpoint_folder, checkpoint_name)
 
-    def save(self, state: Dict, checkpoint_name: str) -> None:
+    def save(self, state: dict, checkpoint_name: str) -> None:
         """
         Save a state dictionary to a checkpoint file.
 
@@ -68,12 +70,12 @@ class CheckpointManager(object):
                 f"Failed to save checkpoint '{checkpoint_name}'"
             ) from exc
 
-    def load(self, checkpoint_name: str) -> Optional[Dict]:
+    def load(self, checkpoint_path: str | object) -> Optional[dict]:
         """
         Load a state dictionary from a checkpoint file.
 
         Args:
-            checkpoint_name (str): The name of the checkpoint file.
+            checkpoint_path (str): The path of the checkpoint file.
 
         Returns:
             dict: The loaded state dictionary.
@@ -82,9 +84,10 @@ class CheckpointManager(object):
             CheckpointManagerError: If loading the checkpoint fails.
         """
         # Checkpoint name cannot be nil
-        assert checkpoint_name, checkpoint_name
+        assert checkpoint_path, checkpoint_path
 
-        checkpoint_path = self._get_checkpoint_path(checkpoint_name)
+        if checkpoint_path is self.LAST_CREATED_NAME:
+            checkpoint_path = self.last_created_name
 
         # Use EAFP style rather than checking if the file exists and so on...
         try:
@@ -92,10 +95,10 @@ class CheckpointManager(object):
                 return pickle.load(f)
         except Exception as exc:
             raise self.CheckpointManagerError(
-                f"Failed to revive checkpoint '{checkpoint_name}'"
+                f"Failed to revive checkpoint '{checkpoint_path}'"
             ) from exc
 
-    def list(self) -> List[str]:
+    def list(self) -> list[str]:
         """
         List all available checkpoint files, including those in subdirectories.
 
@@ -136,10 +139,9 @@ class CheckpointManager(object):
                 raise self.CheckpointManagerError("No checkpoints available to delete.")
 
             # Assuming the last checkpoint is the one with the most recent modification time.
-            checkpoint_name = max(
+            checkpoint_name = sorted(
                 checkpoints,
-                key=lambda x: os.path.getmtime(self._get_checkpoint_path(x)),
-            )
+            )[-1]
 
         checkpoint_path = self._get_checkpoint_path(checkpoint_name)
 
@@ -147,5 +149,15 @@ class CheckpointManager(object):
             os.remove(checkpoint_path)
         except Exception as exc:
             raise self.CheckpointManagerError(
-                f"Failed to delete checkpoint '{checkpoint_name}'"
+                f"Failed to delete checkpoint `{checkpoint_name}`"
             ) from exc
+
+    @property
+    def last_created_name(self):
+        """
+        Get the last saved checkpoint file name.
+        """
+        checkpoints = self.list()
+        if checkpoints:
+            # This works for now
+            return sorted(checkpoints)[-1]

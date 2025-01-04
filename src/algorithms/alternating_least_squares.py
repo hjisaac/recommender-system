@@ -12,8 +12,7 @@ from src.helpers.dataset_indexer import IndexedDatasetWrapper
 from src.helpers.state_manager import AlgorithmState
 from src.helpers.serial_mapper import SerialUnidirectionalMapper
 from src.helpers.predictor import Predictor
-from src.helpers._logging import logger # noqa
-
+from src.helpers._logging import logger  # noqa
 
 
 # Centralize this if needed somewhere else
@@ -281,10 +280,15 @@ class AlternatingLeastSquares(Algorithm):
         # If we know user factors and user biases but item factors and biases are not known,
         # we can learn them using user factors and user biases that we know. And inversely,
         # if we know item factors and item biases but user factors and biases are unknown, we
-        # can learn them too.
+        # can learn them too. But, we're going to provide a simplified implementation of it now.
 
-        if (self.user_factors is None or self.user_biases is None) and (
-            self.item_factors is None or self.item_biases is None
+
+
+        if (
+            self.user_factors is None
+            and self.user_biases is None
+            and self.item_factors is None
+            and self.item_biases is None
         ):
             logger.info(
                 "Initializing user and item's factors and biases, as none of them is provided."
@@ -298,7 +302,7 @@ class AlternatingLeastSquares(Algorithm):
             self.user_biases = self._get_bias_sample(users_count)
             self.item_biases = self._get_bias_sample(items_count)
 
-        elif not (self.user_factors is None or self.user_biases is None):
+        elif self.item_factors is None and self.item_biases is None:
             # Initialize item factors and biases and then update the factors and biases via learning
             logger.info(
                 "Learning item factors and biases using the provided `user_factors` and `user_biases`..."
@@ -311,7 +315,7 @@ class AlternatingLeastSquares(Algorithm):
                 self.update_item_bias_and_factor(
                     item_id, data_by_item_id__train[item_id]
                 )
-        elif not (self.item_factors is None or self.item_biases is None):
+        elif self.user_factors is None and self.user_biases is None:
             # Initialize user factors and biases and then update the factors and biases via learning
             logger.info(
                 "Learning user factors and biases using the provided `item_factors` and `item_biases`..."
@@ -464,7 +468,7 @@ class AlternatingLeastSquares(Algorithm):
     def _get_factor_sample(self, size) -> np.ndarray:
         """
         Returns a factor sample using a normal distribution 0 as
-        mean and `1 / np.sqrt(self.hyper_n_factors)` as scale.
+        mean and `1 / np.sqrt(self.hyper_n_factors)` as a scale.
         """
         return np.random.normal(
             loc=0.0,
