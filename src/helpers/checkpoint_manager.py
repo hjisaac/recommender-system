@@ -13,8 +13,6 @@ class CheckpointManager(object):
 
     CheckpointManagerError = type("CheckpointManagerError", (Exception,), {})
 
-    LAST_CREATED_NAME = object()
-
     def __init__(self, checkpoint_folder: str, sub_folder: str = None) -> None:
         """
         Initialize the CheckpointManager.
@@ -70,7 +68,7 @@ class CheckpointManager(object):
                 f"Failed to save checkpoint '{checkpoint_name}'"
             ) from exc
 
-    def load(self, checkpoint_path: str | object) -> Optional[dict]:
+    def load(self, checkpoint_path: str) -> Optional[dict]:
         """
         Load a state dictionary from a checkpoint file.
 
@@ -85,9 +83,6 @@ class CheckpointManager(object):
         """
         # Checkpoint name cannot be nil
         assert checkpoint_path, checkpoint_path
-
-        if checkpoint_path is self.LAST_CREATED_NAME:
-            checkpoint_path = self.last_created_name
 
         # Use EAFP style rather than checking if the file exists and so on...
         try:

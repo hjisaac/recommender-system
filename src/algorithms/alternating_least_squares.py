@@ -282,8 +282,6 @@ class AlternatingLeastSquares(Algorithm):
         # if we know item factors and item biases but user factors and biases are unknown, we
         # can learn them too. But, we're going to provide a simplified implementation of it now.
 
-
-
         if (
             self.user_factors is None
             and self.user_biases is None
