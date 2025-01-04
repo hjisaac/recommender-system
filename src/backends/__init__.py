@@ -17,17 +17,17 @@ class Backend(object):
 
     def __call__(self, data):
 
-        if self.resume:
-            # TODO:
-            self.algorithm.set_state(self.checkpoint_manager.load())
-            pass
+        self.algorithm.run(
+            data=data,
+            initial_state=self.checkpoint_manager.load() if self.resume else None,
+        )
 
-        self.algorithm.run(data=data, resume=self.resume)
         checkpoint_name = self._get_checkpoint_name()
         # Save the current state of the training from the algorithm object
         self.checkpoint_manager.save(
             self.algorithm.state, checkpoint_name=self._get_checkpoint_name()
         )
+
         logger.info(f"Checkpoint successfully saved at {checkpoint_name}")
         # Here, we're again passing the algorithm to the `to_predictor`
         # method, because to do prediction we still need the algorithm.
