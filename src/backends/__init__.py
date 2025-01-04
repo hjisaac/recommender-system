@@ -22,8 +22,7 @@ class Backend(object):
             initial_state=self.checkpoint_manager.load() if self.resume else None,
         )
 
-        # Get the checkpoint name under which to save the finalized state
-        # of the algorithm
+        # Get the checkpoint name under which to save the finalized state of the algorithm
         checkpoint_name = self._get_checkpoint_name()
         # Save the current state of the training from the algorithm object
         self.checkpoint_manager.save(
@@ -31,12 +30,12 @@ class Backend(object):
         )
 
         logger.info(f"Checkpoint successfully saved at {checkpoint_name}")
-        # Here, we're passing the algorithm to the `to_predictor` method, because
-        # to do prediction we still need the algorithm. This is not a common case,
-        # but we're designing the code to be generic and to be extremely extensible.
-        # It is clear that we cannot access the algorithm from the state object. And
-        # It is not a good idea to instantiate a new algorithm somewhere in the downstream
-        # code because of some context and complications it will come with.
+        # Here, we're passing the algorithm to the `to_predictor` method, because to do
+        # prediction we still need the algorithm. This is not a common case, but we're
+        # designing the code to be generic and to be extremely extensible. It is clear
+        # that we cannot access the algorithm from the state object. And It is not a good
+        # idea to instantiate a new algorithm somewhere in the downstream code because of
+        # some context that we will have to build again and complications it will come with.
         return self.algorithm.state.to_predictor(self.algorithm)
 
     def _get_checkpoint_name(self):
