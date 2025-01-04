@@ -9,3 +9,4 @@ test.svg
 **/__pycache__
 datasets/*
 .idea
+**/app.log

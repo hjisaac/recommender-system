@@ -1,11 +1,12 @@
 [general]
-# Original: LINES_COUNT_TO_READ = 1_000_000
-LINES_COUNT_TO_READ = 400 # 20_000_000
-TRAIN_TEST_SPLIT_RATIO = 0.1
+# Original: LINES_COUNT_TO_READ = 1_000_000_000
+LINES_COUNT_TO_READ = 1_000
+APPROXIMATE_TRAIN_RATIO = 0.85
+LOG_FILE = "./artifacts/logs/app.log"
 
 [als]
 # Original: HYPER_N_EPOCH = 20
-HYPER_N_EPOCH = 4
+HYPER_N_EPOCH = 0 # Just want to revive the objects
 
 # Original: HYPER_N_FACTOR = 10
 HYPER_N_FACTOR = 10
@@ -13,7 +14,7 @@ HYPER_N_FACTOR = 10
 HYPER_GAMMA = 0.01
 HYPER_LAMBDA = 0.1
 HYPER_TAU = 1
-CHECKPOINT_FOLDER = "./.checkpoints"
+CHECKPOINT_FOLDER = "./artifacts/checkpoints/als"
 
 [figures]
 PLT_FIGURE_FOLDER = "./figures"

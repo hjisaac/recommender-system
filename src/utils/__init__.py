@@ -1,3 +1,4 @@
+import dill as pickle
 from datetime import datetime
 
 
@@ -58,3 +59,12 @@ def convert_flat_dict_to_string(
     joined_string = "_".join(filter(None, string_parts))
 
     return f"{joined_string}{dotted_extension}" if dotted_extension else joined_string
+
+
+# Added for debugging purpose
+def inspect_pickle(path):
+    with open(path, "rb") as f:
+        try:
+            return pickle.load(f)
+        except Exception:
+            raise

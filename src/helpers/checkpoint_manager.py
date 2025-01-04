@@ -58,15 +58,14 @@ class CheckpointManager(object):
             ValueError: If the state is not a dictionary.
             CheckpointManagerError: If saving the checkpoint fails.
         """
-        if not isinstance(state, dict):
-            raise ValueError("State must be a dictionary.")
+
         checkpoint_path = self._get_checkpoint_path(checkpoint_name)
         try:
             with open(checkpoint_path, "wb") as f:
                 pickle.dump(state, f)
         except Exception as exc:
             raise self.CheckpointManagerError(
-                f"Failed to save checkpoint '{checkpoint_name}': {e}"
+                f"Failed to save checkpoint '{checkpoint_name}'"
             ) from exc
 
     def load(self, checkpoint_name: str) -> Optional[Dict]:
@@ -89,28 +88,32 @@ class CheckpointManager(object):
 
         # Use EAFP style rather than checking if the file exists and so on...
         try:
-
             with open(checkpoint_path, "rb") as f:
                 return pickle.load(f)
         except Exception as exc:
             raise self.CheckpointManagerError(
-                f"Failed to load checkpoint '{checkpoint_name}'"
+                f"Failed to revive checkpoint '{checkpoint_name}'"
             ) from exc
 
     def list(self) -> List[str]:
         """
-        List all available checkpoint files.
+        List all available checkpoint files, including those in subdirectories.
 
         Returns:
-            list: A list of checkpoint filenames in the folder.
+            list: A list of checkpoint file paths.
         """
+        checkpoint_files = []
+
         try:
-            return [
-                file
-                for file in os.listdir(self.checkpoint_folder)
-                if file.endswith(".pkl")
-                and os.path.isfile(os.path.join(self.checkpoint_folder, file))
-            ]
+            # Walk through all directories and subdirectories
+            for root, _, files in os.walk(self.checkpoint_folder):
+                for file in files:
+                    if file.endswith(".pkl"):  # Check for .pkl files
+                        # Get the full file path
+                        full_path = os.path.join(root, file)
+                        checkpoint_files.append(full_path)
+
+            return checkpoint_files
         except Exception as exc:
             raise self.CheckpointManagerError(
                 f"Failed to list checkpoints: {exc}"

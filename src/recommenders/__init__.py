@@ -1,9 +1,7 @@
-import logging
 from abc import abstractmethod, ABC
 
 from src.backends import Backend
-
-logger = logging.getLogger(__name__)
+from src.helpers._logging import logger # noqa
 
 
 class Recommender(object):
@@ -13,9 +11,8 @@ class Recommender(object):
 
     def recommend(self, input):  # noqa
         predictions = self.predictor.predict(input)
-        # self.predictor.render(predictions)
-        # self._after_predict(predictions)
-        print("Recommending", predictions)
+        self.predictor.render(predictions)
+        print("Recommending", self.predictor.render(predictions))
         return predictions
 
 
