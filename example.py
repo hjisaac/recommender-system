@@ -1,19 +1,27 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[13]:
 
 
+import logging
 from src.algorithms.alternating_least_squares import AlternatingLeastSquares
 from src.helpers.dataset_indexer import DatasetIndexer
 from src.helpers.checkpoint_manager import CheckpointManager
 from src.recommenders import CollaborativeFilteringRecommenderBuilder
 from src.backends import Backend
+from src.helpers._logging import logger # noqa
 
-from src.settings import settings
+
+# In[14]:
 
 
-# In[3]:
+logger.info(
+    "Log test"
+)
+
+
+# In[10]:
 
 
 dataset_indexer = DatasetIndexer(
@@ -29,7 +37,7 @@ indexed_data = dataset_indexer.index(
 )
 
 
-# In[18]:
+# In[11]:
 
 
 als_instance = AlternatingLeastSquares(
@@ -47,11 +55,13 @@ als_backend = Backend(
         checkpoint_folder=settings.als.CHECKPOINT_FOLDER,
         sub_folder=str(settings.general.LINES_COUNT_TO_READ),
     ),
-    resume_enabled=True,
+    # Whether we should resume by using the last state of
+    # the algorithm the checkpoint manager folder or not.
+    resume=True,
 )
 
 
-# In[19]:
+# In[12]:
 
 
 recommender_builder = CollaborativeFilteringRecommenderBuilder(
@@ -70,3 +80,7 @@ recommender.recommend(prediction_input)
 
 
 # In[ ]:
+
+
+
+

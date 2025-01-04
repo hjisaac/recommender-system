@@ -1,9 +1,7 @@
-import logging
 from abc import abstractmethod, ABC
 
 from src.backends import Backend
-
-logger = logging.getLogger(__name__)
+from src.helpers._logging import logger # noqa
 
 
 class Recommender(object):

@@ -1,7 +1,5 @@
-import logging
 from src.utils import convert_flat_dict_to_string
-
-logger = logging.getLogger(__name__)
+from src.helpers._logging import logger # noqa
 
 
 class Backend(object):
@@ -16,6 +14,7 @@ class Backend(object):
         self.resume = resume
 
     def __call__(self, data):
+        logger.error(f"Checkpoint list : { self.checkpoint_manager.list()}")
         # Run the algorithm
         self.algorithm.run(
             data=data,

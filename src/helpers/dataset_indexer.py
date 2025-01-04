@@ -1,20 +1,17 @@
 import logging
-import math
-import random
 import numpy as np
 from csv import DictReader
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from functools import partial
-from typing import Iterable, Callable, Sequence, Optional
+from typing import Iterable, Callable, Optional
 
 from src.helpers.serial_mapper import (
     SerialBidirectionalMapper,
     SerialUnidirectionalMapper,
 )
 from src.helpers.constants import NOT_DEFINED
-
-logger = logging.getLogger(__name__)
+from src.helpers._logging import logger # noqa
 
 sample_from_bernoulli = partial(np.random.binomial, n=1)
 

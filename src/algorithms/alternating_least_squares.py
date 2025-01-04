@@ -12,8 +12,8 @@ from src.helpers.dataset_indexer import IndexedDatasetWrapper
 from src.helpers.state_manager import AlgorithmState
 from src.helpers.serial_mapper import SerialUnidirectionalMapper
 from src.helpers.predictor import Predictor
+from src.helpers._logging import logger # noqa
 
-logger = logging.getLogger(__name__)
 
 
 # Centralize this if needed somewhere else
@@ -111,14 +111,14 @@ class AlternatingLeastSquares(Algorithm):
             and hyper_gamma
             and hyper_tau
             and hyper_n_factors
-            and hyper_n_epochs
+            # and hyper_n_epochs
         ), (
             # Serves as a message
             hyper_lambda,
             hyper_gamma,
             hyper_tau,
             hyper_n_factors,
-            hyper_n_epochs,
+            # hyper_n_epochs,
         )
 
         self.hyper_lambda = hyper_lambda
