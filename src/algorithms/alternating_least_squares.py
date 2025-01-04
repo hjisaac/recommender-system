@@ -94,24 +94,24 @@ class AlternatingLeastSquares(Algorithm):
     )
 
     def __init__(
-            self,
-            hyper_lambda: float = 0.1,
-            hyper_gamma: float = 0.01,
-            hyper_tau: float = 0.1,
-            hyper_n_epochs: int = 10,
-            hyper_n_factors: int = 10,
-            user_factors: Optional[np.ndarray] = None,
-            item_factors: Optional[np.ndarray] = None,
-            user_biases: Optional[np.ndarray] = None,
-            item_biases: Optional[np.ndarray] = None,
+        self,
+        hyper_lambda: float = 0.1,
+        hyper_gamma: float = 0.01,
+        hyper_tau: float = 0.1,
+        hyper_n_epochs: int = 10,
+        hyper_n_factors: int = 10,
+        user_factors: Optional[np.ndarray] = None,
+        item_factors: Optional[np.ndarray] = None,
+        user_biases: Optional[np.ndarray] = None,
+        item_biases: Optional[np.ndarray] = None,
     ):
 
         assert (
-                hyper_lambda
-                and hyper_gamma
-                and hyper_tau
-                and hyper_n_factors
-                and hyper_n_epochs
+            hyper_lambda
+            and hyper_gamma
+            and hyper_tau
+            and hyper_n_factors
+            and hyper_n_epochs
         ), (
             # Serves as a message
             hyper_lambda,
@@ -162,21 +162,21 @@ class AlternatingLeastSquares(Algorithm):
             raise TypeError("All arrays or sequences must be of the same type.")
 
         if _type == np.ndarray and (
-                not all(arr.shape == arrays[0].shape for arr in arrays if arr is not None)
+            not all(arr.shape == arrays[0].shape for arr in arrays if arr is not None)
         ):
             raise TypeError(
                 "Arrays have mismatched shapes. Ensure all inputs are ndarrays with the same shape"
             )
 
         if _type == list and (
-                not all(len(arr) == len(arrays[0]) for arr in arrays if arr is not None)
+            not all(len(arr) == len(arrays[0]) for arr in arrays if arr is not None)
         ):
             raise TypeError(
                 "Lists have mismatched lengths. Ensure all inputs are lists with the same length."
             )
 
     def _validate_factors_and_biases(
-            self, user_factors, item_factors, user_biases, item_biases
+        self, user_factors, item_factors, user_biases, item_biases
     ):
         """
         Validates that user and item factors have the same shape,
@@ -199,7 +199,7 @@ class AlternatingLeastSquares(Algorithm):
             ) from exc
 
     def _validate_epochs_losses_and_rmse(
-            self, loss_train, loss_test, rmse_train, rmse_test
+        self, loss_train, loss_test, rmse_train, rmse_test
     ):
         """
         Validates that all epoch-related lists (loss and RMSE) have the same length.
@@ -268,7 +268,7 @@ class AlternatingLeastSquares(Algorithm):
         )
 
     def _finalize_factors_and_biases_initialization(
-            self, data_by_user_id__train, data_by_item_id__train
+        self, data_by_user_id__train, data_by_item_id__train
     ):
         """
         Initialize factors and biases based on the information provided while
@@ -284,7 +284,7 @@ class AlternatingLeastSquares(Algorithm):
         # can learn them too.
 
         if (self.user_factors is None or self.user_biases is None) and (
-                self.item_factors is None or self.item_biases is None
+            self.item_factors is None or self.item_biases is None
         ):
             logger.info(
                 "Initializing user and item's factors and biases, as none of them is provided."
@@ -333,10 +333,10 @@ class AlternatingLeastSquares(Algorithm):
             )
 
     def _learn_bias_and_factor(
-            self,
-            target: LearningTargetEnum,
-            target_id: Optional[int] = None,
-            ratings_data: Optional[list] = None,
+        self,
+        target: LearningTargetEnum,
+        target_id: Optional[int] = None,
+        ratings_data: Optional[list] = None,
     ):
         """
         Learn or compute user or item (target) related bias and factor based on the
@@ -400,14 +400,14 @@ class AlternatingLeastSquares(Algorithm):
             other_target_id = _get_other_target_id(other_target)
 
             bias += (
-                    rating
-                    - other_target_biases[other_target_id]
-                    - np.dot(factor, other_target_factors[other_target_id])
+                rating
+                - other_target_biases[other_target_id]
+                - np.dot(factor, other_target_factors[other_target_id])
             )
             ratings_count += 1
 
         bias = (self.hyper_lambda * bias) / (
-                self.hyper_lambda * ratings_count + self.hyper_gamma
+            self.hyper_lambda * ratings_count + self.hyper_gamma
         )
 
         for data in ratings_data:
@@ -423,8 +423,8 @@ class AlternatingLeastSquares(Algorithm):
                 other_target_factors[other_target_id],
             )
             _B += (
-                          rating - bias - other_target_biases[other_target_id]
-                  ) * other_target_factors[other_target_id]
+                rating - bias - other_target_biases[other_target_id]
+            ) * other_target_factors[other_target_id]
 
         factor = np.linalg.solve(
             self.hyper_lambda * _A + self.hyper_tau * np.eye(self.hyper_n_factors),
@@ -434,7 +434,7 @@ class AlternatingLeastSquares(Algorithm):
         return factor, bias
 
     def learn_user_bias_and_factor(
-            self, user_id: Optional[int] = None, user_ratings_data: Optional[list] = None
+        self, user_id: Optional[int] = None, user_ratings_data: Optional[list] = None
     ):
         """
         Learn or compute the given user_id related bias and factor based on the
@@ -448,7 +448,7 @@ class AlternatingLeastSquares(Algorithm):
         )
 
     def learn_item_bias_and_factor(
-            self, item_id: Optional[int] = None, item_ratings_data: Optional[list] = None
+        self, item_id: Optional[int] = None, item_ratings_data: Optional[list] = None
     ):
         """
         Learn or compute the given item_id related bias and factor based on the
@@ -481,7 +481,7 @@ class AlternatingLeastSquares(Algorithm):
 
     @staticmethod
     def _compute_rmse(
-            accumulated_squared_residual: float, residuals_count: int
+        accumulated_squared_residual: float, residuals_count: int
     ) -> float:
         """
         Returns the Root Mean Squared Error
@@ -490,13 +490,13 @@ class AlternatingLeastSquares(Algorithm):
 
     def _compute_loss(self, accumulated_squared_residual: float) -> float:
         return (
-                (-1 / 2 * self.hyper_lambda * accumulated_squared_residual)
-                - self.hyper_tau / 2 * sum(self._get_accumulated_factors_product())
-                - self.hyper_gamma * sum(self._get_accumulated_squared_biases())
+            (-1 / 2 * self.hyper_lambda * accumulated_squared_residual)
+            - self.hyper_tau / 2 * sum(self._get_accumulated_factors_product())
+            - self.hyper_gamma * sum(self._get_accumulated_squared_biases())
         )
 
     def _get_accumulated_squared_residual_and_residuals_count(
-            self, data_by_user_id: SerialUnidirectionalMapper
+        self, data_by_user_id: SerialUnidirectionalMapper
     ) -> tuple[float, int]:
         """
         Compute the accumulated squared residuals and their count for the given data.
@@ -510,20 +510,19 @@ class AlternatingLeastSquares(Algorithm):
                 user_item_rating = float(user_item_rating)
                 item_id = self._get_item_id(item)
                 accumulated_squared_residuals += (
-                                                         user_item_rating
-                                                         - (
-                                                                 self.user_biases[user_id]
-                                                                 + self.item_biases[item_id]
-                                                                 + np.dot(self.user_factors[user_id],
-                                                                          self.item_factors[item_id])
-                                                         )
-                                                 ) ** 2
+                    user_item_rating
+                    - (
+                        self.user_biases[user_id]
+                        + self.item_biases[item_id]
+                        + np.dot(self.user_factors[user_id], self.item_factors[item_id])
+                    )
+                ) ** 2
 
                 residuals_count += 1
         return accumulated_squared_residuals, residuals_count
 
     def _get_accumulated_squared_biases(self):
-        return np.sum(self.user_biases ** 2), np.sum(self.item_biases ** 2)
+        return np.sum(self.user_biases**2), np.sum(self.item_biases**2)
 
     def _get_accumulated_factors_product(self):
         # TODO: Improve this (numpy first)
@@ -552,7 +551,11 @@ class AlternatingLeastSquares(Algorithm):
         self.item_biases[item_id] = item_bias
         self.item_factors[item_id] = item_factor
 
-    def run(self, data: IndexedDatasetWrapper, initial_state: AlternatingLeastSquaresState = None):
+    def run(
+        self,
+        data: IndexedDatasetWrapper,
+        initial_state: AlternatingLeastSquaresState = None,
+    ):
         """
         Runs the algorithm on the indexed data, `IndexedDatasetWrapper`.
         """
