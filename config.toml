@@ -2,6 +2,7 @@
 # Original: LINES_COUNT_TO_READ = 1_000_000_000
 LINES_COUNT_TO_READ = 1_000
 APPROXIMATE_TRAIN_RATIO = 0.85
+LOG_FILE = "./artifacts/logs/app.log"
 
 [als]
 # Original: HYPER_N_EPOCH = 20

@@ -556,7 +556,6 @@ class AlternatingLeastSquares(Algorithm):
         Runs the algorithm on the indexed data, `IndexedDatasetWrapper`.
         """
 
-        # TODO: "resume" ?
         assert isinstance(
             data, IndexedDatasetWrapper
         ), "The provided `indexed_data` must be an instance of `IndexedDatasetWrapper`."
@@ -577,8 +576,11 @@ class AlternatingLeastSquares(Algorithm):
                 if isinstance(initial_state, dict)
                 else initial_state
             )
+
+            # Run some small validation rules before proceeding
             self._validate_state(state)
 
+            # Set the algorithm state to the `initial_state`
             self._load_state(state)
 
         # Make sure to
@@ -589,7 +591,7 @@ class AlternatingLeastSquares(Algorithm):
         self._get_user_id = lambda user: data.id_to_user_bmap.inverse[user]
         self._get_item_id = lambda item: data.id_to_item_bmap.inverse[item]
 
-        for __ in tqdm(range(self.hyper_n_epochs), desc="Epochs", unit="epoch"):
+        for epoch in tqdm(range(self.hyper_n_epochs), desc="Epochs", unit="epoch"):
 
             for user_id in data_by_user_id__train:
                 self.update_user_bias_and_factor(
@@ -639,3 +641,10 @@ class AlternatingLeastSquares(Algorithm):
             self._epochs_loss_test.append(loss_test)
             self._epochs_rmse_train.append(rmse_train)
             self._epochs_rmse_test.append(rmse_test)
+
+            # Print the information for the current epoch
+            tqdm.write(
+                f"Epoch {epoch + 1}/{self.hyper_n_epochs}: "
+                f"Loss (Train/Test) = {loss_train:.4f}/{loss_test:.4f}, "
+                f"RMSE (Train/Test) = {rmse_train:.4f}/{rmse_test:.4f}"
+            )
