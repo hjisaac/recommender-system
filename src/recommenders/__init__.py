@@ -1,7 +1,7 @@
 from abc import abstractmethod, ABC
 
 from src.backends import Backend
-from src.helpers._logging import logger # noqa
+from src.helpers._logging import logger  # noqa
 
 
 class Recommender(object):

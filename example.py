@@ -1,24 +1,22 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[13]:
+# In[8]:
 
 
-import logging
 from src.algorithms.alternating_least_squares import AlternatingLeastSquares
 from src.helpers.dataset_indexer import DatasetIndexer
 from src.helpers.checkpoint_manager import CheckpointManager
 from src.recommenders import CollaborativeFilteringRecommenderBuilder
 from src.backends import Backend
-from src.helpers._logging import logger # noqa
+from src.helpers._logging import logger  # noqa
+from src.settings import settings
 
 
-# In[14]:
+# In[9]:
 
 
-logger.info(
-    "Log test"
-)
+logger.info("Log test")
 
 
 # In[10]:
@@ -80,7 +78,3 @@ recommender.recommend(prediction_input)
 
 
 # In[ ]:
-
-
-
-
