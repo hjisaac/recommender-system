@@ -1,0 +1,2 @@
+2025-01-05 00:40:03,490 - INFO - Checkpoint successfully saved at 20250105-004003_lambda0.1_gamma0.01_tau1_n_epochs4_n_factors10
+2025-01-05 00:40:03,492 - INFO - Successfully built the recommender using AlternatingLeastSquares
