@@ -267,7 +267,7 @@ class AlternatingLeastSquares(Algorithm):
             state.loss_train, state.loss_test, state.rmse_train, state.rmse_test
         )
 
-    def _initialize_factors_and_biases(
+    def _finalize_factors_and_biases_initialization(
         self, data_by_user_id__train, data_by_item_id__train
     ):
         """
@@ -551,7 +551,7 @@ class AlternatingLeastSquares(Algorithm):
         self.item_biases[item_id] = item_bias
         self.item_factors[item_id] = item_factor
 
-    def run(self, data: IndexedDatasetWrapper, initial_state: bool = False):
+    def run(self, data: IndexedDatasetWrapper, initial_state: AlternatingLeastSquaresState=None):
         """
         Runs the algorithm on the indexed data, `IndexedDatasetWrapper`.
         """
@@ -570,6 +570,7 @@ class AlternatingLeastSquares(Algorithm):
         # TODO: Needs doc
         # data_by_item_id__test = indexed_data.data_by_item_id__test
 
+        # We want to run the algorithm in resume mode from the backend
         if initial_state:
             state = (
                 AlternatingLeastSquaresState(initial_state)
@@ -577,14 +578,13 @@ class AlternatingLeastSquares(Algorithm):
                 else initial_state
             )
 
-            # Run some small validation rules before proceeding
+            # Run some validation rules
             self._validate_state(state)
 
-            # Set the algorithm state to the `initial_state`
             self._load_state(state)
 
-        # Make sure to
-        self._initialize_factors_and_biases(
+        # Check if factors biases are set, and learn them if applicable
+        self._finalize_factors_and_biases_initialization(
             data_by_user_id__train, data_by_item_id__train
         )
 
