@@ -86,7 +86,6 @@ def get_plt_figure_path(figure_name, subdir=""):
 
 def plot_data_item_distribution_as_hist(
     self,
-    data_item: str,
     plot_title: str = "Ratings distribution",
     plot_xlabel: str = "Ratings",
     plot_ylabel: str = "Count",
@@ -94,8 +93,8 @@ def plot_data_item_distribution_as_hist(
     # TODO: Use this link to fix https://stackoverflow.com/questions/23246125/how-to-center-labels-in-histogram-plotx hist
     data_to_plot = []
     for user_id in self.id_to_user_bmap:
-        for data in self.data_by_user_id[user_id]:
-            data_to_plot.append(data[data_item])
+        for data in self.data_by_user_id__train[user_id]:
+            data_to_plot.append(data[1]) # access the rating
 
     plt.figure(figsize=(10, 6))
     plt.hist(data_to_plot, bins=10, edgecolor="black")
@@ -157,11 +156,12 @@ def plot_als_train_test_rmse_evolution(als_model):  # noqa
     error_values: List or array of error values (e.g., RMSE, loss) for each iteration.
     label: Label for the plot (default is "Test MSE").
     """
-    iterations = range(1, len(als_model.epochs_rmse_train) + 1)
+
+    iterations = range(1, len(als_model._epochs_rmse_train) + 1) # noqa
 
     # Plotting the error values
-    plt.plot(iterations, als_model.epochs_rmse_train, label="Train RMSE", color="blue")
-    plt.plot(iterations, als_model.epochs_rmse_test, label="Test RMSE", color="red")
+    plt.plot(iterations, als_model._epochs_rmse_train, label="Train RMSE", color="blue") # noqa
+    plt.plot(iterations, als_model._epochs_rmse_test, label="Test RMSE", color="red") # noqa
     # Adding titles and labels
     plt.title("RMSE Evolution Over Iterations")
     plt.xlabel("Iterations")
