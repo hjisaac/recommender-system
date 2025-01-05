@@ -8,3 +8,5 @@
 2025-01-05 03:58:29,485 - INFO - Starting a model fitting using the backend AlternatingLeastSquares...
 2025-01-05 03:58:29,500 - INFO - Checkpoint ./artifacts/checkpoints/als/1000000/20250105-004003_lambda0.1_gamma0.01_tau1_n_epochs4_n_factors10.pkl loaded with success
 2025-01-05 03:59:07,342 - INFO - All factors and biases are already provided, so no initialization is needed.
+2025-01-05 04:02:30,354 - INFO - Checkpoint successfully saved at 20250105-040230_lambda0.1_gamma0.01_tau1_n_epochs4_n_factors10
+2025-01-05 04:02:30,354 - INFO - Successfully built the recommender using AlternatingLeastSquares
