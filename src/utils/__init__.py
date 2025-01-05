@@ -1,4 +1,6 @@
+import numpy as np
 import dill as pickle
+from functools import partial
 from datetime import datetime
 
 
@@ -59,6 +61,9 @@ def convert_flat_dict_to_string(
     joined_string = "_".join(filter(None, string_parts))
 
     return f"{joined_string}{dotted_extension}" if dotted_extension else joined_string
+
+
+sample_from_bernoulli = partial(np.random.binomial, n=1)
 
 
 # Added for debugging purpose

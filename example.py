@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[8]:
+# In[1]:
 
 
 from src.algorithms.alternating_least_squares import AlternatingLeastSquares
@@ -13,13 +13,7 @@ from src.helpers._logging import logger  # noqa
 from src.settings import settings
 
 
-# In[9]:
-
-
-logger.info("Log test")
-
-
-# In[10]:
+# In[2]:
 
 
 dataset_indexer = DatasetIndexer(
@@ -35,7 +29,7 @@ indexed_data = dataset_indexer.index(
 )
 
 
-# In[11]:
+# In[3]:
 
 
 als_instance = AlternatingLeastSquares(
@@ -59,7 +53,7 @@ als_backend = Backend(
 )
 
 
-# In[12]:
+# In[4]:
 
 
 recommender_builder = CollaborativeFilteringRecommenderBuilder(
@@ -70,10 +64,10 @@ recommender_builder = CollaborativeFilteringRecommenderBuilder(
 recommender = recommender_builder.build(data=indexed_data)
 
 
-# In[20]:
+# In[5]:
 
 
-prediction_input = [{"rating": "4", "movieId": "17", "userId": "1"}]
+prediction_input = [("17", 4)]
 recommender.recommend(prediction_input)
 
 

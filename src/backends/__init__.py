@@ -18,7 +18,7 @@ class Backend(object):
 
         if self.resume:
             initial_state = self.checkpoint_manager.load(
-                self.checkpoint_manager.LAST_CREATED_NAME,
+                self.checkpoint_manager.last_created_name,
             )
             logger.info(
                 f"Checkpoint {self.checkpoint_manager.last_created_name} loaded with success",

@@ -282,8 +282,6 @@ class AlternatingLeastSquares(Algorithm):
         # if we know item factors and item biases but user factors and biases are unknown, we
         # can learn them too. But, we're going to provide a simplified implementation of it now.
 
-
-
         if (
             self.user_factors is None
             and self.user_biases is None
@@ -350,15 +348,6 @@ class AlternatingLeastSquares(Algorithm):
         "other_target" to designate both of them.
         """
 
-        # TODO: Find an elegant way to do this `_target_to_other_target_header` thing
-        #  according to whether the `_construct_data`. Because headers need to be dynamic
-        #  of the DatasetIndexer will be kept or not.
-
-        _target_to_other_target_header = {
-            LearningTargetEnum.USER: "movieId",
-            LearningTargetEnum.ITEM: "userId",
-        }
-
         _targets = LearningTargetEnum.targets()
 
         _mapping = {
@@ -397,10 +386,11 @@ class AlternatingLeastSquares(Algorithm):
 
         for data in ratings_data:
             other_target, rating = (
-                data[_target_to_other_target_header[target]],
-                data["rating"],
+                # Access the other target
+                data[0],
+                # Access the rating
+                data[1],
             )
-            rating = float(rating)
             other_target_id = _get_other_target_id(other_target)
 
             bias += (
@@ -416,10 +406,9 @@ class AlternatingLeastSquares(Algorithm):
 
         for data in ratings_data:
             other_target, rating = (
-                data[_target_to_other_target_header[target]],
-                data["rating"],
+                data[0],
+                data[1],
             )
-            rating = float(rating)
             other_target_id = _get_other_target_id(other_target)
 
             _A += np.outer(
@@ -509,9 +498,8 @@ class AlternatingLeastSquares(Algorithm):
         residuals_count = 0
         for user_id in data_by_user_id:
             for data in data_by_user_id[user_id]:
-                # TODO: Deal with "movieId", and clarify why only "movieId" is being used
-                item, user_item_rating = data["movieId"], data["rating"]
-                user_item_rating = float(user_item_rating)
+                item, user_item_rating = data
+                # user_item_rating = float(user_item_rating)
                 item_id = self._get_item_id(item)
                 accumulated_squared_residuals += (
                     user_item_rating
