@@ -348,15 +348,6 @@ class AlternatingLeastSquares(Algorithm):
         "other_target" to designate both of them.
         """
 
-        # TODO: Find an elegant way to do this `_target_to_other_target_header` thing
-        #  according to whether the `_construct_data`. Because headers need to be dynamic
-        #  of the DatasetIndexer will be kept or not.
-
-        _target_to_other_target_header = {
-            LearningTargetEnum.USER: "movieId",
-            LearningTargetEnum.ITEM: "userId",
-        }
-
         _targets = LearningTargetEnum.targets()
 
         _mapping = {
@@ -507,7 +498,6 @@ class AlternatingLeastSquares(Algorithm):
         residuals_count = 0
         for user_id in data_by_user_id:
             for data in data_by_user_id[user_id]:
-                # TODO: Deal with "movieId", and clarify why only "movieId" is being used
                 item, user_item_rating = data
                 # user_item_rating = float(user_item_rating)
                 item_id = self._get_item_id(item)
