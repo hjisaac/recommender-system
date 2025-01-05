@@ -1,6 +1,7 @@
+import numpy as np
 import dill as pickle
+from functools import partial
 from datetime import datetime
-
 
 class cached_class_property:  # noqa
     """
@@ -19,7 +20,7 @@ class cached_class_property:  # noqa
 
 
 def convert_flat_dict_to_string(
-    input_dict: dict, prefix="", extension="", timestamp=True
+        input_dict: dict, prefix="", extension="", timestamp=True
 ):
     """
     Convert a flat dictionary into a string with optional prefix, extension,
@@ -59,6 +60,9 @@ def convert_flat_dict_to_string(
     joined_string = "_".join(filter(None, string_parts))
 
     return f"{joined_string}{dotted_extension}" if dotted_extension else joined_string
+
+
+sample_from_bernoulli = partial(np.random.binomial, n=1)
 
 
 # Added for debugging purpose

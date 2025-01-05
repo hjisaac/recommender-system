@@ -396,7 +396,8 @@ class AlternatingLeastSquares(Algorithm):
         for data in ratings_data:
             other_target, rating = (
                 data[_target_to_other_target_header[target]],
-                data["rating"],
+                # Access the rating
+                data[1],
             )
             rating = float(rating)
             other_target_id = _get_other_target_id(other_target)
@@ -415,7 +416,7 @@ class AlternatingLeastSquares(Algorithm):
         for data in ratings_data:
             other_target, rating = (
                 data[_target_to_other_target_header[target]],
-                data["rating"],
+                data[1],
             )
             rating = float(rating)
             other_target_id = _get_other_target_id(other_target)
