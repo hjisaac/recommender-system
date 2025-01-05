@@ -10,7 +10,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 # Create a formatter
-formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+formatter = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s")
 
 # Console handler for logging to the console
 console_handler = logging.StreamHandler(sys.stdout)

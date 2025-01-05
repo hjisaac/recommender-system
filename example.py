@@ -13,7 +13,7 @@ from src.helpers._logging import logger  # noqa
 from src.settings import settings
 
 
-# In[3]:
+# In[2]:
 
 
 dataset_indexer = DatasetIndexer(
@@ -29,7 +29,7 @@ indexed_data = dataset_indexer.index(
 )
 
 
-# In[4]:
+# In[3]:
 
 
 als_instance = AlternatingLeastSquares(
@@ -53,7 +53,7 @@ als_backend = Backend(
 )
 
 
-# In[5]:
+# In[4]:
 
 
 recommender_builder = CollaborativeFilteringRecommenderBuilder(
@@ -64,10 +64,10 @@ recommender_builder = CollaborativeFilteringRecommenderBuilder(
 recommender = recommender_builder.build(data=indexed_data)
 
 
-# In[6]:
+# In[5]:
 
 
-prediction_input = [{"rating": "4", "movieId": "17", "userId": "1"}]
+prediction_input = [("17", 4)]
 recommender.recommend(prediction_input)
 
 
