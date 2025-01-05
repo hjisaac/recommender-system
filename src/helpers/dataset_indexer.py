@@ -55,18 +55,21 @@ class DatasetIndexer(AbstractDatasetIndexer):
         self._rating_header = rating_header
         self._file_path = file_path
         self._data_headers = data_headers
-        self._data_constructor = data_constructor
+        # This dictates the datastructures to use for holding the
+        # rating information by each user and each item
+        self._data_constructor = data_constructor or tuple
         self._limit = limit or self.LIMIT_TO_INDEX_IN_MEMORY
 
-    def _construct_data(self, data, items):  # noqa
+    def _construct_data(
+        self, data: dict, constructor: tuple, ordered_attributes: list
+    ):  # noqa
         """
         Add structure to data
         """
-        return (
-            self._data_constructor(data, items)
-            if self._data_constructor is not None
-            else data
-        )
+
+        assert ordered_attributes, ordered_attributes
+
+        return constructor(data[attr] for attr in ordered_attributes)
 
     def index(self, approximate_train_ratio: float = 1) -> IndexedDatasetWrapper:
 
@@ -121,9 +124,8 @@ class DatasetIndexer(AbstractDatasetIndexer):
                         # This user is new, so add it
                         id_to_user_bmap.add(user)
 
-                        # If the user is new, run a Bernoulli experiment to
-                        # decide whether that new user's data should be used as a
-                        # training data of test data.
+                        # If the user is new, run a Bernoulli experiment to decide whether
+                        # that new user's data should be used as a training data of test data
                         belongs_to_test_split = not sample_from_bernoulli(
                             p=approximate_train_ratio
                         )
@@ -133,7 +135,16 @@ class DatasetIndexer(AbstractDatasetIndexer):
                         id_to_item_bmap.add(item)
 
                     # Add the data without the useless items for indexing
-                    data = self._construct_data(line, self._data_headers)
+                    user_data = self._construct_data(
+                        line,
+                        self._data_constructor,
+                        [self._item_header, self._rating_header],
+                    )
+                    item_data = self._construct_data(
+                        line,
+                        self._data_constructor,
+                        [self._user_header, self._rating_header],
+                    )
 
                     # Like if the user has already been seen once
                     # Now, search for where the user is and add the data there
@@ -142,8 +153,8 @@ class DatasetIndexer(AbstractDatasetIndexer):
 
                         # This means the user is in the training set
                         if data_by_user_id__train[user_id]:
-                            data_by_user_id__train.add(data=data, key=user_id)
-                            data_by_item_id__train.add(data=data, key=item_id)
+                            data_by_user_id__train.add(data=user_data, key=user_id)
+                            data_by_item_id__train.add(data=item_data, key=item_id)
 
                             if item_id is None:
                                 data_by_item_id__test.add(
@@ -151,8 +162,8 @@ class DatasetIndexer(AbstractDatasetIndexer):
                                 )
 
                         else:
-                            data_by_user_id__test.add(data=data, key=user_id)
-                            data_by_item_id__test.add(data=data, key=item_id)
+                            data_by_user_id__test.add(data=user_data, key=user_id)
+                            data_by_item_id__test.add(data=item_data, key=item_id)
 
                             if item_id is None:
                                 data_by_item_id__train.add(
@@ -160,8 +171,8 @@ class DatasetIndexer(AbstractDatasetIndexer):
                                 )
 
                     elif belongs_to_test_split is True:
-                        data_by_user_id__test.add(data=data, key=user_id)
-                        data_by_item_id__test.add(data=data, key=item_id)
+                        data_by_user_id__test.add(data=user_data, key=user_id)
+                        data_by_item_id__test.add(data=item_data, key=item_id)
 
                         # Add the user_id to the training set but without the data to
                         # keep the same dimension between the training and test set
@@ -171,8 +182,8 @@ class DatasetIndexer(AbstractDatasetIndexer):
                             data_by_item_id__train.add(SerialUnidirectionalMapper.EMPTY)
 
                     else:
-                        data_by_user_id__train.add(data=data, key=user_id)
-                        data_by_item_id__train.add(data=data, key=item_id)
+                        data_by_user_id__train.add(data=user_data, key=user_id)
+                        data_by_item_id__train.add(data=item_data, key=item_id)
                         # Add the user_id to the test set but without the data to
                         # keep the same dimension between the training and test set
                         data_by_user_id__test.add(SerialUnidirectionalMapper.EMPTY)
@@ -188,10 +199,9 @@ class DatasetIndexer(AbstractDatasetIndexer):
                         )
                         break
         except (FileNotFoundError,) as exc:
-            logger.error(
+            raise self.DatasetIndexerError(
                 f"Cannot index data from the given `file_path` .i.e {self._file_path}. Attempt failed with exception {exc}"
-            )
-            raise self.DatasetIndexerError() from exc
+            ) from exc
 
         logger.info(
             f"Successfully indexed {indexed_count} lines from {self._file_path}"
