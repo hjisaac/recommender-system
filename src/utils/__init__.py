@@ -3,6 +3,7 @@ import dill as pickle
 from functools import partial
 from datetime import datetime
 
+
 class cached_class_property:  # noqa
     """
     A decorator to define a class-level property that caches its value
@@ -20,7 +21,7 @@ class cached_class_property:  # noqa
 
 
 def convert_flat_dict_to_string(
-        input_dict: dict, prefix="", extension="", timestamp=True
+    input_dict: dict, prefix="", extension="", timestamp=True
 ):
     """
     Convert a flat dictionary into a string with optional prefix, extension,
