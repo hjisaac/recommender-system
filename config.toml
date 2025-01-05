@@ -5,7 +5,7 @@ APPROXIMATE_TRAIN_RATIO = 0.85
 LOG_FILE = "./artifacts/logs/app.log"
 
 [als]
-# Original: HYPER_N_EPOCH = 20
+# Original: HYPER_N_EPOCH = 30
 HYPER_N_EPOCH = 0 # Just want to revive the objects
 
 # Original: HYPER_N_FACTOR = 10

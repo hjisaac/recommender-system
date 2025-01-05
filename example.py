@@ -16,7 +16,6 @@ from src.settings import settings
 # In[2]:
 
 
-logger.info("Log test")
 
 
 # In[3]:
