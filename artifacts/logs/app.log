@@ -1,2 +1,10 @@
 2025-01-05 00:40:03,490 - INFO - Checkpoint successfully saved at 20250105-004003_lambda0.1_gamma0.01_tau1_n_epochs4_n_factors10
 2025-01-05 00:40:03,492 - INFO - Successfully built the recommender using AlternatingLeastSquares
+2025-01-05 03:54:16,281 - WARNING - The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether the data point should be used as a training data or a test data.
+2025-01-05 03:55:54,308 - WARNING - The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether the data point should be used as a training data or a test data.
+2025-01-05 03:58:29,485 - WARNING - The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-05 03:58:29,485 - INFO - Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-05 03:58:29,485 - INFO - Starting the build of the recommender using AlternatingLeastSquares...
+2025-01-05 03:58:29,485 - INFO - Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-05 03:58:29,500 - INFO - Checkpoint ./artifacts/checkpoints/als/1000000/20250105-004003_lambda0.1_gamma0.01_tau1_n_epochs4_n_factors10.pkl loaded with success
+2025-01-05 03:59:07,342 - INFO - All factors and biases are already provided, so no initialization is needed.

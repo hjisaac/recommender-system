@@ -60,16 +60,20 @@ class DatasetIndexer(AbstractDatasetIndexer):
         self._data_constructor = data_constructor or tuple
         self._limit = limit or self.LIMIT_TO_INDEX_IN_MEMORY
 
+    @staticmethod
     def _construct_data(
-        self, data: dict, constructor: tuple, ordered_attributes: list
-    ):  # noqa
+        data: dict, constructor: tuple, ordered_attribute_description: list[tuple]
+    ):
         """
-        Add structure to data
+        Construct the datastructures using the provided (or tuple) constructor
+        and the ordered attributes provided.
         """
 
-        assert ordered_attributes, ordered_attributes
+        assert ordered_attribute_description, ordered_attribute_description
 
-        return constructor(data[attr] for attr in ordered_attributes)
+        return constructor(
+            attr_type(data[attr]) for attr, attr_type in ordered_attribute_description
+        )
 
     def index(self, approximate_train_ratio: float = 1) -> IndexedDatasetWrapper:
 
@@ -134,16 +138,15 @@ class DatasetIndexer(AbstractDatasetIndexer):
                         # This item is new, so add it
                         id_to_item_bmap.add(item)
 
-                    # Add the data without the useless items for indexing
                     user_data = self._construct_data(
                         line,
                         self._data_constructor,
-                        [self._item_header, self._rating_header],
+                        [(self._item_header, str), (self._rating_header, float)],
                     )
                     item_data = self._construct_data(
                         line,
                         self._data_constructor,
-                        [self._user_header, self._rating_header],
+                        [(self._user_header, str), (self._rating_header, float)],
                     )
 
                     # Like if the user has already been seen once

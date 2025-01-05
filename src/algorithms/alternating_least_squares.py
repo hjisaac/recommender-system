@@ -395,11 +395,11 @@ class AlternatingLeastSquares(Algorithm):
 
         for data in ratings_data:
             other_target, rating = (
-                data[_target_to_other_target_header[target]],
+                # Access the other target
+                data[0],
                 # Access the rating
                 data[1],
             )
-            rating = float(rating)
             other_target_id = _get_other_target_id(other_target)
 
             bias += (
@@ -415,10 +415,9 @@ class AlternatingLeastSquares(Algorithm):
 
         for data in ratings_data:
             other_target, rating = (
-                data[_target_to_other_target_header[target]],
+                data[0],
                 data[1],
             )
-            rating = float(rating)
             other_target_id = _get_other_target_id(other_target)
 
             _A += np.outer(
@@ -509,8 +508,8 @@ class AlternatingLeastSquares(Algorithm):
         for user_id in data_by_user_id:
             for data in data_by_user_id[user_id]:
                 # TODO: Deal with "movieId", and clarify why only "movieId" is being used
-                item, user_item_rating = data["movieId"], data["rating"]
-                user_item_rating = float(user_item_rating)
+                item, user_item_rating = data
+                # user_item_rating = float(user_item_rating)
                 item_id = self._get_item_id(item)
                 accumulated_squared_residuals += (
                     user_item_rating

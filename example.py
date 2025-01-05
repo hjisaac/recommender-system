@@ -13,9 +13,6 @@ from src.helpers._logging import logger  # noqa
 from src.settings import settings
 
 
-# In[2]:
-
-
 # In[3]:
 
 
@@ -75,3 +72,7 @@ recommender.recommend(prediction_input)
 
 
 # In[ ]:
+
+
+
+
