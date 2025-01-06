@@ -9,13 +9,24 @@ class Backend(object):
     """
 
     def __init__(self, algorithm, checkpoint_manager, item_database=None, resume=False):
+        """
+        Initializes the Backend class, which coordinates the components of the system.
+
+        The backend orchestrates the interaction between the algorithm, checkpoint manager,
+        and item database, ensuring they work together seamlessly.
+
+        Parameters:
+        - algorithm (Algorithm): The algorithm that the backend will use to perform operations.
+        - checkpoint_manager (CheckpointManager): Responsible for managing model checkpoints.
+        - item_database (Optional[Database], default=None): An abstraction layer to provide item data.
+          The interface of this database should conform to a contract that allows interaction with item data,
+          typically providing a `get(item)` method.
+        - resume (bool, default=False): If True, the backend will attempt to resume from the last checkpoint
+          rather than starting from scratch.
+        """
+
         self.resume = resume
         self.algorithm = algorithm
-        # The database is here an abstraction to provide the items' data.
-        # For generalization purposes, that interface should conform to
-        # a clear contract that the backend code can rely on. Eg:= That
-        # interface should implement a get method like `database.get(item)`
-        # but we will go the simpler way for now.
         self.item_database = item_database
         self.checkpoint_manager = checkpoint_manager
 
