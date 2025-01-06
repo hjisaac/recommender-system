@@ -17,6 +17,9 @@ help:
 compile:
 	jupyter nbconvert --to script example.ipynb
 
+profile:
+	pyinstrument example.py
+
 # Default target
 .PHONY: test
 test:
