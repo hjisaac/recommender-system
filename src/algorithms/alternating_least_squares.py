@@ -1,11 +1,9 @@
-import logging
 from types import NoneType
 
 import numpy as np
 from enum import Enum
 from tqdm import tqdm
 from typing import Optional
-from collections import defaultdict
 
 from src.algorithms.core import Algorithm
 from src.helpers.dataset_indexer import IndexedDatasetWrapper
@@ -38,8 +36,9 @@ class AlternatingLeastSquaresState(AlgorithmState):
     # We still need the algorithm in other to do prediction
 
     @staticmethod
-    def to_predictor(als: "AlternatingLeastSquares", *args, item_database=None, **kwargs) -> Predictor:
-
+    def to_predictor(
+        als: "AlternatingLeastSquares", *args, item_database=None, **kwargs
+    ) -> Predictor:
         def predict(user_ratings_data: list):
             """
             Predict ratings for a user based on user and item factors and biases

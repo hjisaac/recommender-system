@@ -25,6 +25,7 @@ numpy = "2"
 pipdeptree = "^2.23.4"
 black = {extras = ["jupyter"], version = "^24.8.0"}
 coverage = "^7.6.9"
+pyinstrument = "^5.0.0"
 
 [build-system]
 requires = ["poetry-core"]
