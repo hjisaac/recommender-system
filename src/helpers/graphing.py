@@ -85,15 +85,15 @@ def get_plt_figure_path(figure_name, subdir=""):
 
 
 def plot_data_item_distribution_as_hist(
-    self,
+    indexed_data,
     plot_title: str = "Ratings distribution",
     plot_xlabel: str = "Ratings",
     plot_ylabel: str = "Count",
 ):
     # TODO: Use this link to fix https://stackoverflow.com/questions/23246125/how-to-center-labels-in-histogram-plotx hist
     data_to_plot = []
-    for user_id in self.id_to_user_bmap:
-        for data in self.data_by_user_id__train[user_id]:
+    for user_id in indexed_data.id_to_user_bmap:
+        for data in indexed_data.data_by_user_id__train[user_id]:
             data_to_plot.append(data[1])  # access the rating
 
     plt.figure(figsize=(10, 6))
@@ -109,14 +109,14 @@ def plot_data_item_distribution_as_hist(
     plt.show()
 
 
-def plot_power_low_distribution(self):  # noqa
+def plot_power_low_distribution(indexed_data):  # noqa
     user_degrees_occurrences = {
-        user_id: len(self.data_by_user_id__train[user_id])
-        for user_id in self.id_to_user_bmap
+        user_id: len(indexed_data.data_by_user_id__train[user_id])
+        for user_id in indexed_data.id_to_user_bmap
     }
     movie_degrees_occurrences = {
-        item_id: len(self.data_by_item_id__train[item_id])
-        for item_id in self.id_to_item_bmap
+        item_id: len(indexed_data.data_by_item_id__train[item_id])
+        for item_id in indexed_data.id_to_item_bmap
     }
     user_degrees_occurrences_counter = Counter(user_degrees_occurrences.values())
     movie_degrees_occurrences_counter = Counter(movie_degrees_occurrences.values())
@@ -188,11 +188,11 @@ def plot_als_train_test_loss_evolution(als_model):  # noqa
     als_model: Object containing 'epochs_loss_train' and 'epochs_loss_test'
                attributes that represent the loss values for each iteration.
     """
-    iterations = range(1, len(als_model.epochs_loss_train) + 1)
+    iterations = range(1, len(als_model._epochs_loss_train) + 1)
 
     # Plotting the loss values
-    plt.plot(iterations, als_model.epochs_loss_train, label="Train Loss", color="blue")
-    plt.plot(iterations, als_model.epochs_loss_test, label="Test Loss", color="red")
+    plt.plot(iterations, als_model._epochs_loss_train, label="Train Loss", color="blue")
+    plt.plot(iterations, als_model._epochs_loss_test, label="Test Loss", color="red")
 
     # Adding titles and labels
     plt.title("Loss Evolution Over Iterations")
