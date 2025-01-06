@@ -94,7 +94,7 @@ def plot_data_item_distribution_as_hist(
     data_to_plot = []
     for user_id in self.id_to_user_bmap:
         for data in self.data_by_user_id__train[user_id]:
-            data_to_plot.append(data[1]) # access the rating
+            data_to_plot.append(data[1])  # access the rating
 
     plt.figure(figsize=(10, 6))
     plt.hist(data_to_plot, bins=10, edgecolor="black")
@@ -157,11 +157,15 @@ def plot_als_train_test_rmse_evolution(als_model):  # noqa
     label: Label for the plot (default is "Test MSE").
     """
 
-    iterations = range(1, len(als_model._epochs_rmse_train) + 1) # noqa
+    iterations = range(1, len(als_model._epochs_rmse_train) + 1)  # noqa
 
     # Plotting the error values
-    plt.plot(iterations, als_model._epochs_rmse_train, label="Train RMSE", color="blue") # noqa
-    plt.plot(iterations, als_model._epochs_rmse_test, label="Test RMSE", color="red") # noqa
+    plt.plot(
+        iterations, als_model._epochs_rmse_train, label="Train RMSE", color="blue"
+    )  # noqa
+    plt.plot(
+        iterations, als_model._epochs_rmse_test, label="Test RMSE", color="red"
+    )  # noqa
     # Adding titles and labels
     plt.title("RMSE Evolution Over Iterations")
     plt.xlabel("Iterations")

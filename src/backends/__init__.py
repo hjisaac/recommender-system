@@ -8,10 +8,16 @@ class Backend(object):
     all the components together and ensures their communication with each other.
     """
 
-    def __init__(self, algorithm, checkpoint_manager, resume=False):
-        self.algorithm = algorithm
-        self.checkpoint_manager = checkpoint_manager
+    def __init__(self, algorithm, checkpoint_manager, item_database=None, resume=False):
         self.resume = resume
+        self.algorithm = algorithm
+        # The database is here an abstraction to provide the items' data.
+        # For generalization purposes, that interface should conform to
+        # a clear contract that the backend code can rely on. Eg:= That
+        # interface should implement a get method like `database.get(item)`
+        # but we will go the simpler way for now.
+        self.item_database = item_database
+        self.checkpoint_manager = checkpoint_manager
 
     def __call__(self, data):
         initial_state = None
@@ -44,7 +50,9 @@ class Backend(object):
         # that we cannot access the algorithm from the state object. And It is not a good
         # idea to instantiate a new algorithm somewhere in the downstream code because of
         # some context that we will have to build again and complications it will come with.
-        return self.algorithm.state.to_predictor(self.algorithm)
+        return self.algorithm.state.to_predictor(
+            self.algorithm, item_database=self.item_database
+        )
 
     def _get_checkpoint_name(self):
         """Side effect method that returns a different string made
