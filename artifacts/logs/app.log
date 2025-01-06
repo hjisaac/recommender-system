@@ -264,3 +264,12 @@
 2025-01-06 20:28:28,843 [INFO] Initializing user and item's factors and biases, as none of them is provided.
 2025-01-06 20:29:05,252 [INFO] Checkpoint successfully saved at 20250106-202905_lambda0.1_gamma0.01_tau1_n_epochs2_n_factors10
 2025-01-06 20:29:05,252 [INFO] Successfully built the recommender using AlternatingLeastSquares
+2025-01-06 23:06:34,954 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether the data point should be used as a training data or a test data.
+2025-01-06 23:06:42,355 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-06 23:06:42,357 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-06 23:06:46,442 [INFO] Starting the build of the recommender using AlternatingLeastSquares...
+2025-01-06 23:06:46,444 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-06 23:06:46,469 [INFO] Checkpoint ./artifacts/checkpoints/als/1000000/20241231-021927_lambda0.1_gamma0.01_tau1_n_epochs4_n_factors10.pkl loaded with success
+2025-01-06 23:06:46,471 [INFO] All factors and biases are already provided, so no initialization is needed.
+2025-01-06 23:07:46,679 [INFO] Checkpoint successfully saved at 20250106-230746_lambda0.1_gamma0.01_tau1_n_epochs4_n_factors10
+2025-01-06 23:07:46,680 [INFO] Successfully built the recommender using AlternatingLeastSquares

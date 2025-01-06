@@ -136,6 +136,11 @@ class AlternatingLeastSquares(Algorithm):
         self.user_biases = user_biases
         self.item_biases = item_biases
 
+        # This is useful, when the backend (i.e., the caller) wants
+        # to resume the training from certain epoch instead all starting
+        # completing from the beginning. In such setting, the initial
+        self._initial_hyper_n_epochs = hyper_n_epochs
+
         self._epochs_loss_train = []
         self._epochs_loss_test = []
         self._epochs_rmse_train = []
@@ -292,7 +297,7 @@ class AlternatingLeastSquares(Algorithm):
         # If we know user factors and user biases but item factors and biases are not known,
         # we can learn them using user factors and user biases that we know. And inversely,
         # if we know item factors and item biases but user factors and biases are unknown, we
-        # can learn them too. But, we're going to provide a simplified implementation of it now.
+        # can learn them too. But we're going to provide a simplified implementation of it now.
 
         if (
             self.user_factors is None
@@ -597,6 +602,14 @@ class AlternatingLeastSquares(Algorithm):
 
         self.id_to_user_bmap = data.id_to_user_bmap
         self.id_to_item_bmap = data.id_to_item_bmap
+
+        if self.hyper_n_epochs >= self._initial_hyper_n_epochs:
+            logger.error(
+                "Cannot train the model more because hyperparameter 'hyper_n_epochs' is already "
+                f"greater or equal to the final number of epochs wanted ({self._initial_hyper_n_epochs}). "
+                "Please check the value of 'hyper_n_epochs' and adjust accordingly. Exiting..."
+            )
+            return
 
         for epoch in tqdm(range(self.hyper_n_epochs), desc="Epochs", unit="epoch"):
 
