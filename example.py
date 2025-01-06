@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[30]:
+# In[31]:
 
 
 import pandas as pd
@@ -23,7 +23,7 @@ from src.helpers.graphing import (
 )
 
 
-# In[31]:
+# In[32]:
 
 
 dataset_indexer = DatasetIndexer(
@@ -39,7 +39,7 @@ indexed_data = dataset_indexer.index(
 )
 
 
-# In[32]:
+# In[33]:
 
 
 # Import the movie csv file that will act as our movie database
@@ -51,19 +51,19 @@ item_database = (
 )
 
 
-# In[33]:
+# In[34]:
 
 
 # plot_data_item_distribution_as_hist(indexed_data)
 
 
-# In[34]:
+# In[35]:
 
 
 # plot_power_low_distribution(indexed_data,)
 
 
-# In[35]:
+# In[36]:
 
 
 als_instance = AlternatingLeastSquares(
@@ -85,11 +85,11 @@ als_backend = Backend(
     item_database=item_database,
     # Whether we should resume by using the last state of
     # the algorithm the checkpoint manager folder or not.
-    resume=True,
+    resume=False,
 )
 
 
-# In[36]:
+# In[37]:
 
 
 recommender_builder = CollaborativeFilteringRecommenderBuilder(
@@ -103,19 +103,19 @@ recommender = recommender_builder.build(data=indexed_data)
 # In[ ]:
 
 
-# In[37]:
+# In[38]:
 
 
 # plot_als_train_test_rmse_evolution(als_backend.algorithm)
 
 
-# In[38]:
+# In[39]:
 
 
 # plot_als_train_test_loss_evolution(als_backend.algorithm)
 
 
-# In[39]:
+# In[40]:
 
 
 prediction_input = [("17", 4)]

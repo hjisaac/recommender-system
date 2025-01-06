@@ -1,12 +1,12 @@
 [general]
 # Original: LINES_COUNT_TO_READ = 1_000_000_000
-LINES_COUNT_TO_READ = 1000000
+LINES_COUNT_TO_READ = 1_000_000_000
 APPROXIMATE_TRAIN_RATIO = 0.85
 LOG_FILE = "./artifacts/logs/app.log"
 
 [als]
 # Original: HYPER_N_EPOCH = 30
-HYPER_N_EPOCH = 2 # Just want to revive the objects
+HYPER_N_EPOCH = 30
 
 # Original: HYPER_N_FACTOR = 10
 HYPER_N_FACTOR = 10

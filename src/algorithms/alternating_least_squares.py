@@ -140,6 +140,7 @@ class AlternatingLeastSquares(Algorithm):
         # to resume the training from certain epoch instead all starting
         # completing from the beginning. In such setting, the initial
         self._initial_hyper_n_epochs = hyper_n_epochs
+        self._state_resumed = False
 
         self._epochs_loss_train = []
         self._epochs_loss_test = []
@@ -251,6 +252,9 @@ class AlternatingLeastSquares(Algorithm):
         self._epochs_loss_test = state.loss_test or []
         self._epochs_rmse_train = state.rmse_train or []
         self._epochs_rmse_test = state.rmse_test or []
+
+        # Helps to know wether the state has been resumed or not
+        self._state_resumed = True
 
     @property
     def state(self) -> AlgorithmState:
@@ -603,7 +607,12 @@ class AlternatingLeastSquares(Algorithm):
         self.id_to_user_bmap = data.id_to_user_bmap
         self.id_to_item_bmap = data.id_to_item_bmap
 
-        if self.hyper_n_epochs >= self._initial_hyper_n_epochs:
+        n_epochs = self.hyper_n_epochs
+
+        # When we resume, we only want to train for the rest of the epochs
+        if self._state_resumed and (
+            (n_epochs := self._initial_hyper_n_epochs - self.hyper_n_epochs) <= 0
+        ):
             logger.error(
                 f"Cannot train the model more because hyperparameter 'hyper_n_epochs' ({self.hyper_n_epochs}) is already "
                 f"greater or equal to the final number of epochs wanted which is {self._initial_hyper_n_epochs}. "
@@ -611,7 +620,11 @@ class AlternatingLeastSquares(Algorithm):
             )
             return
 
-        for epoch in tqdm(range(self.hyper_n_epochs), desc="Epochs", unit="epoch"):
+        logger.debug(
+            f"Epochs count to train for {n_epochs}, entering the training loop now"
+        )
+
+        for epoch in tqdm(range(n_epochs), desc="Epochs", unit="epoch"):
 
             for user_id in data_by_user_id__train:
                 self.update_user_bias_and_factor(
@@ -668,3 +681,7 @@ class AlternatingLeastSquares(Algorithm):
                 f"Loss (Train/Test) : {loss_train:.4f} / {loss_test:.4f}, "
                 f"RMSE (Train/Test) : {rmse_train:.4f} / {rmse_test:.4f}"
             )
+
+        logger.info(
+            f"{self.__class__.__name__} algorithm running just end, exiting the run method... "
+        )
