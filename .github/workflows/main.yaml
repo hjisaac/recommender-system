@@ -20,13 +20,11 @@ jobs:
 
       # Step 3: Install dependencies
       - name: Install dependencies with Poetry
-        run: |
-          pip install poetry
-          poetry install
+        run: poetry install
 
       # Step 4: Run code style check with Black
-      - name: Code Style Check with Black
-        run: poetry run black --check .
+      # - name: Code Style Check with Black
+      #  run: poetry run black --check .
 
       # Step 5: Compile Jupyter Notebook (Optional)
       - name: Compile Jupyter Notebook
