@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[30]:
 
 
 import pandas as pd
@@ -17,13 +17,13 @@ from src.settings import settings
 from src.helpers.graphing import (
     plot_als_train_test_loss_evolution,
     plot_als_train_test_rmse_evolution,
-    plot_error_evolution,
+    # plot_error_evolution,
     plot_power_low_distribution,
     plot_data_item_distribution_as_hist,
 )
 
 
-# In[2]:
+# In[31]:
 
 
 dataset_indexer = DatasetIndexer(
@@ -39,7 +39,7 @@ indexed_data = dataset_indexer.index(
 )
 
 
-# In[3]:
+# In[32]:
 
 
 # Import the movie csv file that will act as our movie database
@@ -51,21 +51,19 @@ item_database = (
 )
 
 
-# In[4]:
+# In[33]:
 
 
-plot_data_item_distribution_as_hist(indexed_data)
+# plot_data_item_distribution_as_hist(indexed_data)
 
 
-# In[5]:
+# In[34]:
 
 
-plot_power_low_distribution(
-    indexed_data,
-)
+# plot_power_low_distribution(indexed_data,)
 
 
-# In[6]:
+# In[35]:
 
 
 als_instance = AlternatingLeastSquares(
@@ -91,7 +89,7 @@ als_backend = Backend(
 )
 
 
-# In[7]:
+# In[36]:
 
 
 recommender_builder = CollaborativeFilteringRecommenderBuilder(
@@ -102,13 +100,22 @@ recommender_builder = CollaborativeFilteringRecommenderBuilder(
 recommender = recommender_builder.build(data=indexed_data)
 
 
-# In[8]:
+# In[ ]:
 
 
-plot_als_train_test_rmse_evolution(als_backend.algorithm)
+# In[37]:
 
 
-# In[10]:
+# plot_als_train_test_rmse_evolution(als_backend.algorithm)
+
+
+# In[38]:
+
+
+# plot_als_train_test_loss_evolution(als_backend.algorithm)
+
+
+# In[39]:
 
 
 prediction_input = [("17", 4)]

@@ -605,8 +605,8 @@ class AlternatingLeastSquares(Algorithm):
 
         if self.hyper_n_epochs >= self._initial_hyper_n_epochs:
             logger.error(
-                "Cannot train the model more because hyperparameter 'hyper_n_epochs' is already "
-                f"greater or equal to the final number of epochs wanted ({self._initial_hyper_n_epochs}). "
+                f"Cannot train the model more because hyperparameter 'hyper_n_epochs' ({self.hyper_n_epochs}) is already "
+                f"greater or equal to the final number of epochs wanted which is {self._initial_hyper_n_epochs}. "
                 "Please check the value of 'hyper_n_epochs' and adjust accordingly. Exiting..."
             )
             return
@@ -664,7 +664,7 @@ class AlternatingLeastSquares(Algorithm):
 
             # Print the information for the current epoch
             tqdm.write(
-                f"Epoch {epoch + 1}/{self.hyper_n_epochs}: "
-                f"Loss (Train/Test) : {loss_train:.4f}/{loss_test:.4f}, "
-                f"RMSE (Train/Test) : {rmse_train:.4f}/{rmse_test:.4f}"
+                f"Epoch {epoch + 1}/{self.hyper_n_epochs} "
+                f"Loss (Train/Test) : {loss_train:.4f} / {loss_test:.4f}, "
+                f"RMSE (Train/Test) : {rmse_train:.4f} / {rmse_test:.4f}"
             )

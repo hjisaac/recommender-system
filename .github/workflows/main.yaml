@@ -1,19 +1,55 @@
+name: Python CI/CD Workflow
+run-name: ${{ github.actor }} is testing GitHub Actions 🚀
 
-name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
+
 jobs:
-  Explore-GitHub-Actions:
+  Python-Workflow:
     runs-on: ubuntu-latest
+
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: Check out repository code
+      # Step 1: Check out the repository code
+      - name: Check out repository
         uses: actions/checkout@v4
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-      - name: List files in the repository
+
+      # Step 2: Set up Python environment
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      # Step 3: Install dependencies
+      - name: Install dependencies with Poetry
+        run: poetry install
+
+      # Step 4: Run code style check with Black
+      # - name: Code Style Check with Black
+      #  run: poetry run black --check .
+
+      # Step 5: Compile Jupyter Notebook (Optional)
+      - name: Compile Jupyter Notebook
         run: |
-          ls ${{ github.workspace }}
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+          make compile
+          echo "Jupyter Notebook compiled successfully."
+
+      # Step 6: List files in the repository (debug step)
+      # - name: List files in the repository
+      #  run: |
+      #    ls ${{ github.workspace }}
+
+      # Commented Testing and Coverage Steps:
+      # - name: Run Tests with Coverage
+      #   run: |
+      #     make test_coverage
+
+      # - name: Generate HTML Coverage Report
+      #   if: always()
+      #   run: |
+      #     make test_html_report
+      #     echo "HTML Coverage Report generated."
+
+      # - name: Clean Up
+      #   if: always()
+      #   run: |
+      #     make clean
+      #     echo "Clean up complete."
