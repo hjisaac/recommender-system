@@ -8,10 +8,27 @@ class Backend(object):
     all the components together and ensures their communication with each other.
     """
 
-    def __init__(self, algorithm, checkpoint_manager, resume=False):
-        self.algorithm = algorithm
-        self.checkpoint_manager = checkpoint_manager
+    def __init__(self, algorithm, checkpoint_manager, item_database=None, resume=False):
+        """
+        Initializes the Backend class, which coordinates the components of the system.
+
+        The backend orchestrates the interaction between the algorithm, checkpoint manager,
+        and item database, ensuring they work together seamlessly.
+
+        Parameters:
+        - algorithm (Algorithm): The algorithm that the backend will use to perform operations.
+        - checkpoint_manager (CheckpointManager): Responsible for managing model checkpoints.
+        - item_database (Optional[Database], default=None): An abstraction layer to provide item data.
+          The interface of this database should conform to a contract that allows interaction with item data,
+          typically providing a `get(item)` method.
+        - resume (bool, default=False): If True, the backend will attempt to resume from the last checkpoint
+          rather than starting from scratch.
+        """
+
         self.resume = resume
+        self.algorithm = algorithm
+        self.item_database = item_database
+        self.checkpoint_manager = checkpoint_manager
 
     def __call__(self, data):
         initial_state = None
@@ -44,7 +61,9 @@ class Backend(object):
         # that we cannot access the algorithm from the state object. And It is not a good
         # idea to instantiate a new algorithm somewhere in the downstream code because of
         # some context that we will have to build again and complications it will come with.
-        return self.algorithm.state.to_predictor(self.algorithm)
+        return self.algorithm.state.to_predictor(
+            self.algorithm, item_database=self.item_database
+        )
 
     def _get_checkpoint_name(self):
         """Side effect method that returns a different string made

@@ -1,0 +1,34 @@
+
+  _     ._   __/__   _ _  _  _ _/_   Recorded: 20:28:18  Samples:  46082
+ /_//_/// /_\ / //_// / //_'/ //     Duration: 46.569    CPU time: 46.550
+/   _/                      v5.0.0
+
+Profile at /home/hjisaac/AI4Science/ml_at_scale/example.py:26
+
+46.568 <module>  example.py:1
+|- 36.410 CollaborativeFilteringRecommenderBuilder.build  src/recommenders/__init__.py:30
+|  `- 36.410 Backend.__call__  src/backends/__init__.py:22
+|     `- 36.403 AlternatingLeastSquares.run  src/algorithms/alternating_least_squares.py:559
+|        |- 16.967 AlternatingLeastSquares.update_item_bias_and_factor  src/algorithms/alternating_least_squares.py:549
+|        |  `- 16.890 AlternatingLeastSquares.learn_item_bias_and_factor  src/algorithms/alternating_least_squares.py:454
+|        |     `- 16.844 AlternatingLeastSquares._learn_bias_and_factor  src/algorithms/alternating_least_squares.py:348
+|        |        |- 9.543 [self]  src/algorithms/alternating_least_squares.py
+|        |        |- 5.195 outer  numpy/_core/numeric.py:885
+|        |        |     [2 frames hidden]  numpy, <built-in>
+|        |        `- 0.895 solve  numpy/linalg/_linalg.py:318
+|        |- 14.624 AlternatingLeastSquares.update_user_bias_and_factor  src/algorithms/alternating_least_squares.py:539
+|        |  `- 14.600 AlternatingLeastSquares.learn_user_bias_and_factor  src/algorithms/alternating_least_squares.py:440
+|        |     `- 14.589 AlternatingLeastSquares._learn_bias_and_factor  src/algorithms/alternating_least_squares.py:348
+|        |        |- 8.660 [self]  src/algorithms/alternating_least_squares.py
+|        |        `- 4.890 outer  numpy/_core/numeric.py:885
+|        `- 4.492 AlternatingLeastSquares._get_accumulated_squared_residual_and_residuals_count  src/algorithms/alternating_least_squares.py:504
+`- 9.587 DatasetIndexer.index  src/helpers/dataset_indexer.py:78
+   |- 2.748 DictReader.__next__  csv.py:107
+   |     [2 frames hidden]  csv, <built-in>
+   |- 2.475 [self]  src/helpers/dataset_indexer.py
+   |- 2.438 _construct_data  src/helpers/dataset_indexer.py:63
+   |  |- 1.401 [self]  src/helpers/dataset_indexer.py
+   |  `- 1.037 <genexpr>  src/helpers/dataset_indexer.py:74
+   |- 1.060 SerialUnidirectionalMapper.__getitem__  src/helpers/serial_mapper.py:20
+   `- 0.696 SerialUnidirectionalMapper.add  src/helpers/serial_mapper.py:33
+
