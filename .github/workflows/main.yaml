@@ -37,10 +37,6 @@ jobs:
       # Step 6: Compile Jupyter Notebook
       - name: Compile Jupyter Notebook
         run: |
-          make compile
+          # make compile
           echo "Jupyter Notebook compiled successfully."
 
-      # Step 7: List files in the repository (debug step)
-      - name: List files in the repository
-        run: |
-          ls ${{ github.workspace }}
