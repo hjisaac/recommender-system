@@ -148,6 +148,4 @@ This project is licensed under the MIT License. See the `LICENSE` file for more 
 
 Contributions are welcome! Please submit pull requests or open issues with suggestions for improvements.
 
---- 
 
-This README highlights the **high performance** and **strong theoretical foundation** of the recommender system while underscoring the system's extensibility and adaptability for real-world applications.
