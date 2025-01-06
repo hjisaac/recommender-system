@@ -17,7 +17,8 @@ dill = "^0.3.9"
 streamlit = "^1.39.0"
 toml = "^0.10.2"
 python-box = "^7.3.0"
-jax = "^0.4.38"
+numba = "^0.60.0"
+numpy = "2"
 
 
 [tool.poetry.group.dev.dependencies]

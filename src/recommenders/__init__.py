@@ -8,8 +8,8 @@ class Recommender(object):
     def __init__(self, predictor):
         self.predictor = predictor
 
-    def recommend(self, input):  # noqa
-        predictions = self.predictor.predict(input)
+    def recommend(self, input_data):  # noqa
+        predictions = self.predictor.predict(input_data)
         return self.predictor.render(predictions)
 
 
