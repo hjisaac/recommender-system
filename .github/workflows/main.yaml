@@ -16,40 +16,31 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: '3.9'
 
-      # Step 3: Install dependencies
+      # Step 3: Install Poetry
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "export PATH=$HOME/.local/bin:$PATH" >> $GITHUB_ENV
+          source $GITHUB_ENV
+
+      # Step 4: Install dependencies using Poetry
       - name: Install dependencies with Poetry
-        run: poetry install
+        run: |
+          poetry install
 
-      # Step 4: Run code style check with Black
-      # - name: Code Style Check with Black
-      #  run: poetry run black --check .
+      # Step 5: Run code style check with Black
+      - name: Code Style Check with Black
+        run: poetry run black --check .
 
-      # Step 5: Compile Jupyter Notebook (Optional)
+      # Step 6: Compile Jupyter Notebook
       - name: Compile Jupyter Notebook
         run: |
           make compile
           echo "Jupyter Notebook compiled successfully."
 
-      # Step 6: List files in the repository (debug step)
-      # - name: List files in the repository
-      #  run: |
-      #    ls ${{ github.workspace }}
-
-      # Commented Testing and Coverage Steps:
-      # - name: Run Tests with Coverage
-      #   run: |
-      #     make test_coverage
-
-      # - name: Generate HTML Coverage Report
-      #   if: always()
-      #   run: |
-      #     make test_html_report
-      #     echo "HTML Coverage Report generated."
-
-      # - name: Clean Up
-      #   if: always()
-      #   run: |
-      #     make clean
-      #     echo "Clean up complete."
+      # Step 7: List files in the repository (debug step)
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}
