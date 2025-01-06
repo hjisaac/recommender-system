@@ -5,9 +5,8 @@ from src.helpers._logging import logger  # noqa
 
 
 class Recommender(object):
-    def __init__(self, predictor, after_predict=None):
+    def __init__(self, predictor):
         self.predictor = predictor
-        # self._after_predict = after_predict
 
     def recommend(self, input):  # noqa
         predictions = self.predictor.predict(input)
