@@ -135,6 +135,7 @@ These results demonstrate the model's ability to generalize well to unseen data,
 - **Integration of Additional Algorithms**: Incorporate other collaborative filtering and content-based methods.
 - **Hybrid Recommender Systems**: Combine collaborative and content-based filtering for improved performance.
 - **Real-Time Recommendations**: Optimize the system for real-time use cases.
+- **Integration of Model Based Algorithms**
 
 ---
 
@@ -145,6 +146,48 @@ This project is licensed under the MIT License. See the `LICENSE` file for more 
 ---
 
 ## Contributing
+
+### File Structure
+
+```txt
+artifacts/            # Stores generated artifacts such as model checkpoints, logs, and profiling data.
+├── checkpoints/      # Saved model checkpoints for resuming or fine-tuning training.
+│   └── als/          # Checkpoints for the ALS algorithm specifically.
+│       ├── 1000000   # Checkpoint for ALS with 1 million interactions.
+│       └── 100000000 # Checkpoint for ALS with 100 million interactions.
+├── figures/          # Contains visualizations or figures generated during the project.
+└── logs/             # Logging files generated during training or testing.
+
+datasets/             # Datasets used for training and evaluation of the recommender system.
+
+docs/                 # Documentation for the project, including detailed explanations and guidelines.
+
+examples/             # Example scripts to demonstrate the usage of the system.
+├── basic_example/    # A simple example to get started quickly.
+└── movies_lens/      # Example using the MovieLens dataset.
+
+figures/              # Additional plots and figures for analysis and results.
+
+ml-32m/               # Preprocessed or raw data specifically for the MovieLens 32M dataset.
+
+src/                  # Source code for the project, organized by functional modules.
+├── algorithms/       # Core algorithms used in the recommender system.
+│   └── core/         # Implementation of the ALS algorithm and similar techniques.
+├── backends/         # Backend modules for database access, API integrations, etc.
+├── helpers/          # Utility functions and helpers for common tasks.
+├── recommenders/     # High-level classes to encapsulate recommendation pipelines.
+├── settings/         # Configuration files for the project.
+└── utils/            # General-purpose utilities used throughout the codebase.
+
+tests/                # Test suite for validating the functionality of the project.
+├── backends/         # Tests specific to backend modules.
+├── fixtures/         # Sample test data or configurations for consistent testing.
+├── helpers/          # Tests for utility functions and helpers.
+│   └── test_checkpoints/ # Tests for the checkpoint loading and saving functionality.
+└── utils/            # Tests for utilities used across the codebase.
+
+
+```
 
 Contributions are welcome! Please submit pull requests or open issues with suggestions for improvements.
 
