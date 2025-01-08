@@ -52,12 +52,12 @@ class AlternatingLeastSquaresState(AlgorithmState):
             """
 
             if not user_ratings_data:
-                # Return the rating prediction for all the known users
+                # Return the averaged rating prediction for all the items
                 # Matrix product .i.e the equivalent of the "@" operator
                 return np.mean(
                     np.dot(als.user_factors, als.item_factors.T)
                     + als.user_biases.reshape(-1, 1)
-                    + als.item_factors.reshape(1, -1),
+                    + als.item_biases.reshape(1, -1),
                     axis=0,
                 )
 
