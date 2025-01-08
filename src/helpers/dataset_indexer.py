@@ -285,8 +285,8 @@ class DatasetIndexer(AbstractDatasetIndexer):
                     # set or the training set, no need to sample from Bernoulli distro
                     # in that case.
 
-                    belongs_to_test_split = (
-                        not sample_from_bernoulli(p=approximate_train_ratio)
+                    belongs_to_test_split = not sample_from_bernoulli(
+                        p=approximate_train_ratio
                     )
 
                     if belongs_to_test_split:

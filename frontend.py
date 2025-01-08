@@ -24,11 +24,13 @@ movies_sample = [
     # Add more movies here...
 ]
 
+
 # Function to render stars for ratings
 def render_stars(rating):
     full_stars = int(rating)
     half_star = 1 if rating % 1 >= 0.5 else 0
     return "⭐" * full_stars + "✰" * half_star + "✰" * (5 - full_stars - half_star)
+
 
 # Function to filter movies
 def filter_movies(movies, search_term, genres):
@@ -36,8 +38,9 @@ def filter_movies(movies, search_term, genres):
         movie
         for movie in movies
         if search_term.lower() in movie["title"].lower()
-           and (not genres or any(g.strip() in movie["genres"] for g in genres))
+        and (not genres or any(g.strip() in movie["genres"] for g in genres))
     ]
+
 
 # Function to render the movie grid
 def render_movie_grid(movies, columns_per_row):
@@ -65,6 +68,7 @@ def render_movie_grid(movies, columns_per_row):
                         unsafe_allow_html=True,
                     )
 
+
 # Function to render movie details
 def render_movie_details(movie):
     st.image(movie["image_url"], width=300)
@@ -74,6 +78,7 @@ def render_movie_details(movie):
     st.write(f"**Description:** {movie['description']}")
     if st.button("Go Back to Movie List"):
         st.query_params.clear()
+
 
 # Streamlit Interface
 st.title("Movie Grid 🎬")
@@ -95,7 +100,9 @@ else:
     genres = st.multiselect(
         "Filter by genres",
         options=list(
-            set(g.strip() for movie in movies_sample for g in movie["genres"].split(","))
+            set(
+                g.strip() for movie in movies_sample for g in movie["genres"].split(",")
+            )
         ),
     )
 
