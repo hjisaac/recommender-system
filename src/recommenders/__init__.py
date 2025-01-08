@@ -30,7 +30,8 @@ class CollaborativeFilteringRecommenderBuilder(AbstractRecommenderBuilder):
     def build(self, data):
         # Run the model backend code .i.e fit the model and return the prediction-capable object
         logger.info(
-            f"Starting the build of the recommender using {self.backend.algorithm.__class__.__name__}..."
+            f"Starting the build of the recommender using {self.backend.algorithm.__class__.__name__} "
+            f"with the state {self.backend.algorithm.state.to_dict()}"
         )
         logger.info(
             f"Starting a model fitting using the backend {self.backend.algorithm.__class__.__name__}..."

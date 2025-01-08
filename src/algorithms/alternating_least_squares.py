@@ -253,7 +253,7 @@ class AlternatingLeastSquares(Algorithm):
         self._epochs_rmse_train = state.rmse_train or []
         self._epochs_rmse_test = state.rmse_test or []
 
-        # Helps to know wether the state has been resumed or not
+        # Helps to know whether the state has been resumed or not
         self._state_resumed = True
 
     @property
@@ -620,7 +620,7 @@ class AlternatingLeastSquares(Algorithm):
             )
             return
 
-        logger.debug(
+        logger.info(
             f"Epochs count to train for {n_epochs}, entering the training loop now"
         )
 
@@ -683,5 +683,5 @@ class AlternatingLeastSquares(Algorithm):
             )
 
         logger.info(
-            f"{self.__class__.__name__} algorithm running just end, exiting the run method... "
+            f"{self.__class__.__name__} algorithm running just ends. Exiting the run method... "
         )

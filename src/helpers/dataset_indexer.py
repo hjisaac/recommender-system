@@ -71,7 +71,7 @@ class DatasetIndexer(AbstractDatasetIndexer):
 
         assert ordered_attribute_description, ordered_attribute_description
 
-        return constructor(
+        return constructor(  # noqa
             attr_type(data[attr]) for attr, attr_type in ordered_attribute_description
         )
 
@@ -81,7 +81,7 @@ class DatasetIndexer(AbstractDatasetIndexer):
 
         logger.warning(
             "The current implementation does not split the data into train and test sets exactly with the provided ratio. "
-            "We use the provided ratio as a probability for a Bernoulli distribution to know whether the data point should "
+            "We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should "
             "be used as a training data or a test data."
         )
 
@@ -193,6 +193,126 @@ class DatasetIndexer(AbstractDatasetIndexer):
 
                         # But if the item_id already exists, do nothing
                         if item_id is None:
+                            data_by_item_id__test.add(SerialUnidirectionalMapper.EMPTY)
+
+                    indexed_count += 1
+                    if indexed_count == self._limit:
+                        logger.warning(
+                            f"The limit of lines (.i.e {self._limit}) to index has been reached. Exiting without loading the rest... "
+                        )
+                        break
+        except (FileNotFoundError,) as exc:
+            raise self.DatasetIndexerError(
+                f"Cannot index data from the given `file_path` .i.e {self._file_path}. Attempt failed with exception {exc}"
+            ) from exc
+
+        logger.info(
+            f"Successfully indexed {indexed_count} lines from {self._file_path}"
+        )
+
+        return IndexedDatasetWrapper(
+            data_by_user_id__train=data_by_user_id__train,
+            data_by_item_id__train=data_by_item_id__train,
+            data_by_user_id__test=data_by_user_id__test,
+            data_by_item_id__test=data_by_item_id__test,
+            id_to_user_bmap=id_to_user_bmap,
+            id_to_item_bmap=id_to_item_bmap,
+        )
+
+    def index_simple(self, approximate_train_ratio: float = 1) -> IndexedDatasetWrapper:
+
+        assert 0 <= approximate_train_ratio <= 1, approximate_train_ratio
+
+        logger.warning(
+            "The current implementation does not split the data into train and test sets exactly with the provided ratio. "
+            "We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should "
+            "be used as a training data or a test data."
+        )
+
+        indexed_count = 0
+
+        # The two next bmap variables are needed to keep track of the bijective
+        # mapping between each user or item and the id we've associated to them.
+        id_to_item_bmap = SerialBidirectionalMapper()  # bijective mapping
+        id_to_user_bmap = SerialBidirectionalMapper()
+
+        # The next two variables are used to group data by item_id and user_id
+        data_by_user_id__train = SerialUnidirectionalMapper()  # subjective mapping
+        data_by_item_id__train = SerialUnidirectionalMapper()
+
+        data_by_user_id__test = SerialUnidirectionalMapper()  # subjective mapping
+        data_by_item_id__test = SerialUnidirectionalMapper()
+
+        # Whether the line should be used for test or not
+        belongs_to_test_split: bool
+        try:
+            with open(self._file_path, mode="r", newline="") as csvfile:
+                for line_count, line in enumerate(DictReader(csvfile)):
+                    user, item = line[self._user_header], line[self._item_header]
+
+                    # Unlikely in this dataset but better have this guard
+                    if not user or not item:
+                        logger.warning(
+                            f"Cannot process the line {line_count}, cause expects `user` and `item` "
+                            f"to be defined but got {user} and {item} for them respectively, skipping..."
+                        )
+                        continue
+
+                    user_id = id_to_user_bmap.inverse[user]
+                    item_id = id_to_item_bmap.inverse[item]
+
+                    if user_id is None:
+                        # This user is new, so add it
+                        id_to_user_bmap.add(user)
+                    if item_id is None:
+                        # This item is new, so add it
+                        id_to_item_bmap.add(item)
+
+                    user_data = self._construct_data(
+                        line,
+                        self._data_constructor,
+                        [(self._item_header, str), (self._rating_header, float)],
+                    )
+                    item_data = self._construct_data(
+                        line,
+                        self._data_constructor,
+                        [(self._user_header, str), (self._rating_header, float)],
+                    )
+
+                    # Whether the current entry should be pushed into the training set
+                    # or not. Set to `NOT_DEFINED` to express the fact that the user
+                    # has already been seeing once and then already belongs to the test
+                    # set or the training set, no need to sample from Bernoulli distro
+                    # in that case.
+
+                    belongs_to_test_split = (
+                        not sample_from_bernoulli(p=approximate_train_ratio)
+                    )
+
+                    if belongs_to_test_split:
+
+                        data_by_user_id__test.add(data=user_data, key=user_id)
+                        data_by_item_id__test.add(data=item_data, key=item_id)
+
+                        if user_id is None:
+                            # The user is not yet in the train set, so add it
+                            data_by_user_id__train.add(SerialUnidirectionalMapper.EMPTY)
+
+                        if item_id is None:
+                            # The item is not yet in the train set, so add it
+                            data_by_item_id__train.add(SerialUnidirectionalMapper.EMPTY)
+
+                    else:
+
+                        data_by_user_id__train.add(data=user_data, key=user_id)
+                        data_by_item_id__train.add(data=item_data, key=item_id)
+
+                        if user_id is None:
+                            # The user is not yet in the test set, so add it
+                            data_by_user_id__test.add(SerialUnidirectionalMapper.EMPTY)
+
+                        if item_id is None:
+                            # The item is not yet in the test set, so add it
                             data_by_item_id__test.add(SerialUnidirectionalMapper.EMPTY)
 
                     indexed_count += 1
