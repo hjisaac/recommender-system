@@ -70,12 +70,12 @@ def vocabulary_based_one_hot_encode(
     to_encode: list, vocabulary: list, np_array: bool = True
 ) -> list | np.ndarray:
     """
-    One-hot encodes a list of features based on the provided vocabulary.
+    One-hot encodes a list of word based on the provided vocabulary.
 
     Args:
-        to_encode (list): Features to encode.
-        vocabulary (list): List of unique features for encoding.
-        np_array (bool): Return as NumPy array if True, else return as list.
+        to_encode (list): Words to encode.
+        vocabulary (list): List of unique words for encoding.
+        np_array (bool): Return as NumPy array if True, else return as a list.
 
     Returns:
         list or np.ndarray: One-hot encoded vector.
@@ -93,8 +93,8 @@ def vocabulary_based_one_hot_encode(
     return encoded
 
 
-# Added for debugging purpose
-def inspect_pickle(path):
+# Added so that it can be used for debugging
+def load_pickle(path):
     with open(path, "rb") as f:
         try:
             return pickle.load(f)
