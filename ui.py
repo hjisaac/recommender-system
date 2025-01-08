@@ -111,6 +111,7 @@ for i in range(rows):
                     f'<div class="zoom"><img src="{movie["image_url"]}" style="width: 100%;" alt="Movie Poster"></div>',
                     unsafe_allow_html=True,
                 )
+                st.write("\n\n")
 
 # Add some spacing at the bottom
 st.write("")

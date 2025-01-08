@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[31]:
+# In[1]:
 
 
 import pandas as pd
@@ -23,7 +23,7 @@ from src.helpers.graphing import (
 )
 
 
-# In[32]:
+# In[2]:
 
 
 dataset_indexer = DatasetIndexer(
@@ -34,12 +34,12 @@ dataset_indexer = DatasetIndexer(
     limit=settings.general.LINES_COUNT_TO_READ,
 )
 
-indexed_data = dataset_indexer.index(
+indexed_data = dataset_indexer.index_simple(
     approximate_train_ratio=settings.general.APPROXIMATE_TRAIN_RATIO
 )
 
 
-# In[33]:
+# In[3]:
 
 
 # Import the movie csv file that will act as our movie database
@@ -51,19 +51,19 @@ item_database = (
 )
 
 
-# In[34]:
+# In[4]:
 
 
 # plot_data_item_distribution_as_hist(indexed_data)
 
 
-# In[35]:
+# In[5]:
 
 
 # plot_power_low_distribution(indexed_data,)
 
 
-# In[36]:
+# In[6]:
 
 
 als_instance = AlternatingLeastSquares(
@@ -86,10 +86,11 @@ als_backend = Backend(
     # Whether we should resume by using the last state of
     # the algorithm the checkpoint manager folder or not.
     resume=False,
+    save_checkpoint=True,
 )
 
 
-# In[37]:
+# In[7]:
 
 
 recommender_builder = CollaborativeFilteringRecommenderBuilder(
@@ -103,26 +104,38 @@ recommender = recommender_builder.build(data=indexed_data)
 # In[ ]:
 
 
-# In[38]:
+
+
+
+# In[8]:
 
 
 # plot_als_train_test_rmse_evolution(als_backend.algorithm)
 
 
-# In[39]:
+# In[11]:
 
 
 # plot_als_train_test_loss_evolution(als_backend.algorithm)
 
 
-# In[40]:
+# In[10]:
 
 
+#
 prediction_input = [("17", 4)]
+recommender.recommend(prediction_input)
+
+
+# In[15]:
+
+
+prediction_input = [("267654", 4)]  # Harry Poter
 recommender.recommend(prediction_input)
 
 
 # In[ ]:
 
 
-# In[ ]:
+
+
