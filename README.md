@@ -42,7 +42,7 @@ The codebase is crafted with a focus on **modularity** and **reusability**, ensu
 
 ## Algorithm
 
-### Alternating Least Squares (ALS)
+### 1- Alternating Least Squares (ALS)
 
 **ALS** is a collaborative filtering technique based on **matrix factorization**. It models user and item interactions by discovering latent features that explain observed ratings. The algorithm alternates between optimizing user and item matrices to minimize the regularized objective function:
 
@@ -94,18 +94,19 @@ To set up the project:
    ```
 
 3. **Download the dataset**:
-   Place the MovieLens dataset in the `data/` directory. Download it from [here](https://grouplens.org/datasets/movielens/).
+   To run the movielenz example, download the dataset from [here](https://grouplens.org/datasets/movielens/).
 
 ---
 
 ## Usage
 
 1. **Run the model**:
+   Run the example file:
    ```bash
-   python main.py
+   poetry run python main.py
    ```
 
-2. **Evaluate performance**:
+3. **Evaluate performance**:
    The script outputs RMSE values for both training and testing, providing insight into the system's predictive accuracy.
 
 ---
@@ -135,7 +136,6 @@ These results demonstrate the model's ability to generalize well to unseen data,
 - **Integration of Additional Algorithms**: Incorporate other collaborative filtering and content-based methods.
 - **Hybrid Recommender Systems**: Combine collaborative and content-based filtering for improved performance.
 - **Real-Time Recommendations**: Optimize the system for real-time use cases.
-- **Integration of Model Based Algorithms**
 
 ---
 
@@ -145,20 +145,18 @@ This project is licensed under the MIT License. See the `LICENSE` file for more 
 
 ---
 
-## Contributing
-
-### File Structure
+## Code Structure
 
 ```txt
 artifacts/            # Stores generated artifacts such as model checkpoints, logs, and profiling data.
 ├── checkpoints/      # Saved model checkpoints for resuming or fine-tuning training.
 │   └── als/          # Checkpoints for the ALS algorithm specifically.
-│       ├── 1000000   # Checkpoint for ALS with 1 million interactions.
-│       └── 100000000 # Checkpoint for ALS with 100 million interactions.
+│       ├── 1000000   # Checkpoint for ALS with 1 million interactions as limit of lines to load.
+│       └── 100000000 # Checkpoint for ALS with 100 million interactions as limit of lines to load.
 ├── figures/          # Contains visualizations or figures generated during the project.
 └── logs/             # Logging files generated during training or testing.
 
-datasets/             # Datasets used for training and evaluation of the recommender system.
+datasets/             # Documentation about the datasets used for training and evaluation of the recommender system.
 
 docs/                 # Documentation for the project, including detailed explanations and guidelines.
 
@@ -166,13 +164,9 @@ examples/             # Example scripts to demonstrate the usage of the system.
 ├── basic_example/    # A simple example to get started quickly.
 └── movies_lens/      # Example using the MovieLens dataset.
 
-figures/              # Additional plots and figures for analysis and results.
-
-ml-32m/               # Preprocessed or raw data specifically for the MovieLens 32M dataset.
-
 src/                  # Source code for the project, organized by functional modules.
 ├── algorithms/       # Core algorithms used in the recommender system.
-│   └── core/         # Implementation of the ALS algorithm and similar techniques.
+│   └── core/         # Implementation of the base logics common to all the recommender algorithms.
 ├── backends/         # Backend modules for database access, API integrations, etc.
 ├── helpers/          # Utility functions and helpers for common tasks.
 ├── recommenders/     # High-level classes to encapsulate recommendation pipelines.
