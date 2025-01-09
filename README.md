@@ -141,12 +141,6 @@ These results demonstrate the model's ability to generalize well to unseen data,
 
 ---
 
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for more details.
-
----
-
 ## Code Structure
 
 ```txt
@@ -185,6 +179,12 @@ tests/                # Test suite for validating the functionality of the proje
 
 ```
 
-Contributions are welcome! Please submit pull requests or open issues with suggestions for improvements.
+---
+
+## License
+
+This project is licensed under the MIT License. See the `LICENSE` file for more details.
+
+
 
 
