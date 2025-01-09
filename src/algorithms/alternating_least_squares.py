@@ -42,7 +42,7 @@ class AlternatingLeastSquaresState(AlgorithmState):
         def predict(user_ratings_data: list):
             """
             Predict ratings for a user based on user and item factors and biases
-            and his historical ratings' data'.
+            and his historical ratings' data.
 
             Args:
                 user_ratings_data (list): User's historical ratings' data.
@@ -359,6 +359,8 @@ class AlternatingLeastSquares(Algorithm):
         self,
         target: LearningTargetEnum,
         target_id: Optional[int] = None,
+        target_factors: np.ndarray = None,
+        target_biases: np.ndarray = None,
         ratings_data: Optional[list] = None,
     ):
         """
