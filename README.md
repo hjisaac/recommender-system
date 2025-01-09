@@ -11,7 +11,7 @@ This project demonstrates the development of a **high-performing recommender sys
 
 1. [Introduction](#introduction)
 2. [Key Features](#key-features)
-3. [Algorithm](#algorithm)
+3. [Algorithms](#algorithm)
    - [Alternating Least Squares (ALS)](#alternating-least-squares-als)
 4. [Dataset](#dataset)
 5. [Installation](#installation)
@@ -40,9 +40,9 @@ The codebase is crafted with a focus on **modularity** and **reusability**, ensu
 
 ---
 
-## Algorithm
+## Algorithms
 
-### 1- Alternating Least Squares (ALS)
+### Alternating Least Squares (ALS)
 
 **ALS** is a collaborative filtering technique based on **matrix factorization**. It models user and item interactions by discovering latent features that explain observed ratings. The algorithm alternates between optimizing user and item matrices to minimize the regularized objective function:
 
