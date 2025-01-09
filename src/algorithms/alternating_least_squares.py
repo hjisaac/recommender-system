@@ -64,7 +64,6 @@ class AlternatingLeastSquaresState(AlgorithmState):
             user_factor = None
 
             for _ in range(als.PREDICTION_EPOCHS):
-
                 user_factor, user_bias = als.learn_user_bias_and_factor(
                     user_id=None,
                     user_factor=user_factor,
