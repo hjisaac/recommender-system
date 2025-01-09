@@ -342,7 +342,7 @@ class AlternatingLeastSquares(Algorithm):
         self,
         target: LearningTargetEnum,
         target_id: Optional[int] = None,
-        target_factor: np.ndarray = None,  # the old factors
+        target_factor: np.ndarray = None,
         ratings_data: Optional[list] = None,
     ):
         """
@@ -382,7 +382,6 @@ class AlternatingLeastSquares(Algorithm):
                 target_factors[target_id]
                 if target_id
                 else self._get_factor_sample(size=self.hyper_n_factors)
-
             )
         else:
             factor = target_factor
@@ -390,7 +389,6 @@ class AlternatingLeastSquares(Algorithm):
         (other_target_factors, other_target_biases, _id_to_target_bmap) = _mapping[
             _targets[1 - _index]
         ]
-
 
         bias = 0
 
@@ -442,7 +440,10 @@ class AlternatingLeastSquares(Algorithm):
         return factor, bias
 
     def learn_user_bias_and_factor(
-        self, user_id: Optional[int] = None, user_ratings_data: Optional[list] = None
+        self,
+        user_id: Optional[int] = None,
+        user_factor: np.ndarray = None,
+        user_ratings_data: Optional[list] = None,
     ):
         """
         Learn or compute the given user_id related bias and factor based on the
@@ -452,11 +453,15 @@ class AlternatingLeastSquares(Algorithm):
         return self._learn_bias_and_factor(
             target=LearningTargetEnum.USER,
             target_id=user_id,
+            target_factor=user_factor,
             ratings_data=user_ratings_data,
         )
 
     def learn_item_bias_and_factor(
-        self, item_id: Optional[int] = None, item_ratings_data: Optional[list] = None
+        self,
+        item_id: Optional[int] = None,
+        item_factor: np.ndarray = None,
+        item_ratings_data: Optional[list] = None,
     ):
         """
         Learn or compute the given item_id related bias and factor based on the
@@ -466,6 +471,7 @@ class AlternatingLeastSquares(Algorithm):
         return self._learn_bias_and_factor(
             target=LearningTargetEnum.ITEM,
             target_id=item_id,
+            target_factor=item_factor,
             ratings_data=item_ratings_data,
         )
 
