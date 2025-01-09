@@ -61,11 +61,17 @@ class AlternatingLeastSquaresState(AlgorithmState):
                     axis=0,
                 )
 
-            # for _ in range(3):  # 3 Should be parameter
+            user_factor = None
 
-            user_factor, user_bias = als.learn_user_bias_and_factor(
-                user_id=None, user_ratings_data=user_ratings_data
-            )
+            for _ in range(als.PREDICTION_EPOCHS):
+
+                user_factor, user_bias = als.learn_user_bias_and_factor(
+                    user_id=None,
+                    user_factor=user_factor,
+                    user_ratings_data=user_ratings_data,
+                )
+
+                print("Hé predictio iter")
 
             # The order of the vectors in the matrix product matters as they have
             # the following shape respectively: (`items_count`, hyper_n_factors)
@@ -91,7 +97,7 @@ class AlternatingLeastSquares(Algorithm):
     be changed as it is being run. So one needs to instance another algorithm instance
     each time.
 
-    This way of thinking makes the implementation easier than assuming that an algorithm
+    This way of thinking makes         _B = np.zeros(self.hyper_n_factors)the implementation easier than assuming that an algorithm
     instance's states should not change in terms of its extrinsic states (the intrinsic
     states of an algorithm are the hyperparameters), which will require us to expose the
     states change using another pattern and that seems more complex.
@@ -105,6 +111,8 @@ class AlternatingLeastSquares(Algorithm):
         "hyper_n_epochs",
         "hyper_n_factors",
     ]
+
+    PREDICTION_EPOCHS = 4
 
     AlternatingLeastSquaresError = type(
         "AlternatingLeastSquaresError", (Exception,), {}
@@ -371,7 +379,7 @@ class AlternatingLeastSquares(Algorithm):
         _index = _targets.index(target)
 
         # If the old factor has not been passed, then try to access it
-        if not target_factor:
+        if target_factor is None:
             # Get the target factors to attempt to retrieve the old factor from
             # which we want to learn the bias and them the updated version of the
             # factor.
