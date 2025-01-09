@@ -67,13 +67,13 @@ sample_from_bernoulli = partial(np.random.binomial, n=1)
 
 
 def vocabulary_based_one_hot_encode(
-    to_encode: list, vocabulary: list, np_array: bool = True
+    words: list, vocabulary: list, np_array: bool = True
 ) -> list | np.ndarray:
     """
     One-hot encodes a list of word based on the provided vocabulary.
 
     Args:
-        to_encode (list): Words to encode.
+        words (list): Words to encode.
         vocabulary (list): List of unique words for encoding.
         np_array (bool): Return as NumPy array if True, else return as a list.
 
@@ -83,7 +83,7 @@ def vocabulary_based_one_hot_encode(
     # Initialize the encoded vector based on np_array flag
     encoded = np.array([0] * len(vocabulary)) if np_array else [0] * len(vocabulary)
 
-    for w in to_encode:
+    for w in words:
         try:
             index = vocabulary.index(w)
             encoded[index] = 1
