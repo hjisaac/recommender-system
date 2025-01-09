@@ -66,8 +66,35 @@ def convert_flat_dict_to_string(
 sample_from_bernoulli = partial(np.random.binomial, n=1)
 
 
-# Added for debugging purpose
-def inspect_pickle(path):
+def vocabulary_based_one_hot_encode(
+    to_encode: list, vocabulary: list, np_array: bool = True
+) -> list | np.ndarray:
+    """
+    One-hot encodes a list of word based on the provided vocabulary.
+
+    Args:
+        to_encode (list): Words to encode.
+        vocabulary (list): List of unique words for encoding.
+        np_array (bool): Return as NumPy array if True, else return as a list.
+
+    Returns:
+        list or np.ndarray: One-hot encoded vector.
+    """
+    # Initialize the encoded vector based on np_array flag
+    encoded = np.array([0] * len(vocabulary)) if np_array else [0] * len(vocabulary)
+
+    for w in to_encode:
+        try:
+            index = vocabulary.index(w)
+            encoded[index] = 1
+        except ValueError:
+            continue
+
+    return encoded
+
+
+# Added so that it can be used for debugging
+def load_pickle(path):
     with open(path, "rb") as f:
         try:
             return pickle.load(f)

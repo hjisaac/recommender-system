@@ -2,6 +2,8 @@ import os
 import dill as pickle
 from typing import Optional
 
+from src.utils import load_pickle
+
 
 class CheckpointManager(object):
     """
@@ -86,8 +88,7 @@ class CheckpointManager(object):
 
         # Use EAFP style rather than checking if the file exists and so on...
         try:
-            with open(checkpoint_path, "rb") as f:
-                return pickle.load(f)
+            return load_pickle(checkpoint_path)
         except Exception as exc:
             raise self.CheckpointManagerError(
                 f"Failed to revive checkpoint '{checkpoint_path}'"
