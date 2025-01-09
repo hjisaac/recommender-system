@@ -61,11 +61,15 @@ class AlternatingLeastSquaresState(AlgorithmState):
                     axis=0,
                 )
 
-            # for _ in range(3):  # 3 Should be parameter
+            user_factor = None
 
-            user_factor, user_bias = als.learn_user_bias_and_factor(
-                user_id=None, user_ratings_data=user_ratings_data
-            )
+            for _ in range(als.PREDICTION_EPOCHS):
+
+                user_factor, user_bias = als.learn_user_bias_and_factor(
+                    user_id=None,
+                    user_factor=user_factor,
+                    user_ratings_data=user_ratings_data,
+                )
 
             # The order of the vectors in the matrix product matters as they have
             # the following shape respectively: (`items_count`, hyper_n_factors)
@@ -91,7 +95,7 @@ class AlternatingLeastSquares(Algorithm):
     be changed as it is being run. So one needs to instance another algorithm instance
     each time.
 
-    This way of thinking makes the implementation easier than assuming that an algorithm
+    This way of thinking makes         _B = np.zeros(self.hyper_n_factors)the implementation easier than assuming that an algorithm
     instance's states should not change in terms of its extrinsic states (the intrinsic
     states of an algorithm are the hyperparameters), which will require us to expose the
     states change using another pattern and that seems more complex.
@@ -105,6 +109,8 @@ class AlternatingLeastSquares(Algorithm):
         "hyper_n_epochs",
         "hyper_n_factors",
     ]
+
+    PREDICTION_EPOCHS = 4
 
     AlternatingLeastSquaresError = type(
         "AlternatingLeastSquaresError", (Exception,), {}
@@ -342,8 +348,7 @@ class AlternatingLeastSquares(Algorithm):
         self,
         target: LearningTargetEnum,
         target_id: Optional[int] = None,
-        target_factors: np.ndarray = None,
-        target_biases: np.ndarray = None,
+        target_factor: np.ndarray = None,
         ratings_data: Optional[list] = None,
     ):
         """
@@ -371,22 +376,30 @@ class AlternatingLeastSquares(Algorithm):
 
         _index = _targets.index(target)
 
-        # Get the target factors to attempt to retrieve the old factor from
-        # which we want to learn the bias and them the updated version of the
-        # factor.
-        target_factors, _, _ = _mapping[_targets[_index]]
+        # If the old factor has not been passed, then try to access it
+        if target_factor is None:
+            # Get the target factors to attempt to retrieve the old factor from
+            # which we want to learn the bias and them the updated version of the
+            # factor.
+
+            target_factors, _, _ = _mapping[_targets[_index]]
+            # The old factor that we want to use in other to learn a new one
+            factor = (
+                target_factors[target_id]
+                if target_id
+                else self._get_factor_sample(size=self.hyper_n_factors)
+            )
+        else:
+            factor = target_factor
+
         (other_target_factors, other_target_biases, _id_to_target_bmap) = _mapping[
             _targets[1 - _index]
         ]
 
         bias = 0
-        # The old factor that we want to use in other to learn a new one
-        factor = (
-            target_factors[target_id]
-            if target_id
-            else self._get_factor_sample(size=self.hyper_n_factors)
-        )
+
         ratings_count = 0
+
         _A = np.zeros((self.hyper_n_factors, self.hyper_n_factors))
         _B = np.zeros(self.hyper_n_factors)
 
@@ -433,7 +446,10 @@ class AlternatingLeastSquares(Algorithm):
         return factor, bias
 
     def learn_user_bias_and_factor(
-        self, user_id: Optional[int] = None, user_ratings_data: Optional[list] = None
+        self,
+        user_id: Optional[int] = None,
+        user_factor: np.ndarray = None,
+        user_ratings_data: Optional[list] = None,
     ):
         """
         Learn or compute the given user_id related bias and factor based on the
@@ -443,11 +459,15 @@ class AlternatingLeastSquares(Algorithm):
         return self._learn_bias_and_factor(
             target=LearningTargetEnum.USER,
             target_id=user_id,
+            target_factor=user_factor,
             ratings_data=user_ratings_data,
         )
 
     def learn_item_bias_and_factor(
-        self, item_id: Optional[int] = None, item_ratings_data: Optional[list] = None
+        self,
+        item_id: Optional[int] = None,
+        item_factor: np.ndarray = None,
+        item_ratings_data: Optional[list] = None,
     ):
         """
         Learn or compute the given item_id related bias and factor based on the
@@ -457,6 +477,7 @@ class AlternatingLeastSquares(Algorithm):
         return self._learn_bias_and_factor(
             target=LearningTargetEnum.ITEM,
             target_id=item_id,
+            target_factor=item_factor,
             ratings_data=item_ratings_data,
         )
 

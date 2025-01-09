@@ -3,6 +3,8 @@ import dill as pickle
 from functools import partial
 from datetime import datetime
 
+sample_from_bernoulli = partial(np.random.binomial, n=1)
+
 
 class cached_class_property:  # noqa
     """
@@ -63,9 +65,6 @@ def convert_flat_dict_to_string(
     return f"{joined_string}{dotted_extension}" if dotted_extension else joined_string
 
 
-sample_from_bernoulli = partial(np.random.binomial, n=1)
-
-
 def vocabulary_based_one_hot_encode(
     words: list, vocabulary: list, np_array: bool = True
 ) -> list | np.ndarray:
@@ -80,7 +79,7 @@ def vocabulary_based_one_hot_encode(
     Returns:
         list or np.ndarray: One-hot encoded vector.
     """
-    # Initialize the encoded vector based on np_array flag
+    # Initialize the encoded vector based on the `np_array` flag
     encoded = np.array([0] * len(vocabulary)) if np_array else [0] * len(vocabulary)
 
     for w in words:
