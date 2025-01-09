@@ -3,7 +3,7 @@
 
 # Recommendation System Codebase
 
-This project demonstrates the development of a **high-performing recommender system** leveraging **matrix factorization** techniques. The **Alternating Least Squares (ALS)** algorithm is at the core of this system, enabling precise user-item rating predictions. It has been extensively validated using the **MovieLens dataset**, showcasing exceptional performance and adaptability to real-world scenarios.
+This project demonstrates the development of a **recommender system** leveraging **matrix factorization** techniques. The **Alternating Least Squares (ALS)** algorithm is at the core of this system, enabling precise user-item rating predictions. It has been extensively validated using the **MovieLens dataset**, showcasing exceptional performance and adaptability to real-world scenarios.
 
 ---
 
