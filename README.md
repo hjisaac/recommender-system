@@ -17,8 +17,8 @@ This project demonstrates the development of a **recommender system** leveraging
 5. [Installation](#installation)
 6. [Usage](#usage)
 7. [Performance](#performance)
-8. [Improvements](#improvements)
-9. [Code Structure](#code-structure)
+8. [Code Structure](#code-structure)
+9. [Improvements](#improvements)
 10. [License](#license)
 
 ---
