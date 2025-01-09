@@ -668,3 +668,87 @@
 2025-01-09 02:52:46,168 [INFO] All factors and biases are already provided, so no initialization is needed.
 2025-01-09 02:52:46,170 [ERROR] Cannot train the model more because hyperparameter 'hyper_n_epochs' (10) is already greater or equal to the final number of epochs wanted which is 10. Please check the value of 'hyper_n_epochs' and adjust accordingly. Exiting...
 2025-01-09 02:52:46,175 [INFO] Successfully built the recommender using AlternatingLeastSquares
+2025-01-09 17:20:07,124 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-09 17:20:18,348 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-09 17:20:18,349 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-09 17:20:18,846 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.5, 'hyper_tau': 0.4, 'hyper_gamma': 0.01, 'hyper_n_epochs': 20, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-09 17:20:18,846 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-09 17:20:18,846 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-09 17:20:18,857 [INFO] Epochs count to train for 20, entering the training loop now
+2025-01-09 17:25:15,356 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-09 17:25:24,271 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-09 17:25:24,272 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-09 17:26:05,208 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-09 17:26:14,325 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-09 17:26:14,325 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-09 17:26:15,771 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-09 17:26:35,783 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-09 17:26:35,784 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-09 17:26:36,551 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.5, 'hyper_tau': 0.4, 'hyper_gamma': 0.01, 'hyper_n_epochs': 20, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-09 17:26:36,552 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-09 17:27:19,108 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-09 17:27:27,357 [INFO] Epochs count to train for 20, entering the training loop now
+2025-01-09 17:31:15,890 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-09 17:31:47,163 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-09 17:31:56,068 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-09 17:31:56,068 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-09 17:31:56,408 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.5, 'hyper_tau': 0.4, 'hyper_gamma': 0.01, 'hyper_n_epochs': 20, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-09 17:31:56,408 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-09 17:31:56,408 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-09 17:31:56,416 [INFO] Epochs count to train for 20, entering the training loop now
+2025-01-09 17:36:32,343 [INFO] AlternatingLeastSquares algorithm running just ends. Exiting the run method... 
+2025-01-09 17:36:32,352 [INFO] Checkpoint successfully saved at 20250109-173632_lambda0.5_gamma0.01_tau0.4_n_epochs20_n_factors10
+2025-01-09 17:36:32,353 [INFO] Successfully built the recommender using AlternatingLeastSquares
+2025-01-09 17:38:46,554 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-09 17:38:53,028 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-09 17:38:53,029 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-09 17:38:53,382 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 1, 'hyper_tau': 0.4, 'hyper_gamma': 0.04, 'hyper_n_epochs': 20, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-09 17:38:53,382 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-09 17:38:53,383 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-09 17:38:53,390 [INFO] Epochs count to train for 20, entering the training loop now
+2025-01-09 17:44:04,045 [INFO] AlternatingLeastSquares algorithm running just ends. Exiting the run method... 
+2025-01-09 17:44:04,053 [INFO] Checkpoint successfully saved at 20250109-174404_lambda1_gamma0.04_tau0.4_n_epochs20_n_factors10
+2025-01-09 17:44:04,053 [INFO] Successfully built the recommender using AlternatingLeastSquares
+2025-01-09 17:45:56,914 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-09 17:46:03,131 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-09 17:46:03,131 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-09 17:46:03,478 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.5, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 20, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-09 17:46:03,479 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-09 17:46:03,479 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-09 17:46:03,486 [INFO] Epochs count to train for 20, entering the training loop now
+2025-01-09 17:50:36,616 [INFO] AlternatingLeastSquares algorithm running just ends. Exiting the run method... 
+2025-01-09 17:50:36,623 [INFO] Checkpoint successfully saved at 20250109-175036_lambda0.5_gamma0.1_tau0.1_n_epochs20_n_factors10
+2025-01-09 17:50:36,624 [INFO] Successfully built the recommender using AlternatingLeastSquares
+2025-01-09 17:51:48,707 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-09 17:51:54,917 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-09 17:51:54,917 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-09 17:51:55,265 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 4, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 20, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-09 17:51:55,265 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-09 17:51:55,265 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-09 17:51:55,272 [INFO] Epochs count to train for 20, entering the training loop now
+2025-01-09 17:53:04,103 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-09 17:53:11,229 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-09 17:53:11,229 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-09 17:53:11,583 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 20, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-09 17:53:11,583 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-09 17:53:11,583 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-09 17:53:11,591 [INFO] Epochs count to train for 20, entering the training loop now
+2025-01-09 17:54:30,700 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-09 17:54:36,842 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-09 17:54:36,842 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-09 17:54:37,194 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 20, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-09 17:54:37,194 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-09 17:54:37,194 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-09 17:54:37,203 [INFO] Epochs count to train for 20, entering the training loop now
+2025-01-09 17:59:20,762 [INFO] AlternatingLeastSquares algorithm running just ends. Exiting the run method... 
+2025-01-09 17:59:20,770 [INFO] Checkpoint successfully saved at 20250109-175920_lambda0.1_gamma0.1_tau0.1_n_epochs20_n_factors10
+2025-01-09 17:59:20,770 [INFO] Successfully built the recommender using AlternatingLeastSquares
+2025-01-09 17:59:35,555 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-09 18:03:00,019 [INFO] Successfully indexed 32000204 lines from ./ml-32m/ratings.csv
+2025-01-09 18:03:00,410 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 20, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-09 18:03:00,411 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-09 18:03:00,411 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-09 18:03:00,477 [INFO] Epochs count to train for 20, entering the training loop now
+2025-01-09 21:21:48,507 [INFO] AlternatingLeastSquares algorithm running just ends. Exiting the run method... 
+2025-01-09 21:21:48,587 [INFO] Checkpoint successfully saved at 20250109-212148_lambda0.1_gamma0.1_tau0.1_n_epochs20_n_factors10
+2025-01-09 21:21:48,589 [INFO] Successfully built the recommender using AlternatingLeastSquares

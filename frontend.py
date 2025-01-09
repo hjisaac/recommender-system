@@ -2,9 +2,6 @@ import streamlit as st
 from urllib.parse import urlencode, parse_qs
 import warnings
 
-# Suppress deprecation warnings temporarily
-warnings.filterwarnings("ignore", category=DeprecationWarning, module="streamlit")
-
 # Sample movie data
 movies_sample = [
     {
@@ -15,6 +12,18 @@ movies_sample = [
         "image_url": "https://via.placeholder.com/150",
     },
     {
+        "title": "Movie 2",
+        "genres": "Comedy, Drama",
+        "rating": 3.5,
+        "description": "A heartwarming comedy with a touch of drama.",
+        "image_url": "https://via.placeholder.com/150",
+    },{
+        "title": "Movie 2",
+        "genres": "Comedy, Drama",
+        "rating": 3.5,
+        "description": "A heartwarming comedy with a touch of drama.",
+        "image_url": "https://via.placeholder.com/150",
+    },{
         "title": "Movie 2",
         "genres": "Comedy, Drama",
         "rating": 3.5,

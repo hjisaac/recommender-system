@@ -53,8 +53,8 @@ class AlternatingLeastSquaresState(AlgorithmState):
 
             if not user_ratings_data:
                 # Return the averaged rating prediction for all the items
-                # Matrix product .i.e the equivalent of the "@" operator
                 return np.mean(
+                    # Matrix product .i.e the equivalent of the "@" operator
                     np.dot(als.user_factors, als.item_factors.T)
                     + als.user_biases.reshape(-1, 1)
                     + als.item_biases.reshape(1, -1),
@@ -80,7 +80,8 @@ class AlternatingLeastSquaresState(AlgorithmState):
             return [
                 item_database[als.id_to_item_bmap[item_id]]
                 # The minus in front of the prediction (ndarray) makes `np.argsort`
-                # to do the arg-sorting in descending order.
+                # to do the arg-sorting in descending order. The hardcoded `10` should
+                # be a parameter provided through the recommender object.
                 for item_id in np.argsort(-predictions)[:10]
             ]
 
@@ -94,7 +95,7 @@ class AlternatingLeastSquares(Algorithm):
     be changed as it is being run. So one needs to instance another algorithm instance
     each time.
 
-    This way of thinking makes         _B = np.zeros(self.hyper_n_factors)the implementation easier than assuming that an algorithm
+    This way of thinking makes the implementation easier than assuming that an algorithm
     instance's states should not change in terms of its extrinsic states (the intrinsic
     states of an algorithm are the hyperparameters), which will require us to expose the
     states change using another pattern and that seems more complex.
@@ -155,7 +156,7 @@ class AlternatingLeastSquares(Algorithm):
         self.item_biases = item_biases
 
         # This is useful, when the backend (i.e., the caller) wants
-        # to resume the training from certain epoch instead all starting
+        # to resume the training from certain epoch instead of starting
         # completing from the beginning. In such setting, the initial
         self._initial_hyper_n_epochs = hyper_n_epochs
         self._state_resumed = False
@@ -184,22 +185,22 @@ class AlternatingLeastSquares(Algorithm):
             arrays: A variable number of arrays or sequences to compare.
 
         Raises:
-            AlternatingLeastSquaresError: If the arrays have mismatched types, shapes, or lengths.
+            TypeError: If the arrays have mismatched types, shapes, or lengths.
         """
 
-        _type = type(arrays[0])
+        type_ = type(arrays[0])
 
-        if not all(isinstance(arr, (_type, NoneType)) for arr in arrays):  # Skip None
+        if not all(isinstance(arr, (type_, NoneType)) for arr in arrays):  # Skip None
             raise TypeError("All arrays or sequences must be of the same type.")
 
-        if _type == np.ndarray and (
+        if type_ == np.ndarray and (
             not all(arr.shape == arrays[0].shape for arr in arrays if arr is not None)
         ):
             raise TypeError(
                 "Arrays have mismatched shapes. Ensure all inputs are ndarrays with the same shape"
             )
 
-        if _type == list and (
+        if type_ == list and (
             not all(len(arr) == len(arrays[0]) for arr in arrays if arr is not None)
         ):
             raise TypeError(
@@ -553,7 +554,7 @@ class AlternatingLeastSquares(Algorithm):
         Side effect method that updates the given user's bias and latent factor
         """
         user_factor, user_bias = self.learn_user_bias_and_factor(
-            user_id, user_ratings_data
+            user_id=user_id, user_ratings_data=user_ratings_data
         )
         self.user_biases[user_id] = user_bias
         self.user_factors[user_id] = user_factor
@@ -563,7 +564,7 @@ class AlternatingLeastSquares(Algorithm):
         Side effect method that updates the given item's bias and latent factor
         """
         item_factor, item_bias = self.learn_item_bias_and_factor(
-            item_id, item_ratings_data
+            item_id=item_id, item_ratings_data=item_ratings_data
         )
         self.item_biases[item_id] = item_bias
         self.item_factors[item_id] = item_factor

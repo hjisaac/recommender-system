@@ -23,7 +23,7 @@ from src.helpers.graphing import (
 )
 
 
-# In[ ]:
+# In[2]:
 
 
 dataset_indexer = DatasetIndexer(
@@ -80,7 +80,7 @@ als_backend = Backend(
     item_database=item_database,
     # Whether we should resume by using the last state of
     # the algorithm the checkpoint manager folder or not.
-    # save_checkpoint=False,
+    save_checkpoint=True,
     resume=False,
     checkpoint_to_resume=None,
 )
@@ -106,3 +106,4 @@ recommender = recommender_builder.build(data=indexed_data)
 
 
 # plot_als_train_test_loss_evolution(als_backend.algorithm)
+
