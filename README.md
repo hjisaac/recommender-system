@@ -17,9 +17,9 @@ This project demonstrates the development of a **recommender system** leveraging
 5. [Installation](#installation)
 6. [Usage](#usage)
 7. [Performance](#performance)
-8. [Future Directions](#future-directions)
-9. [License](#license)
-10. [Contributing](#contributing)
+8. [Improvements](#improvements)
+9. [Code Structure](#code-structure)
+10. [License](#license)
 
 ---
 
@@ -131,16 +131,6 @@ These results demonstrate the model's ability to generalize well to unseen data,
 
 ---
 
-## Improvements
-
-- **Integration of Additional Algorithms**: Incorporate other collaborative filtering and content-based methods.
-- **Hybrid Recommender Systems**: Combine collaborative and content-based filtering for improved performance.
-- **More Examples**: Implement more examples potentially with different datasets for real-time recommendations.
-- **Numba and Jax**: Currently it is not possible to use numba/jax, cause the code contains a lot of custom objects. Plan a fix.
-- **Issues**: Resolve the remaining issues and compare with existing library.
-
----
-
 ## Code Structure
 
 ```txt
@@ -178,6 +168,16 @@ tests/                # Test suite for validating the functionality of the proje
 
 
 ```
+
+---
+
+## Improvements
+
+- **Integration of Additional Algorithms**: Incorporate other collaborative filtering and content-based methods.
+- **Hybrid Recommender Systems**: Combine collaborative and content-based filtering for improved performance.
+- **More Examples**: Implement more examples potentially with different datasets for real-time recommendations.
+- **Numba and Jax**: Currently it is not possible to use numba/jax, cause the code contains a lot of custom objects. Plan a fix.
+- **Issues**: Resolve the remaining issues and compare with existing library.
 
 ---
 
