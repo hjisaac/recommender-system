@@ -71,8 +71,6 @@ class AlternatingLeastSquaresState(AlgorithmState):
                     user_ratings_data=user_ratings_data,
                 )
 
-                print("Hé predictio iter")
-
             # The order of the vectors in the matrix product matters as they have
             # the following shape respectively: (`items_count`, hyper_n_factors)
             # and (hyper_n_factors, 1). Broadcasting is used for the biases' additions
