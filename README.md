@@ -131,11 +131,13 @@ These results demonstrate the model's ability to generalize well to unseen data,
 
 ---
 
-## Future Directions
+## Improvements
 
 - **Integration of Additional Algorithms**: Incorporate other collaborative filtering and content-based methods.
 - **Hybrid Recommender Systems**: Combine collaborative and content-based filtering for improved performance.
-- **Real-Time Recommendations**: Optimize the system for real-time use cases.
+- **More Examples**: Implement more examples potentially with different datasets for real-time recommendations.
+- **Numba and Jax**: Currently it is not possible to use numba/jax, cause the code contains a lot of custom objects. Plan a fix.
+- **Issues**: Resolve the remaining issues and compare with existing library.
 
 ---
 
