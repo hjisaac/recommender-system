@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[9]:
 
 
 import pandas as pd
@@ -13,6 +13,7 @@ from src.recommenders import CollaborativeFilteringRecommenderBuilder
 from src.backends import Backend
 from src.helpers._logging import logger  # noqa
 from src.settings import settings
+from src.utils import vocabulary_based_one_hot_encode
 
 from src.helpers.graphing import (
     plot_als_train_test_loss_evolution,
@@ -23,14 +24,44 @@ from src.helpers.graphing import (
 )
 
 
-# In[2]:
+# In[10]:
+
+
+USER_HEADER = "userId"
+ITEM_HEADER = "movieId"
+RATING_HEADER = "rating"
+FEATURE_TO_ENCODE = "genres"
+ITEM_FEATURE_LIST = [
+    "Action",
+    "Adventure",
+    "Animation",
+    "Children",
+    "Comedy",
+    "Crime",
+    "Documentary",
+    "Drama",
+    "Fantasy",
+    "Film-Noir",
+    "Horror",
+    "IMAX",
+    "Musical",
+    "Mystery",
+    "Romance",
+    "Sci-Fi",
+    "Thriller",
+    "War",
+    "Western",
+]
+
+
+# In[11]:
 
 
 dataset_indexer = DatasetIndexer(
     file_path="./ml-32m/ratings.csv",
-    user_header="userId",
-    item_header="movieId",
-    rating_header="rating",
+    user_header=USER_HEADER,
+    item_header=ITEM_HEADER,
+    rating_header=RATING_HEADER,
     limit=settings.general.LINES_COUNT_TO_READ,
 )
 
@@ -39,31 +70,39 @@ indexed_data = dataset_indexer.index_simple(
 )
 
 
-# In[3]:
+# In[12]:
 
 
 # Import the movie csv file that will act as our movie database
 # And that database is needed by the backend to query the movies
 item_database = (
-    pd.read_csv("./ml-32m/movies.csv", dtype={"movieId": str})
-    .set_index("movieId")
-    .to_dict(orient="index")
+    pd.read_csv("./ml-32m/movies.csv", dtype={ITEM_HEADER: str})
+    .assign(
+        genres=lambda df: df[FEATURE_TO_ENCODE].apply(lambda genres: genres.split("|")),
+        feature_vector=lambda df: df[FEATURE_TO_ENCODE].apply(
+            lambda g: vocabulary_based_one_hot_encode(
+                to_encode=g, vocabulary=ITEM_FEATURE_LIST
+            )
+        ),
+    )
+    .set_index(ITEM_HEADER)  # Set the movieId as the index
+    .to_dict(orient="index")  # Convert the DataFrame to a dictionary
 )
 
 
-# In[4]:
+# In[13]:
 
 
 # plot_data_item_distribution_as_hist(indexed_data)
 
 
-# In[5]:
+# In[14]:
 
 
 # plot_power_low_distribution(indexed_data,)
 
 
-# In[6]:
+# In[15]:
 
 
 als_instance = AlternatingLeastSquares(
@@ -85,12 +124,12 @@ als_backend = Backend(
     item_database=item_database,
     # Whether we should resume by using the last state of
     # the algorithm the checkpoint manager folder or not.
-    resume=False,
-    save_checkpoint=True,
+    resume=True,
+    save_checkpoint=False,
 )
 
 
-# In[7]:
+# In[16]:
 
 
 recommender_builder = CollaborativeFilteringRecommenderBuilder(
@@ -104,22 +143,19 @@ recommender = recommender_builder.build(data=indexed_data)
 # In[ ]:
 
 
-
-
-
-# In[8]:
+# In[17]:
 
 
 # plot_als_train_test_rmse_evolution(als_backend.algorithm)
 
 
-# In[11]:
+# In[18]:
 
 
 # plot_als_train_test_loss_evolution(als_backend.algorithm)
 
 
-# In[10]:
+# In[19]:
 
 
 #
@@ -127,15 +163,11 @@ prediction_input = [("17", 4)]
 recommender.recommend(prediction_input)
 
 
-# In[15]:
+# In[20]:
 
 
 prediction_input = [("267654", 4)]  # Harry Poter
-recommender.recommend(prediction_input)
-
+result = recommender.recommend(prediction_input)
+print(result)
 
 # In[ ]:
-
-
-
-

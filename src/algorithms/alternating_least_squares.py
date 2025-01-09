@@ -39,7 +39,7 @@ class AlternatingLeastSquaresState(AlgorithmState):
     def to_predictor(
         als: "AlternatingLeastSquares", *args, item_database=None, **kwargs
     ) -> Predictor:
-        def predict(user_ratings_data: list):
+        def predict(user_ratings_data: list = None):
             """
             Predict ratings for a user based on user and item factors and biases
             and his historical ratings' data'.
@@ -51,6 +51,18 @@ class AlternatingLeastSquaresState(AlgorithmState):
                 np.ndarray: Predicted ratings for all items.
             """
 
+            if not user_ratings_data:
+                # Return the averaged rating prediction for all the items
+                # Matrix product .i.e the equivalent of the "@" operator
+                return np.mean(
+                    np.dot(als.user_factors, als.item_factors.T)
+                    + als.user_biases.reshape(-1, 1)
+                    + als.item_biases.reshape(1, -1),
+                    axis=0,
+                )
+
+            # for _ in range(3):  # 3 Should be parameter
+
             user_factor, user_bias = als.learn_user_bias_and_factor(
                 user_id=None, user_ratings_data=user_ratings_data
             )
@@ -58,9 +70,10 @@ class AlternatingLeastSquaresState(AlgorithmState):
             # The order of the vectors in the matrix product matters as they have
             # the following shape respectively: (`items_count`, hyper_n_factors)
             # and (hyper_n_factors, 1). Broadcasting is used for the biases' additions
-            return np.dot(als.item_factors, user_factor) + user_bias + als.item_biases
+            return np.dot(user_factor, als.item_factors.T) + user_bias + als.item_biases
 
         def render(predictions: np.ndarray):
+
             return [
                 item_database[als.id_to_item_bmap[item_id]]
                 # The minus in front of the prediction (ndarray) makes `np.argsort`
@@ -188,33 +201,6 @@ class AlternatingLeastSquares(Algorithm):
                 "Lists have mismatched lengths. Ensure all inputs are lists with the same length."
             )
 
-    def _validate_factors_and_biases(
-        self, user_factors, item_factors, user_biases, item_biases
-    ):
-        """
-        Validates that user and item factors have the same shape,
-        and user and item biases have the same shape.
-        """
-        try:
-            # FIXME:
-            # self._validate_dimension_equality(user_factors, item_factors)
-            pass
-        except TypeError as exc:
-            raise self.AlternatingLeastSquaresError(
-                f"Expected user_factors and item_factors to have the same shape, "
-                f"but got {user_factors.shape} and {item_factors.shape}."
-            ) from exc
-
-        try:
-            # FIXME:
-            # self._validate_dimension_equality(user_biases, item_biases)
-            pass
-        except TypeError as exc:
-            raise self.AlternatingLeastSquaresError(
-                f"Expected user_biases and item_biases to have the same shape, "
-                f"but got {user_biases.shape} and {item_biases.shape}."
-            ) from exc
-
     def _validate_epochs_losses_and_rmse(
         self, loss_train, loss_test, rmse_train, rmse_test
     ):
@@ -280,9 +266,6 @@ class AlternatingLeastSquares(Algorithm):
         )
 
     def _validate_state(self, state):
-        self._validate_factors_and_biases(
-            state.user_factors, state.item_factors, state.user_biases, state.item_biases
-        )
         self._validate_epochs_losses_and_rmse(
             state.loss_train, state.loss_test, state.rmse_train, state.rmse_test
         )
