@@ -1,1 +1,3 @@
 NOT_PROVIDED = NOT_APPLICABLE = NOT_DEFINED = object()
+FEATURES_COUNT_FIELD_NAME = "features_count"
+FEATURES_HOT_ENCODED_FIELD_NAME = "features_hot_encoded"
