@@ -1,4 +1,4 @@
-??
+ ??
 ---
 
 # Recommendation System Building (Framework)
@@ -42,6 +42,8 @@ The codebase is crafted with a focus on **modularity** and **reusability**, ensu
 
 ## Algorithms
 
+
+
 ### Alternating Least Squares (ALS)
 
 **ALS** is a collaborative filtering technique based on **matrix factorization**. It models user and item interactions by discovering latent features that explain observed ratings. The algorithm alternates between optimizing user and item matrices to minimize the regularized objective function:
@@ -53,6 +55,7 @@ $$
 Where:
 - $U$: Matrix of user latent factors $n \times k$.
 - $V$: Matrix of item latent factors $m \times k$.
+- $F$: Matrix of feature (when item features are also modeled) 
 - $b^{(u)}$: Matrix of the user biases $1 \times k$.
 - $b^{(v)}$: Matrix of the item biases $1 \times k$.
 - $r_{ij}$: Observed rating for user $i$ and item $j$.
@@ -61,26 +64,34 @@ Where:
 - $\gamma$: Regularization parameters accounting for $b^{(u)}$ and $b^{(v)}$
 
 #### Workflow:
-1. Solve the optimization problem for $b^{(u)}$ keeping all the other matrices (.i.e $U$, $V$, $b^{(v)}$) fix.
-      $$ b^{(u)} = $$
-2. Solve the optimization problem for $U$ keeping all the other matrices fix.
-3. Solve the optimization problem for $b^{(v)}$ keeping all the other matrices fix.
-4. Solve the optimization problem for $V$ keeping all the other matrices fix.
-5. Repeat until convergence.
+
+1. Solve the optimization problem for $b^{(u)}$ keeping all the other matrices (.i.e $U$, $V$, $b^{(v)}$) fixed.
+      $$ b^{(u)}_i = $$
+2. Solve the optimization problem for $U$ keeping all the other matrices fixed.
+      $$ u_i = $$
+3. Solve the optimization problem for $b^{(v)}$ keeping all the other matrices fixed.
+      $$ b^{(v)}_j = $$
+4. Solve the optimization problem for $V$ keeping all the other matrices fixed.
+   - When F is modeled:
+      $$ v_j = $$
+   - When is not modeled:
+     $$ v_j = $$
+   
+5. (When F modeled) Solve the optimization problem for $F$ keeping all the other matrices fixed.
+   $$f_{\ell} = \frac{\sum_{n=1}^{N} \frac{N}{n \sqrt{F_{n}}} X_{n} - \left(\sum_{t=1}^{\ell} f_{t}\right) \sum_{n=1}^{N} \frac{1}{F_{n}}}{\sqrt{\sum_{n=1}^{N} \left(1 + \sum_{i=1}^{n} \frac{1}{F_{i}}\right)}}$$
+6. Repeat until convergence.
+
 
 #### Advantages:
 - Scalable to large datasets.
-- Support for parallelism
+- Support for parallelization for computation performance.
 - Handles sparsity in user-item interaction matrices effectively.
 
 ---
 
 ## Datasets
-The folder `dataset` contains information about examples' dataset.
 
-### MovieLens dataset
-The first example implemented to access performance uses the [**MovieLens dataset**](https://grouplens.org/datasets/movielens/).
-This dataset is a standard benchmark for evaluating recommendation algorithms.
+The folder `dataset` contains information about examples' dataset.
 
 ---
 
@@ -99,24 +110,46 @@ To set up the project:
    poetry install
    ```
 
-3. **Download the dataset**:
-   To run the movielenz example, download the dataset from [here](https://grouplens.org/datasets/movielens/).
-
----
+3. **Run an example**:
+   To run the movielens example, download the dataset from [here](https://grouplens.org/datasets/movielens/).
+   Ideally, put that dataset in the example folder and change the path of rating.csv file passed to the indexer.
+   And run `poetry run python examples/path_to_example_file.py`
+   
+---  
 
 ## Usage
 
-1. **Run the model**:
-   ```bash
-   poetry run python main.py
+1. **Instantiate the appropriate recommender builder**:
+    Only `CollaborativeFilteringRecommenderBuilder` is implemented for now.
+   ```py
+   from src.recommenders import CollaborativeFilteringRecommenderBuilder
+   # ...
+   # Create everything needed instance the builder (indexed_data, backend that will run the proper algorithm..)
+   # ...
+   # Instantiate the builder with all the necessary arguments
+   recommander_builder = CollaborativeFilteringRecommenderBuilder(*args, *kwars)  
+   
+   # Build the recommender now by calling the build on the builder to get the recommender (Kinda an implementation of the builder design pattern).
+   # This will basically train the recommendation model, so it will take some time depending on the dataset size and the parameters.
+   recommender = recommander_builder.build(*args, **kwargs)
+   
+   # To recommend, call the recommend method of the recommender object with a list of rating. E.g: [(item1, rating1), ..]
+   recommender.recommend(input_ratings)
+   
+   # If called without arguments, the recommender will recommend best rated items.
+   recommender.recommend()
    ```
 
 2. **Evaluate performance**:
-   The script outputs RMSE values for both training and testing, providing insight into the system's predictive accuracy.
+   The script outputs RMSE and Loss values for both training and testing, providing insight into the system's predictive accuracy.
+    And those values can be accessed later from the model and be plotted using the graphing utils if the model has been saved 
+    (to save the model as checkpoint, one can pass `save_checkpoint=True` to the backend object used to do the training)
 
 ---
 
 ## Performance
+
+The first example implemented to access performance uses the [**MovieLens dataset**](https://grouplens.org/datasets/movielens/).
 
 **Root Mean Squared Error (RMSE)** is used as the primary evaluation metric:
 
@@ -160,7 +193,7 @@ figures/              # Additional plots and figures for analysis and results.
 ml-32m/               # Preprocessed or raw data specifically for the MovieLens 32M dataset.
 
 src/                  # Source code for the project, organized by functional modules.
-├── algorithms/       # Core algorithms used in the recommender system.
+├── algorithms/       # Implementation of recommender system algorithms.
 │   └── core/         # Implementation of the base logics common to all the recommender algorithms.
 ├── backends/         # Backend modules for database access, API integrations, etc.
 ├── helpers/          # Utility functions and helpers for common tasks.
@@ -187,16 +220,22 @@ tests/                # Test suite for validating the functionality of the proje
 - **More Examples**: Implement more examples potentially with different datasets for real-time recommendations.
 - **Numba and Jax**: Currently it is not possible to use numba/jax, cause the code contains a lot of custom objects. Plan a fix.
 - **Issues**: Resolve the remaining issues, including the adding of unit tests.
-- **Comparison**: Compare with existing libraries
+- **Comparison**: Compare with existing libraries.
 ---
 
 ## Resources
+
 The `docs` folder contains useful resources (papers, ...)
 
 ---
 ## License
 
 This project is licensed under the MIT License. See the `LICENSE` file for more details.
+
+## Feedbacks
+
+Feel free to give any feedback or report any issue to me [<hjisaac.h at gmail.com>](hjisaac.h@gmail.com). 
+
 
 
 

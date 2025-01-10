@@ -17,9 +17,13 @@ from src.helpers.serial_mapper import (
 from src.helpers.predictor import Predictor
 from src.helpers._logging import logger  # noqa
 
-__als_cache = {
+__als_cache = {}
 
-}
+
+def __clear_als_cache():  # noqa
+    global __als_cache
+    __als_cache = {}
+
 
 # Centralize this if needed somewhere else
 class LearningTargetEnum(str, Enum):
@@ -486,37 +490,75 @@ class AlternatingLeastSquares(Algorithm):
             ratings_data=item_ratings_data,
         )
 
-    def learn_feature_factor(self, feature_id: Optional[int] = None, feature_factor=None) -> np.ndarray:
+    def learn_feature_factor(
+        self, feature_id: Optional[int] = None, feature_factor=None
+    ) -> np.ndarray:
         """
         Learn or compute the given feature_id related factor using the item vectors
         """
 
+        # TODO: Define feature factor
 
-
-        items_databases = None
+        feature_factor = (
+            feature_factor
+            if feature_factor is not None
+            else self.feature_factors[feature_id]
+        )
+        items_databases = None  # TODO:
         # Access __als_cache
         global __als_cache
 
-        if not (features_counts := __als_cache.get("item_features_counts")):
-            features_counts = np.array([])
+        if not (item_features_counts := __als_cache.get("item_features_counts")):
+            item_features_counts = np.array([])
+
             for i, item in enumerate(self.id_to_item_bmap.inverse):
-                features_counts.append(items_databases[item]["feature_count"])
+                item_features_counts.append(items_databases[item]["features_count"])
+
+            # DOCME: Here we will do an engineering hack to avoid zero division error.
+            #   For the items that have no feature, we will set their feature count to
+            #   infinity to make kinda nullify the factor `1 / np.sqrt(feature_count)`.
+            #   This idea makes sens because the feature term does not make sens for item
+            #   without features, which means that we should not include the feature extraction
+            #   term for those items.
+
+            item_features_counts[item_features_counts == 0] = (
+                999999999999  # TODO:  Use the upper bound of int datatype
+            )
+
             # Cache the result for the next time
-            __als_cache["item_features_counts"] = features_counts
+            __als_cache["item_features_counts"] = item_features_counts
 
-        # Why ?
-        feature_factor = feature_factor + 1
+        if not (
+            compressed_item_feature_factors := __als_cache.get(
+                "compressed_item_feature_factors"
+            )
+        ):
+            compressed_item_feature_factors = np.array([])
+            for i, item in enumerate(self.id_to_item_bmap.inverse):
+                # Append the compressed feature factors of the item
+                compressed_item_feature_factors.append(
+                    self.feature_factors[
+                        items_databases[item]["features_hot_encoded"]
+                    ].sum(axis=0)
+                )
+            # Cache the result for the next time
+            __als_cache["compressed_item_feature_factors"] = (
+                compressed_item_feature_factors
+            )
 
-        np.sum(np.multiply(1 / np.sqrt(feature_factor.reshape(-1, 1)), self.item_factors), axis=0) - AND_THE_REST
-        item_full_data = items_databases[item]["feature_count"]
-        self.learn_feature_factor.
+        numerator = np.sum(
+            np.multiply(1 / np.sqrt(feature_factor.reshape(-1, 1)), self.item_factors),
+            axis=0,
+        ) - (
+            np.multiply(
+                1 / feature_factor.reshape(-1, 1),
+                compressed_item_feature_factors - feature_factor,
+            )
+        )
 
-        for item in items_databases:
-            pass
+        denominator = 1 + (1 / np.sqrt(feature_factor.reshape(-1, 1))).sum()
 
-
-
-
+        return numerator / denominator
 
     def _get_factor_sample(
         self, size, loc: Optional[float] = None, scale: Optional[float] = None
