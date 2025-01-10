@@ -119,7 +119,7 @@ To set up the project:
 
 ## Usage
 
-Only `CollaborativeFilteringRecommenderBuilder` is implemented for now.
+Only collaborative filtering is implemented now, and it is encaspsulated in the class `CollaborativeFilteringRecommenderBuilder`.
 
    ```py
    from src.recommenders import CollaborativeFilteringRecommenderBuilder
