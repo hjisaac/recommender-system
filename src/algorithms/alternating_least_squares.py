@@ -20,6 +20,7 @@ from src.helpers._logging import logger  # noqa
 
 _als_cache = {}
 
+
 def _clear_als_cache():  # noqa
     global _als_cache
     _als_cache = {}
@@ -173,7 +174,7 @@ class AlternatingLeastSquares(Algorithm):
         self._initial_hyper_n_epochs = hyper_n_epochs
 
         self._state_resumed = False
-        self._include_features = False,
+        self._include_features = (False,)
 
         self._epochs_loss_train = []
         self._epochs_loss_test = []
@@ -245,7 +246,10 @@ class AlternatingLeastSquares(Algorithm):
         Internal method to update the state of the algorithm.
         This is not exposed to client code to ensure encapsulation.
         """
-        if not (feature_factor := getattr(state, "feature_factors", None)) and self._include_features:
+        if (
+            not (feature_factor := getattr(state, "feature_factors", None))
+            and self._include_features
+        ):
             logger.error(
                 "State that is being loaded does not have `feature_factors`, so cannot run {self.__class__.__name__} "
                 "algorithm with feature included, exiting..."
@@ -508,7 +512,10 @@ class AlternatingLeastSquares(Algorithm):
         )
 
     def learn_feature_factor(
-        self, feature_id: Optional[int] = None, feature_factor=None, item_ratings_data: Optional[list] = None,
+        self,
+        feature_id: Optional[int] = None,
+        feature_factor=None,
+        item_ratings_data: Optional[list] = None,
     ) -> np.ndarray:
         """
         Learn or compute the given feature_id related factor using the item vectors
@@ -528,7 +535,9 @@ class AlternatingLeastSquares(Algorithm):
             item_features_counts = np.zeros(shape=len())
 
             for i, item in enumerate(self.id_to_item_bmap.inverse):
-                item_features_counts.append(self.items_databases[item]["features_count"])
+                item_features_counts.append(
+                    self.items_databases[item]["features_count"]
+                )
 
             # DOCME: Here we will do an engineering hack to avoid zero division error.
             #   For the items that have no feature, we will set their feature count to
@@ -668,7 +677,9 @@ class AlternatingLeastSquares(Algorithm):
         self.item_factors[item_id] = item_factor
 
     def update_feature_factor(self, feature_id, item_ratings_data: list):
-        feature_factor = self.learn_feature_factor(feature_id=feature_id, item_ratings_data=item_ratings_data)
+        feature_factor = self.learn_feature_factor(
+            feature_id=feature_id, item_ratings_data=item_ratings_data
+        )
         self.feature_factors[feature_id] = feature_factor
 
     def run(
@@ -678,7 +689,6 @@ class AlternatingLeastSquares(Algorithm):
         item_database: dict = None,
         include_features: bool = False,
     ):
-
         """
         Runs the algorithm on the indexed data, `IndexedDatasetWrapper`.
         """
@@ -687,9 +697,9 @@ class AlternatingLeastSquares(Algorithm):
             data, IndexedDatasetWrapper
         ), "The provided `indexed_data` must be an instance of `IndexedDatasetWrapper`."
 
-        assert (include_features and item_database) or not include_features, (
-            "When `include_features` is set to `True` the `item_database` should be a defined dict"
-        )
+        assert (
+            include_features and item_database
+        ) or not include_features, "When `include_features` is set to `True` the `item_database` should be a defined dict"
 
         data_by_user_id__train = data.data_by_user_id__train
         data_by_item_id__train = data.data_by_item_id__train
@@ -748,7 +758,11 @@ class AlternatingLeastSquares(Algorithm):
         )
 
         # Get the len of the first hot encoded features array
-        n_features = self.item_database[self.id_to_item_bmap[0]]["features_hot_encoded"] if self._include_features else 0
+        n_features = (
+            self.item_database[self.id_to_item_bmap[0]]["features_hot_encoded"]
+            if self._include_features
+            else 0
+        )
 
         for epoch in tqdm(range(n_epochs), desc="Epochs", unit="epoch"):
 

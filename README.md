@@ -119,9 +119,8 @@ To set up the project:
 
 ## Usage
 
-1. **Instantiate the appropriate recommender builder**:
+Only `CollaborativeFilteringRecommenderBuilder` is implemented for now.
 
-    Only `CollaborativeFilteringRecommenderBuilder` is implemented for now.
    ```py
    from src.recommenders import CollaborativeFilteringRecommenderBuilder
    # ...
@@ -141,11 +140,11 @@ To set up the project:
    recommender.recommend()
    ```
 
-2. **Evaluate performance**:
-
    The script outputs RMSE and Loss values for both training and testing, providing insight into the system's predictive accuracy.
     And those values can be accessed later from the model and be plotted using the graphing utils if the model has been saved 
-    (to save the model as checkpoint, one can pass `save_checkpoint=True` to the backend object used to do the training)
+    (to save the model as checkpoint, one can pass `save_checkpoint=True` to the backend object used to do the training). There are 
+   also some logs that will be generated in the `artifacts/logs` folder each time the backend runs. Those logs can be very usefull
+    for debugging purposes.
 
 ---
 
