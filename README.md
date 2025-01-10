@@ -47,7 +47,7 @@ The codebase is crafted with a focus on **modularity** and **reusability**, ensu
 **ALS** is a collaborative filtering technique based on **matrix factorization**. It models user and item interactions by discovering latent features that explain observed ratings. The algorithm alternates between optimizing user and item matrices to minimize the regularized objective function:
 
 $$
-\min_{U, V} \lambda \sum_{(i,j) \in \mathcal{R}} (r_{ij} - (U_i^T V_j + b^{(u)}_i + b^{(v)}_j))^2 + \tau (||U||^2 + ||V||^2) + \gamma (||b^{(u)}||^2 + ||b^{(v)}||^2)
+\min_{U, V} \lambda \sum_{(i,j) \in \mathcal{R}} (r_{ij} - (U_i^T V_j + b^{(u)}_i + b^{(v)}_j))^2 + \tau (\|U\|^2 + \|V\|^2) + \gamma (\|b^{(u)}\|^2 + \|b^{(v)}\|^2)
 $$
 
 Where:
@@ -66,22 +66,20 @@ Where:
 2. Solve the optimization problem for $U$ keeping all the other matrices fix.
 3. Solve the optimization problem for $b^{(v)}$ keeping all the other matrices fix.
 4. Solve the optimization problem for $V$ keeping all the other matrices fix.
-3. 
-3. Repeat until convergence.
+5. Repeat until convergence.
 
 #### Advantages:
 - Scalable to large datasets.
+- Support for parallelism
 - Handles sparsity in user-item interaction matrices effectively.
 
 ---
 
-## Dataset
+## Datasets
+The folder `dataset` contains information about examples' dataset.
 
-The system utilizes the [**MovieLens dataset**](https://grouplens.org/datasets/movielens/), which includes:
-- **Users**: Unique IDs representing users.
-- **Items**: Unique IDs representing items (e.g., movies).
-- **Ratings**: User-item interactions (e.g., 1-5 stars).
-
+### MovieLens dataset
+The first example implemented to access performance uses the [**MovieLens dataset**](https://grouplens.org/datasets/movielens/).
 This dataset is a standard benchmark for evaluating recommendation algorithms.
 
 ---
@@ -188,8 +186,8 @@ tests/                # Test suite for validating the functionality of the proje
 - **Hybrid Recommender Systems**: Combine collaborative and content-based filtering for improved performance.
 - **More Examples**: Implement more examples potentially with different datasets for real-time recommendations.
 - **Numba and Jax**: Currently it is not possible to use numba/jax, cause the code contains a lot of custom objects. Plan a fix.
-- **Issues**: Resolve the remaining issues and compare with existing library.
-
+- **Issues**: Resolve the remaining issues, including the adding of unit tests.
+- **Comparison**: Compare with existing libraries
 ---
 
 ## Resources
