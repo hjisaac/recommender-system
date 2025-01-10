@@ -17,13 +17,15 @@ movies_sample = [
         "rating": 3.5,
         "description": "A heartwarming comedy with a touch of drama.",
         "image_url": "https://via.placeholder.com/150",
-    },{
+    },
+    {
         "title": "Movie 2",
         "genres": "Comedy, Drama",
         "rating": 3.5,
         "description": "A heartwarming comedy with a touch of drama.",
         "image_url": "https://via.placeholder.com/150",
-    },{
+    },
+    {
         "title": "Movie 2",
         "genres": "Comedy, Drama",
         "rating": 3.5,

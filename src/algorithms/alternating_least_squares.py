@@ -2,10 +2,12 @@ from types import NoneType
 
 import numpy as np
 from enum import Enum
+
 from tqdm import tqdm
 from typing import Optional
 
 from src.algorithms.core import Algorithm
+from src.helpers.constants import NOT_DEFINED
 from src.helpers.dataset_indexer import IndexedDatasetWrapper
 from src.helpers.state_manager import AlgorithmState
 from src.helpers.serial_mapper import (
@@ -15,6 +17,9 @@ from src.helpers.serial_mapper import (
 from src.helpers.predictor import Predictor
 from src.helpers._logging import logger  # noqa
 
+__als_cache = {
+
+}
 
 # Centralize this if needed somewhere else
 class LearningTargetEnum(str, Enum):
@@ -466,7 +471,7 @@ class AlternatingLeastSquares(Algorithm):
     def learn_item_bias_and_factor(
         self,
         item_id: Optional[int] = None,
-        item_factor: np.ndarray = None,
+        item_factor: Optional[np.ndarray] = None,
         item_ratings_data: Optional[list] = None,
     ):
         """
@@ -481,14 +486,50 @@ class AlternatingLeastSquares(Algorithm):
             ratings_data=item_ratings_data,
         )
 
-    def _get_factor_sample(self, size) -> np.ndarray:
+    def learn_feature_factor(self, feature_id: Optional[int] = None, feature_factor=None) -> np.ndarray:
         """
-        Returns a factor sample using a normal distribution 0 as
-        mean and `1 / np.sqrt(self.hyper_n_factors)` as a scale.
+        Learn or compute the given feature_id related factor using the item vectors
         """
+
+
+
+        items_databases = None
+        # Access __als_cache
+        global __als_cache
+
+        if not (features_counts := __als_cache.get("item_features_counts")):
+            features_counts = np.array([])
+            for i, item in enumerate(self.id_to_item_bmap.inverse):
+                features_counts.append(items_databases[item]["feature_count"])
+            # Cache the result for the next time
+            __als_cache["item_features_counts"] = features_counts
+
+        # Why ?
+        feature_factor = feature_factor + 1
+
+        np.sum(np.multiply(1 / np.sqrt(feature_factor.reshape(-1, 1)), self.item_factors), axis=0) - AND_THE_REST
+        item_full_data = items_databases[item]["feature_count"]
+        self.learn_feature_factor.
+
+        for item in items_databases:
+            pass
+
+
+
+
+
+    def _get_factor_sample(
+        self, size, loc: Optional[float] = None, scale: Optional[float] = None
+    ) -> np.ndarray:
+        """
+        Returns a factor sample using a normal distribution loc=`0` as
+        mean and scale=`1 / np.sqrt(self.hyper_n_factors)` as a scale.
+        """
+        loc = 0.0 if loc is None else loc
+        scale = 1 / np.sqrt(self.hyper_n_factors) if scale is None else scale
         return np.random.normal(
-            loc=0.0,
-            scale=1 / np.sqrt(self.hyper_n_factors),
+            loc=loc,
+            scale=scale,
             size=size,
         )
 
@@ -540,14 +581,13 @@ class AlternatingLeastSquares(Algorithm):
         return accumulated_squared_residuals, residuals_count
 
     def _get_accumulated_squared_biases(self):
-        return np.sum(self.user_biases**2), np.sum(self.item_biases**2)
+        # This way of computing the accumulated biases norm is faster
+        return np.square(self.user_biases).sum(), np.square(self.item_biases).sum()
 
     def _get_accumulated_factors_product(self):
-        # TODO: Improve this (numpy first)
         # https://mathworld.wolfram.com/FrobeniusNorm.html#:~:text=The%20Frobenius%20norm%2C%20sometimes%20also,considered%20as%20a%20vector%20norm.
-        return sum(np.dot(factor, factor) for factor in self.user_factors), sum(
-            np.dot(factor, factor) for factor in self.item_factors
-        )
+        # This way of computing the accumulated factors norm is faster
+        return np.square(self.user_factors).sum(), np.square(self.item_factors).sum()
 
     def update_user_bias_and_factor(self, user_id, user_ratings_data: list):
         """
