@@ -1,9 +1,9 @@
 ??
 ---
 
-# Recommender System Codebase
+# Recommendation System Building (Framework)
 
-This project demonstrates the development of a **recommender system** leveraging **matrix factorization** techniques. The **Alternating Least Squares (ALS)** algorithm is at the core of this system, enabling precise user-item rating predictions. It has been validated using the **MovieLens dataset**, showcasing good performance and adaptability to real-world scenarios.
+This project demonstrates the development of a **high-performing recommender system** leveraging **matrix factorization** techniques. The **Alternating Least Squares (ALS)** algorithm is at the core of this system, enabling precise user-item rating predictions. It has been extensively validated using the **MovieLens dataset**, showcasing exceptional performance and adaptability to real-world scenarios.
 
 ---
 
@@ -11,7 +11,7 @@ This project demonstrates the development of a **recommender system** leveraging
 
 1. [Introduction](#introduction)
 2. [Key Features](#key-features)
-3. [Algorithms](#algorithm)
+3. [Algorithms](#algorithms)
    - [Alternating Least Squares (ALS)](#alternating-least-squares-als)
 4. [Dataset](#dataset)
 5. [Installation](#installation)
@@ -47,18 +47,26 @@ The codebase is crafted with a focus on **modularity** and **reusability**, ensu
 **ALS** is a collaborative filtering technique based on **matrix factorization**. It models user and item interactions by discovering latent features that explain observed ratings. The algorithm alternates between optimizing user and item matrices to minimize the regularized objective function:
 
 $$
-\min_{U, V} \sum_{(i,j) \in \mathcal{R}} (r_{ij} - U_i^T V_j)^2 + \lambda (||U||^2 + ||V||^2)
+\min_{U, V} \lambda \sum_{(i,j) \in \mathcal{R}} (r_{ij} - (U_i^T V_j + b^{(u)}_i + b^{(v)}_j))^2 + \tau (||U||^2 + ||V||^2) + \gamma (||b^{(u)}||^2 + ||b^{(v)}||^2)
 $$
 
 Where:
-- \( U \): Matrix of user latent factors (\( n \times k \)).
-- \( V \): Matrix of item latent factors (\( m \times k \)).
-- \( r_{ij} \): Observed rating for user \( i \) and item \( j \).
-- \( \lambda \): Regularization term to prevent overfitting.
+- $U$: Matrix of user latent factors $n \times k$.
+- $V$: Matrix of item latent factors $m \times k$.
+- $b^{(u)}$: Matrix of the user biases $1 \times k$.
+- $b^{(v)}$: Matrix of the item biases $1 \times k$.
+- $r_{ij}$: Observed rating for user $i$ and item $j$.
+- $\lambda$: Regularization parameters accounting for the prediction residuals
+- $\tau$: Regularization parameters accounting for $U$ and $V$
+- $\gamma$: Regularization parameters accounting for $b^{(u)}$ and $b^{(v)}$
 
 #### Workflow:
-1. Fix item matrix \( V \), optimize user matrix \( U \).
-2. Fix user matrix \( U \), optimize item matrix \( V \).
+1. Solve the optimization problem for $b^{(u)}$ keeping all the other matrices (.i.e $U$, $V$, $b^{(v)}$) fix.
+      $$ b^{(u)} = $$
+2. Solve the optimization problem for $U$ keeping all the other matrices fix.
+3. Solve the optimization problem for $b^{(v)}$ keeping all the other matrices fix.
+4. Solve the optimization problem for $V$ keeping all the other matrices fix.
+3. 
 3. Repeat until convergence.
 
 #### Advantages:
@@ -101,12 +109,11 @@ To set up the project:
 ## Usage
 
 1. **Run the model**:
-   Run the example file:
    ```bash
    poetry run python main.py
    ```
 
-3. **Evaluate performance**:
+2. **Evaluate performance**:
    The script outputs RMSE values for both training and testing, providing insight into the system's predictive accuracy.
 
 ---
@@ -120,8 +127,8 @@ RMSE = \sqrt{\frac{1}{n} \sum_{(i,j) \in \mathcal{R}} (r_{ij} - \hat{r}_{ij})^2}
 $$
 
 Where:
-- \( r_{ij} \): Actual rating.
-- \( \hat{r}_{ij} \): Predicted rating.
+- $r_{ij}$: Actual rating.
+- $\hat{r}_{ij}$: Predicted rating.
 
 ### Results (Example)
 - **Training RMSE**: 0.84
@@ -137,18 +144,22 @@ These results demonstrate the model's ability to generalize well to unseen data,
 artifacts/            # Stores generated artifacts such as model checkpoints, logs, and profiling data.
 ├── checkpoints/      # Saved model checkpoints for resuming or fine-tuning training.
 │   └── als/          # Checkpoints for the ALS algorithm specifically.
-│       ├── 1000000   # Checkpoint for ALS with 1 million interactions as limit of lines to load.
-│       └── 100000000 # Checkpoint for ALS with 100 million interactions as limit of lines to load.
+│       ├── 1000000   # Checkpoint for ALS with 1 million interactions.
+│       └── 100000000 # Checkpoint for ALS with 100 million interactions.
 ├── figures/          # Contains visualizations or figures generated during the project.
 └── logs/             # Logging files generated during training or testing.
 
-datasets/             # Documentation about the datasets used for training and evaluation of the recommender system.
+datasets/             # Datasets used for training and evaluation of the recommender system.
 
 docs/                 # Documentation for the project, including detailed explanations and guidelines.
 
 examples/             # Example scripts to demonstrate the usage of the system.
 ├── basic_example/    # A simple example to get started quickly.
 └── movies_lens/      # Example using the MovieLens dataset.
+
+figures/              # Additional plots and figures for analysis and results.
+
+ml-32m/               # Preprocessed or raw data specifically for the MovieLens 32M dataset.
 
 src/                  # Source code for the project, organized by functional modules.
 ├── algorithms/       # Core algorithms used in the recommender system.
@@ -181,6 +192,10 @@ tests/                # Test suite for validating the functionality of the proje
 
 ---
 
+## Resources
+The `docs` folder contains useful resources (papers, ...)
+
+---
 ## License
 
 This project is licensed under the MIT License. See the `LICENSE` file for more details.

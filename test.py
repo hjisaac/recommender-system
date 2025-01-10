@@ -106,4 +106,3 @@ recommender = recommender_builder.build(data=indexed_data)
 
 
 # plot_als_train_test_loss_evolution(als_backend.algorithm)
-

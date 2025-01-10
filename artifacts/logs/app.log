@@ -752,3 +752,5 @@
 2025-01-09 21:21:48,507 [INFO] AlternatingLeastSquares algorithm running just ends. Exiting the run method... 
 2025-01-09 21:21:48,587 [INFO] Checkpoint successfully saved at 20250109-212148_lambda0.1_gamma0.1_tau0.1_n_epochs20_n_factors10
 2025-01-09 21:21:48,589 [INFO] Successfully built the recommender using AlternatingLeastSquares
+2025-01-10 04:32:12,975 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-10 04:44:37,233 [INFO] Successfully indexed 32000204 lines from ./ml-32m/ratings.csv
