@@ -1,9 +1,9 @@
 ??
 ---
 
-# Recommendation System Building (Framework)
+# Recommender System Codebase
 
-This project demonstrates the development of a **high-performing recommender system** leveraging **matrix factorization** techniques. The **Alternating Least Squares (ALS)** algorithm is at the core of this system, enabling precise user-item rating predictions. It has been extensively validated using the **MovieLens dataset**, showcasing exceptional performance and adaptability to real-world scenarios.
+This project demonstrates the development of a **recommender system** leveraging **matrix factorization** techniques. The **Alternating Least Squares (ALS)** algorithm is at the core of this system, enabling precise user-item rating predictions. It has been validated using the **MovieLens dataset**, showcasing good performance and adaptability to real-world scenarios.
 
 ---
 
@@ -11,15 +11,15 @@ This project demonstrates the development of a **high-performing recommender sys
 
 1. [Introduction](#introduction)
 2. [Key Features](#key-features)
-3. [Algorithm](#algorithm)
+3. [Algorithms](#algorithm)
    - [Alternating Least Squares (ALS)](#alternating-least-squares-als)
 4. [Dataset](#dataset)
 5. [Installation](#installation)
 6. [Usage](#usage)
 7. [Performance](#performance)
-8. [Future Directions](#future-directions)
-9. [License](#license)
-10. [Contributing](#contributing)
+8. [Code Structure](#code-structure)
+9. [Improvements](#improvements)
+10. [License](#license)
 
 ---
 
@@ -40,7 +40,7 @@ The codebase is crafted with a focus on **modularity** and **reusability**, ensu
 
 ---
 
-## Algorithm
+## Algorithms
 
 ### Alternating Least Squares (ALS)
 
@@ -94,18 +94,19 @@ To set up the project:
    ```
 
 3. **Download the dataset**:
-   Place the MovieLens dataset in the `data/` directory. Download it from [here](https://grouplens.org/datasets/movielens/).
+   To run the movielenz example, download the dataset from [here](https://grouplens.org/datasets/movielens/).
 
 ---
 
 ## Usage
 
 1. **Run the model**:
+   Run the example file:
    ```bash
-   python main.py
+   poetry run python main.py
    ```
 
-2. **Evaluate performance**:
+3. **Evaluate performance**:
    The script outputs RMSE values for both training and testing, providing insight into the system's predictive accuracy.
 
 ---
@@ -130,35 +131,18 @@ These results demonstrate the model's ability to generalize well to unseen data,
 
 ---
 
-## Future Directions
-
-- **Integration of Additional Algorithms**: Incorporate other collaborative filtering and content-based methods.
-- **Hybrid Recommender Systems**: Combine collaborative and content-based filtering for improved performance.
-- **Real-Time Recommendations**: Optimize the system for real-time use cases.
-- **Integration of Model Based Algorithms**
-
----
-
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for more details.
-
----
-
-## Contributing
-
-### File Structure
+## Code Structure
 
 ```txt
 artifacts/            # Stores generated artifacts such as model checkpoints, logs, and profiling data.
 ├── checkpoints/      # Saved model checkpoints for resuming or fine-tuning training.
 │   └── als/          # Checkpoints for the ALS algorithm specifically.
-│       ├── 1000000   # Checkpoint for ALS with 1 million interactions.
-│       └── 100000000 # Checkpoint for ALS with 100 million interactions.
+│       ├── 1000000   # Checkpoint for ALS with 1 million interactions as limit of lines to load.
+│       └── 100000000 # Checkpoint for ALS with 100 million interactions as limit of lines to load.
 ├── figures/          # Contains visualizations or figures generated during the project.
 └── logs/             # Logging files generated during training or testing.
 
-datasets/             # Datasets used for training and evaluation of the recommender system.
+datasets/             # Documentation about the datasets used for training and evaluation of the recommender system.
 
 docs/                 # Documentation for the project, including detailed explanations and guidelines.
 
@@ -166,13 +150,9 @@ examples/             # Example scripts to demonstrate the usage of the system.
 ├── basic_example/    # A simple example to get started quickly.
 └── movies_lens/      # Example using the MovieLens dataset.
 
-figures/              # Additional plots and figures for analysis and results.
-
-ml-32m/               # Preprocessed or raw data specifically for the MovieLens 32M dataset.
-
 src/                  # Source code for the project, organized by functional modules.
 ├── algorithms/       # Core algorithms used in the recommender system.
-│   └── core/         # Implementation of the ALS algorithm and similar techniques.
+│   └── core/         # Implementation of the base logics common to all the recommender algorithms.
 ├── backends/         # Backend modules for database access, API integrations, etc.
 ├── helpers/          # Utility functions and helpers for common tasks.
 ├── recommenders/     # High-level classes to encapsulate recommendation pipelines.
@@ -189,6 +169,22 @@ tests/                # Test suite for validating the functionality of the proje
 
 ```
 
-Contributions are welcome! Please submit pull requests or open issues with suggestions for improvements.
+---
+
+## Improvements
+
+- **Integration of Additional Algorithms**: Incorporate other collaborative filtering and content-based methods.
+- **Hybrid Recommender Systems**: Combine collaborative and content-based filtering for improved performance.
+- **More Examples**: Implement more examples potentially with different datasets for real-time recommendations.
+- **Numba and Jax**: Currently it is not possible to use numba/jax, cause the code contains a lot of custom objects. Plan a fix.
+- **Issues**: Resolve the remaining issues and compare with existing library.
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the `LICENSE` file for more details.
+
+
 
 
