@@ -1,4 +1,5 @@
 from types import NoneType
+from xml.etree.ElementInclude import include
 
 import numpy as np
 from enum import Enum
@@ -17,12 +18,11 @@ from src.helpers.serial_mapper import (
 from src.helpers.predictor import Predictor
 from src.helpers._logging import logger  # noqa
 
-__als_cache = {}
+_als_cache = {}
 
-
-def __clear_als_cache():  # noqa
-    global __als_cache
-    __als_cache = {}
+def _clear_als_cache():  # noqa
+    global _als_cache
+    _als_cache = {}
 
 
 # Centralize this if needed somewhere else
@@ -136,6 +136,7 @@ class AlternatingLeastSquares(Algorithm):
         item_factors: Optional[np.ndarray] = None,
         user_biases: Optional[np.ndarray] = None,
         item_biases: Optional[np.ndarray] = None,
+        feature_factors: Optional[np.ndarray] = None,
     ):
 
         assert (
@@ -163,12 +164,16 @@ class AlternatingLeastSquares(Algorithm):
         self.item_factors = item_factors
         self.user_biases = user_biases
         self.item_biases = item_biases
+        # The feature factor
+        self.feature_factors = feature_factors
 
         # This is useful, when the backend (i.e., the caller) wants
         # to resume the training from certain epoch instead of starting
         # completing from the beginning. In such setting, the initial
         self._initial_hyper_n_epochs = hyper_n_epochs
+
         self._state_resumed = False
+        self._include_features = False,
 
         self._epochs_loss_train = []
         self._epochs_loss_test = []
@@ -183,6 +188,8 @@ class AlternatingLeastSquares(Algorithm):
 
         self.id_to_user_bmap: Optional[SerialBidirectionalMapper] = None
         self.id_to_item_bmap: Optional[SerialBidirectionalMapper] = None
+        # This is useful for the feature learning
+        self.item_database: Optional[dict] = None
 
     @staticmethod
     def _validate_dimension_equality(*arrays):
@@ -197,6 +204,7 @@ class AlternatingLeastSquares(Algorithm):
             TypeError: If the arrays have mismatched types, shapes, or lengths.
         """
 
+        # This method is ugly :) , but it is okay for now.
         type_ = type(arrays[0])
 
         if not all(isinstance(arr, (type_, NoneType)) for arr in arrays):  # Skip None
@@ -237,6 +245,12 @@ class AlternatingLeastSquares(Algorithm):
         Internal method to update the state of the algorithm.
         This is not exposed to client code to ensure encapsulation.
         """
+        if not (feature_factor := getattr(state, "feature_factors", None)) and self._include_features:
+            logger.error(
+                "State that is being loaded does not have `feature_factors`, so cannot run {self.__class__.__name__} "
+                "algorithm with feature included, exiting..."
+            )
+
         self.__init__(
             hyper_lambda=state.hyper_lambda,
             hyper_gamma=state.hyper_gamma,
@@ -247,6 +261,8 @@ class AlternatingLeastSquares(Algorithm):
             item_factors=state.item_factors,
             user_biases=state.user_biases,
             item_biases=state.item_biases,
+            # To support old models and not crash
+            feature_factors=feature_factor,
         )
 
         self._epochs_loss_train = state.loss_train or []
@@ -273,6 +289,7 @@ class AlternatingLeastSquares(Algorithm):
                 "item_factors": self.item_factors,
                 "user_biases": self.user_biases,
                 "item_biases": self.item_biases,
+                "feature_factors": self.feature_factors,
                 "loss_train": self._epochs_loss_train,
                 "loss_test": self._epochs_loss_test,
                 "rmse_train": self._epochs_rmse_train,
@@ -491,7 +508,7 @@ class AlternatingLeastSquares(Algorithm):
         )
 
     def learn_feature_factor(
-        self, feature_id: Optional[int] = None, feature_factor=None
+        self, feature_id: Optional[int] = None, feature_factor=None, item_ratings_data: Optional[list] = None,
     ) -> np.ndarray:
         """
         Learn or compute the given feature_id related factor using the item vectors
@@ -504,15 +521,14 @@ class AlternatingLeastSquares(Algorithm):
             if feature_factor is not None
             else self.feature_factors[feature_id]
         )
-        items_databases = None  # TODO:
-        # Access __als_cache
-        global __als_cache
+        # Access _als_cache
+        global _als_cache
 
-        if not (item_features_counts := __als_cache.get("item_features_counts")):
-            item_features_counts = np.array([])
+        if not (item_features_counts := _als_cache.get("item_features_counts")):
+            item_features_counts = np.zeros(shape=len())
 
             for i, item in enumerate(self.id_to_item_bmap.inverse):
-                item_features_counts.append(items_databases[item]["features_count"])
+                item_features_counts.append(self.items_databases[item]["features_count"])
 
             # DOCME: Here we will do an engineering hack to avoid zero division error.
             #   For the items that have no feature, we will set their feature count to
@@ -526,10 +542,10 @@ class AlternatingLeastSquares(Algorithm):
             )
 
             # Cache the result for the next time
-            __als_cache["item_features_counts"] = item_features_counts
+            _als_cache["features_counts"] = item_features_counts
 
         if not (
-            compressed_item_feature_factors := __als_cache.get(
+            compressed_item_feature_factors := _als_cache.get(
                 "compressed_item_feature_factors"
             )
         ):
@@ -538,11 +554,11 @@ class AlternatingLeastSquares(Algorithm):
                 # Append the compressed feature factors of the item
                 compressed_item_feature_factors.append(
                     self.feature_factors[
-                        items_databases[item]["features_hot_encoded"]
+                        self.items_databases[item]["features_hot_encoded"]
                     ].sum(axis=0)
                 )
             # Cache the result for the next time
-            __als_cache["compressed_item_feature_factors"] = (
+            _als_cache["compressed_item_feature_factors"] = (
                 compressed_item_feature_factors
             )
 
@@ -651,11 +667,18 @@ class AlternatingLeastSquares(Algorithm):
         self.item_biases[item_id] = item_bias
         self.item_factors[item_id] = item_factor
 
+    def update_feature_factor(self, feature_id, item_ratings_data: list):
+        feature_factor = self.learn_feature_factor(feature_id=feature_id, item_ratings_data=item_ratings_data)
+        self.feature_factors[feature_id] = feature_factor
+
     def run(
         self,
         data: IndexedDatasetWrapper,
         initial_state: AlternatingLeastSquaresState = None,
+        item_database: dict = None,
+        include_features: bool = False,
     ):
+
         """
         Runs the algorithm on the indexed data, `IndexedDatasetWrapper`.
         """
@@ -663,6 +686,10 @@ class AlternatingLeastSquares(Algorithm):
         assert isinstance(
             data, IndexedDatasetWrapper
         ), "The provided `indexed_data` must be an instance of `IndexedDatasetWrapper`."
+
+        assert (include_features and item_database) or not include_features, (
+            "When `include_features` is set to `True` the `item_database` should be a defined dict"
+        )
 
         data_by_user_id__train = data.data_by_user_id__train
         data_by_item_id__train = data.data_by_item_id__train
@@ -695,6 +722,14 @@ class AlternatingLeastSquares(Algorithm):
         self.id_to_user_bmap = data.id_to_user_bmap
         self.id_to_item_bmap = data.id_to_item_bmap
 
+        # About the feature integration
+        self.item_database = item_database
+        self._include_features = include_features
+
+        logger.info(
+            f"About to start training with the `include_features` parameter set to {self._include_features}."
+        )
+
         n_epochs = self.hyper_n_epochs
 
         # When we resume, we only want to train for the rest of the epochs
@@ -709,8 +744,11 @@ class AlternatingLeastSquares(Algorithm):
             return
 
         logger.info(
-            f"Epochs count to train for {n_epochs}, entering the training loop now"
+            f"Epochs count to train for {n_epochs}, entering the training loop now..."
         )
+
+        # Get the len of the first hot encoded features array
+        n_features = self.item_database[self.id_to_item_bmap[0]]["features_hot_encoded"] if self._include_features else 0
 
         for epoch in tqdm(range(n_epochs), desc="Epochs", unit="epoch"):
 
@@ -723,6 +761,9 @@ class AlternatingLeastSquares(Algorithm):
                 self.update_item_bias_and_factor(
                     item_id, data_by_item_id__train[item_id]
                 )
+
+            for feature_id in range(n_features):
+                self.update_feature_factor(feature_id)
 
             # We've got a new model from the current epoch, so time to compute
             # the metrics for both the training and test set.
@@ -771,5 +812,10 @@ class AlternatingLeastSquares(Algorithm):
             )
 
         logger.info(
-            f"{self.__class__.__name__} algorithm running just ends. Exiting the run method... "
+            f"Successfully run {self.__class__.__name__} algorithm running till the end"
         )
+        logger.debug(
+            f"Cleaning the {self.__class__.__name__} algorithm self maintained cache, and exiting..."
+        )
+
+        _clear_als_cache()
