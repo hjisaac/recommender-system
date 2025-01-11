@@ -73,6 +73,8 @@ indexed_data = dataset_indexer.index_simple(
 # In[4]:
 
 
+# Import the movies csv file joined with the movie links csv file and that will act
+# as our movie database. The backend needs this database to query the movies.
 item_database = (
     pd.read_csv("./ml-32m/movies.csv", dtype={ITEM_HEADER: str})
     .merge(
@@ -146,10 +148,6 @@ recommender_builder = CollaborativeFilteringRecommenderBuilder(
 recommender = recommender_builder.build(
     data=indexed_data, item_database=item_database, include_features=True
 )
-
-
-# In[ ]:
-
 
 
 # In[ ]:
