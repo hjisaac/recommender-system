@@ -10,3 +10,5 @@ test.svg
 datasets/*
 .idea
 **/app.log
+10000000_item_database.pkl
+10000000_recommender.pkl
