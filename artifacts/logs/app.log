@@ -6326,3 +6326,169 @@
 2025-01-11 04:28:54,590 [INFO] Successfully run AlternatingLeastSquares algorithm running till the end
 2025-01-11 04:28:54,591 [DEBUG] Cleaning the AlternatingLeastSquares algorithm self maintained cache, and exiting...
 2025-01-11 04:28:54,591 [INFO] Successfully built the recommender using AlternatingLeastSquares
+2025-01-11 04:31:00,798 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 04:31:00,821 [WARNING] The limit of lines (.i.e 1000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 04:31:00,821 [INFO] Successfully indexed 1000 lines from ./ml-32m/ratings.csv
+2025-01-11 04:31:01,276 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 04:31:01,284 [WARNING] The limit of lines (.i.e 1000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 04:31:01,284 [INFO] Successfully indexed 1000 lines from ./ml-32m/ratings.csv
+2025-01-11 04:31:09,239 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 04:31:09,248 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 04:31:09,631 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 04:31:09,687 [WARNING] The limit of lines (.i.e 1000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 04:31:09,687 [INFO] Successfully indexed 1000 lines from ./ml-32m/ratings.csv
+2025-01-11 04:31:11,321 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 04:31:11,321 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 04:31:11,325 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 04:31:11,325 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 04:31:11,325 [INFO] Epochs count to train for 2, entering the training loop now...
+2025-01-11 04:31:19,307 [INFO] Successfully run AlternatingLeastSquares algorithm running till the end
+2025-01-11 04:31:19,307 [DEBUG] Cleaning the AlternatingLeastSquares algorithm self maintained cache, and exiting...
+2025-01-11 04:32:01,981 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 04:32:01,999 [WARNING] The limit of lines (.i.e 1000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 04:32:02,000 [INFO] Successfully indexed 1000 lines from ./ml-32m/ratings.csv
+2025-01-11 04:32:08,737 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 04:32:08,746 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 04:32:09,126 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 04:32:09,179 [WARNING] The limit of lines (.i.e 1000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 04:32:09,179 [INFO] Successfully indexed 1000 lines from ./ml-32m/ratings.csv
+2025-01-11 04:32:10,745 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 04:32:10,745 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 04:32:10,748 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 04:32:10,748 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 04:32:10,748 [INFO] Epochs count to train for 2, entering the training loop now...
+2025-01-11 04:32:11,304 [INFO] Successfully run AlternatingLeastSquares algorithm running till the end
+2025-01-11 04:32:26,000 [DEBUG] Cleaning the AlternatingLeastSquares algorithm self maintained cache, and exiting...
+2025-01-11 04:32:26,001 [INFO] Successfully built the recommender using AlternatingLeastSquares
+2025-01-11 05:23:55,420 [DEBUG] matplotlib data path: /home/hjisaac/.cache/pypoetry/virtualenvs/recommender-system-uSlwvUxw-py3.10/lib/python3.10/site-packages/matplotlib/mpl-data
+2025-01-11 05:23:55,425 [DEBUG] CONFIGDIR=/home/hjisaac/.config/matplotlib
+2025-01-11 05:23:55,426 [DEBUG] interactive is False
+2025-01-11 05:23:55,426 [DEBUG] platform is linux
+2025-01-11 05:23:55,488 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 05:23:55,493 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 05:23:55,673 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 05:23:55,704 [WARNING] The limit of lines (.i.e 1000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 05:23:55,705 [INFO] Successfully indexed 1000 lines from ./ml-32m/ratings.csv
+2025-01-11 05:23:56,497 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 05:23:56,498 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 05:23:56,498 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 05:23:56,498 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 05:23:56,498 [INFO] Epochs count to train for 2, entering the training loop now...
+2025-01-11 05:23:56,877 [INFO] Successfully run AlternatingLeastSquares algorithm running till the end
+2025-01-11 05:23:56,877 [DEBUG] Cleaning the AlternatingLeastSquares algorithm self maintained cache, and exiting...
+2025-01-11 05:23:56,877 [INFO] Successfully built the recommender using AlternatingLeastSquares
+2025-01-11 05:24:49,344 [DEBUG] matplotlib data path: /home/hjisaac/.cache/pypoetry/virtualenvs/recommender-system-uSlwvUxw-py3.10/lib/python3.10/site-packages/matplotlib/mpl-data
+2025-01-11 05:24:49,351 [DEBUG] CONFIGDIR=/home/hjisaac/.config/matplotlib
+2025-01-11 05:24:49,371 [DEBUG] interactive is False
+2025-01-11 05:24:49,372 [DEBUG] platform is linux
+2025-01-11 05:24:49,486 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 05:24:49,503 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 05:24:50,186 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 05:24:50,195 [WARNING] The limit of lines (.i.e 1000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 05:24:50,195 [INFO] Successfully indexed 1000 lines from ./ml-32m/ratings.csv
+2025-01-11 05:24:51,732 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 05:24:51,734 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 05:24:51,735 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 05:24:51,737 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 05:24:51,739 [INFO] Epochs count to train for 2, entering the training loop now...
+2025-01-11 05:24:52,218 [INFO] Successfully run AlternatingLeastSquares algorithm running till the end
+2025-01-11 05:24:52,219 [DEBUG] Cleaning the AlternatingLeastSquares algorithm self maintained cache, and exiting...
+2025-01-11 05:24:52,219 [INFO] Successfully built the recommender using AlternatingLeastSquares
+2025-01-11 05:26:21,280 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 05:26:21,301 [WARNING] The limit of lines (.i.e 1000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 05:26:21,302 [INFO] Successfully indexed 1000 lines from ./ml-32m/ratings.csv
+2025-01-11 05:26:22,724 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 05:26:22,727 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 05:26:22,729 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 05:26:22,731 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 05:26:22,732 [INFO] Epochs count to train for 2, entering the training loop now...
+2025-01-11 05:26:23,164 [INFO] Successfully run AlternatingLeastSquares algorithm running till the end
+2025-01-11 05:26:23,166 [DEBUG] Cleaning the AlternatingLeastSquares algorithm self maintained cache, and exiting...
+2025-01-11 05:26:23,167 [INFO] Successfully built the recommender using AlternatingLeastSquares
+2025-01-11 05:28:57,001 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 05:28:57,198 [WARNING] The limit of lines (.i.e 1000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 05:28:57,200 [INFO] Successfully indexed 1000 lines from ./ml-32m/ratings.csv
+2025-01-11 05:28:58,507 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 05:28:58,510 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 05:28:58,512 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 05:28:58,514 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 05:28:58,514 [INFO] Epochs count to train for 2, entering the training loop now...
+2025-01-11 05:28:58,983 [INFO] Successfully run AlternatingLeastSquares algorithm running till the end
+2025-01-11 05:28:58,984 [DEBUG] Cleaning the AlternatingLeastSquares algorithm self maintained cache, and exiting...
+2025-01-11 05:28:58,985 [INFO] Successfully built the recommender using AlternatingLeastSquares
+2025-01-11 05:31:36,085 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 05:31:36,106 [WARNING] The limit of lines (.i.e 1000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 05:31:36,108 [INFO] Successfully indexed 1000 lines from ./ml-32m/ratings.csv
+2025-01-11 05:31:37,489 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 05:31:37,491 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 05:31:37,492 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 05:31:37,493 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 05:31:37,495 [INFO] Epochs count to train for 2, entering the training loop now...
+2025-01-11 05:31:37,999 [INFO] Successfully run AlternatingLeastSquares algorithm running till the end
+2025-01-11 05:31:37,999 [DEBUG] Cleaning the AlternatingLeastSquares algorithm self maintained cache, and exiting...
+2025-01-11 05:31:38,001 [INFO] Successfully built the recommender using AlternatingLeastSquares
+2025-01-11 05:33:34,161 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 05:33:34,178 [WARNING] The limit of lines (.i.e 1000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 05:33:34,179 [INFO] Successfully indexed 1000 lines from ./ml-32m/ratings.csv
+2025-01-11 05:33:35,548 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 05:33:35,550 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 05:33:35,554 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 05:33:35,557 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 05:33:35,559 [INFO] Epochs count to train for 2, entering the training loop now...
+2025-01-11 05:33:36,209 [INFO] Successfully run AlternatingLeastSquares algorithm running till the end
+2025-01-11 05:33:36,211 [DEBUG] Cleaning the AlternatingLeastSquares algorithm self maintained cache, and exiting...
+2025-01-11 05:33:36,213 [INFO] Successfully built the recommender using AlternatingLeastSquares
+2025-01-11 05:33:51,391 [DEBUG] matplotlib data path: /home/hjisaac/.cache/pypoetry/virtualenvs/recommender-system-uSlwvUxw-py3.10/lib/python3.10/site-packages/matplotlib/mpl-data
+2025-01-11 05:33:51,401 [DEBUG] CONFIGDIR=/home/hjisaac/.config/matplotlib
+2025-01-11 05:33:51,418 [DEBUG] interactive is False
+2025-01-11 05:33:51,419 [DEBUG] platform is linux
+2025-01-11 05:33:51,501 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 05:33:51,508 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 05:33:51,915 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 05:33:51,924 [WARNING] The limit of lines (.i.e 1000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 05:33:51,924 [INFO] Successfully indexed 1000 lines from ./ml-32m/ratings.csv
+2025-01-11 05:33:53,140 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 05:33:53,142 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 05:33:53,143 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 05:33:53,145 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 05:33:53,147 [INFO] Epochs count to train for 2, entering the training loop now...
+2025-01-11 05:33:53,736 [INFO] Successfully run AlternatingLeastSquares algorithm running till the end
+2025-01-11 05:33:53,737 [DEBUG] Cleaning the AlternatingLeastSquares algorithm self maintained cache, and exiting...
+2025-01-11 05:33:53,739 [INFO] Successfully built the recommender using AlternatingLeastSquares
+2025-01-11 05:33:54,133 [ERROR] The provided user ratings data contains the following unknown item rating(s), skipping unknown items' ratings [('267654', 4)]
+2025-01-11 05:45:58,262 [DEBUG] matplotlib data path: /home/hjisaac/.cache/pypoetry/virtualenvs/recommender-system-uSlwvUxw-py3.10/lib/python3.10/site-packages/matplotlib/mpl-data
+2025-01-11 05:45:58,267 [DEBUG] CONFIGDIR=/home/hjisaac/.config/matplotlib
+2025-01-11 05:45:58,268 [DEBUG] interactive is False
+2025-01-11 05:45:58,268 [DEBUG] platform is linux
+2025-01-11 05:45:58,320 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 05:45:58,324 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 05:45:58,497 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 05:45:58,533 [WARNING] The limit of lines (.i.e 1000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 05:45:58,533 [INFO] Successfully indexed 1000 lines from ./ml-32m/ratings.csv
+2025-01-11 05:45:59,332 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 05:45:59,332 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 05:45:59,332 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 05:45:59,333 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 05:45:59,333 [INFO] Epochs count to train for 2, entering the training loop now...
+2025-01-11 05:45:59,702 [INFO] Successfully run AlternatingLeastSquares algorithm running till the end
+2025-01-11 05:45:59,702 [DEBUG] Cleaning the AlternatingLeastSquares algorithm self maintained cache, and exiting...
+2025-01-11 05:45:59,702 [INFO] Successfully built the recommender using AlternatingLeastSquares
+2025-01-11 05:45:59,703 [ERROR] The provided user ratings data contains the following unknown item rating(s), skipping unknown items' ratings [('267654', 4)]
+2025-01-11 05:58:45,450 [DEBUG] matplotlib data path: /home/hjisaac/.cache/pypoetry/virtualenvs/recommender-system-uSlwvUxw-py3.10/lib/python3.10/site-packages/matplotlib/mpl-data
+2025-01-11 05:58:45,458 [DEBUG] CONFIGDIR=/home/hjisaac/.config/matplotlib
+2025-01-11 05:58:45,460 [DEBUG] interactive is False
+2025-01-11 05:58:45,460 [DEBUG] platform is linux
+2025-01-11 05:58:45,539 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 05:58:45,544 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 05:58:45,726 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 05:58:45,760 [WARNING] The limit of lines (.i.e 1000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 05:58:45,760 [INFO] Successfully indexed 1000 lines from ./ml-32m/ratings.csv
+2025-01-11 05:58:46,561 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 05:58:46,561 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 05:58:46,562 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 05:58:46,562 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 05:58:46,562 [INFO] Epochs count to train for 2, entering the training loop now...
+2025-01-11 05:58:46,945 [INFO] Successfully run AlternatingLeastSquares algorithm running till the end
+2025-01-11 05:58:46,946 [DEBUG] Cleaning the AlternatingLeastSquares algorithm self maintained cache, and exiting...
+2025-01-11 05:58:46,946 [INFO] Successfully built the recommender using AlternatingLeastSquares
+2025-01-11 05:58:46,946 [ERROR] The provided user ratings data contains the following unknown item rating(s), skipping unknown items' ratings [('267654', 4)]

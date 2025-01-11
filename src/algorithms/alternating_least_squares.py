@@ -1,11 +1,11 @@
-from functools import cached_property
-from types import NoneType
-
+import sys
 import numpy as np
-from enum import Enum
 
+from enum import Enum
 from tqdm import tqdm
 from typing import Optional
+from functools import cached_property
+from types import NoneType
 
 from src.algorithms.core import Algorithm
 from src.helpers.dataset_indexer import IndexedDatasetWrapper
@@ -69,14 +69,14 @@ class AlternatingLeastSquaresState(AlgorithmState):
             valid_ratings = []
             invalid_ratings = []
             for item, rating in user_ratings_data:
-                if als.id_to_item_bmap.inverse[item]:
+                if als.id_to_item_bmap.inverse[item] is not None:
                     valid_ratings.append((item, rating))
                 else:
                     invalid_ratings.append((item, rating))
-            logger.error(
-                "The provided user ratings data contains unknown items, skipping unknown items' ratings ",
-                invalid_ratings,
-            )
+            if invalid_ratings:
+                logger.error(
+                    f"The provided user ratings data contains the following unknown item rating(s), skipping unknown items' ratings {invalid_ratings}"
+                )
             return valid_ratings
 
         def predict(user_ratings_data: list = None):
@@ -336,7 +336,7 @@ class AlternatingLeastSquares(Algorithm):
     @cached_property
     def _n_feature(self):
         """
-        The number item features modelized
+        The number of item features modeled
         """
         return (
             len(self.item_database[self.id_to_item_bmap[0]]["features_hot_encoded"])
@@ -438,6 +438,10 @@ class AlternatingLeastSquares(Algorithm):
 
         NOTE: In the code, target is either "user" or "item". And we use "target" and
         "other_target" to designate both of them.
+
+        IMPORTANT: `target` does not designate a specific an instance of "user" or "item".
+
+        TODO: This ambiguous can be avoided by using the using `target_instance` for instances
         """
 
         _targets = LearningTargetEnum.targets()
@@ -463,7 +467,7 @@ class AlternatingLeastSquares(Algorithm):
             # which we want to learn the bias and them the updated version of the
             # factor.
 
-            target_factors, _, _ = _mapping[_targets[_index]]
+            target_factors, _, _id_to_target_bmap = _mapping[_targets[_index]]
             # The old factor that we want to use in other to learn a new one
             factor = (
                 target_factors[target_id]
@@ -473,9 +477,9 @@ class AlternatingLeastSquares(Algorithm):
         else:
             factor = target_factor
 
-        (other_target_factors, other_target_biases, _id_to_target_bmap) = _mapping[
-            _targets[1 - _index]
-        ]
+        (other_target_factors, other_target_biases, _id_to_other_target_bmap) = (
+            _mapping[_targets[1 - _index]]
+        )
 
         bias = 0
 
@@ -491,21 +495,14 @@ class AlternatingLeastSquares(Algorithm):
                 # Access the rating
                 data[1],
             )
-            other_target_id = _id_to_target_bmap.inverse[other_target]
+            other_target_id = _id_to_other_target_bmap.inverse[other_target]
 
-            try:
-
-                bias += (
-                    rating
-                    - other_target_biases[other_target_id]
-                    - np.dot(factor, other_target_factors[other_target_id])
-                )
-                ratings_count += 1
-
-            except ValueError as exc:
-                raise
-                print(exc)
-                pass
+            bias += (
+                rating
+                - other_target_biases[other_target_id]
+                - np.dot(factor, other_target_factors[other_target_id])
+            )
+            ratings_count += 1
 
         bias = (self.hyper_lambda * bias) / (
             self.hyper_lambda * ratings_count + self.hyper_gamma
@@ -516,7 +513,7 @@ class AlternatingLeastSquares(Algorithm):
                 data[0],
                 data[1],
             )
-            other_target_id = _id_to_target_bmap.inverse[other_target]
+            other_target_id = _id_to_other_target_bmap.inverse[other_target]
 
             _A += np.outer(
                 other_target_factors[other_target_id],
@@ -525,6 +522,10 @@ class AlternatingLeastSquares(Algorithm):
             _B += (
                 rating - bias - other_target_biases[other_target_id]
             ) * other_target_factors[other_target_id]
+
+        # Adding of the feature factor related term it should be done
+        if target == LearningTargetEnum.ITEM and self._include_features:
+            _B += self._get_accumulated_scaled_feature_factor(target_id)
 
         factor = np.linalg.solve(
             self.hyper_lambda * _A + self.hyper_tau * np.eye(self.hyper_n_factors),
@@ -573,19 +574,11 @@ class AlternatingLeastSquares(Algorithm):
         self,
         feature_id: Optional[int] = None,
         feature_factor=None,
-        item_ratings_data: Optional[list] = None,
     ) -> np.ndarray:
         """
         Learn or compute the given feature_id related factor using the item vectors
         """
 
-        # TODO: Define feature factor
-
-        feature_factor = (
-            feature_factor
-            if feature_factor is not None
-            else self.feature_factors[feature_id]
-        )
         # Access _als_cache
         global _als_cache
 
@@ -602,7 +595,7 @@ class AlternatingLeastSquares(Algorithm):
             #   without features, which means that we should not include the feature extraction
             #   term for those items.
 
-            item_features_counts[item_features_counts == 0] = 10_000_000  # sys.maxsize
+            item_features_counts[item_features_counts == 0] = sys.maxsize  #
 
             # Cache the result for the next time
             _als_cache["features_counts"] = item_features_counts
@@ -666,8 +659,23 @@ class AlternatingLeastSquares(Algorithm):
     def _compute_loss(self, accumulated_squared_residual: float) -> float:
         return (
             (-1 / 2 * self.hyper_lambda * accumulated_squared_residual)
-            - self.hyper_tau / 2 * sum(self._get_accumulated_factors_product())
-            - self.hyper_gamma * sum(self._get_accumulated_squared_biases())
+            - self.hyper_tau / 2 * self._get_accumulated_factors_product()
+            - self.hyper_gamma * self._get_accumulated_squared_biases()
+        )
+
+    def _get_accumulated_scaled_feature_factor(self, item_id):
+        """
+        Calculate the accumulated scaled feature factor for a given item_id.
+        """
+
+        item = self.id_to_item_bmap[item_id]
+        features_hot_encoded = self.item_database[item]["features_hot_encoded"]
+        mask = np.array(features_hot_encoded, dtype=bool)
+
+        return (
+            self.hyper_tau
+            * self.feature_factors[mask].sum(axis=0)
+            / self.item_database[item]["features_count"]
         )
 
     def _get_accumulated_squared_residual_and_residuals_count(
@@ -696,12 +704,33 @@ class AlternatingLeastSquares(Algorithm):
 
     def _get_accumulated_squared_biases(self):
         # This way of computing the accumulated biases norm is faster
-        return np.square(self.user_biases).sum(), np.square(self.item_biases).sum()
+        return np.square(self.user_biases).sum() + np.square(self.item_biases).sum()
 
     def _get_accumulated_factors_product(self):
+        """
+        Compute the Frobenious squared norm for "user", "item", "feature"
         # https://mathworld.wolfram.com/FrobeniusNorm.html#:~:text=The%20Frobenius%20norm%2C%20sometimes%20also,considered%20as%20a%20vector%20norm.
-        # This way of computing the accumulated factors norm is faster
-        return np.square(self.user_factors).sum(), np.square(self.item_factors).sum()
+        """
+        accumulated_squared_user_factor = np.square(self.user_factors).sum()
+        accumulated_squared_item_factor = np.square(
+            [
+                self.item_factors[item_id]
+                - (
+                    self._get_accumulated_scaled_feature_factor(item_id)
+                    if self._include_features
+                    else 0
+                )
+                for item_id in range(len(self.item_factors))
+            ]
+        ).sum()
+        accumulated_squared_feature_factor = (
+            np.square(self.feature_factors).sum() if self._include_features else 0
+        )
+        return (
+            accumulated_squared_user_factor
+            + accumulated_squared_item_factor
+            + accumulated_squared_feature_factor
+        )
 
     def update_user_bias_and_factor(self, user_id, user_ratings_data: list):
         """
