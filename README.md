@@ -220,9 +220,9 @@ tests/                # Test suite for validating the functionality of the proje
 Running the MovieLens example (32 million ratings) takes approximately 3 hours on CPU alone.
 
 The early use of `SerialUnidirectionalMapper` and `SerialBidirectionalMapper` data structures 
-complicates integrating Numba. These classes lack clear type specifications, making it nearly 
-impossible to leverage Numba's optimization capabilities. To use Numba effectively, we would 
-need to remove these data structures from the code.
+complicates integrating [Numba](https://numba.pydata.org/). These classes lack clear type specifications, making it nearly 
+impossible to leverage **Numba**'s optimization capabilities. To use Numba effectively, we would 
+need to remove these data structures from the code. There is an issue opened to fix that.
 
 ## Improvements
 
