@@ -73,42 +73,27 @@ indexed_data = dataset_indexer.index_simple(
 # In[4]:
 
 
-item_database_file = f"{settings.general.LINES_COUNT_TO_READ}_item_database.pkl"
-
-try:
-    item_database = load_pickle(item_database_file)
-    logger.info(f"`item_database` loaded from `{item_database_file}` successfully")
-except Exception as exc:
-    logger.error(exc)
-    # Import the movies csv file joined with the movie links csv file and that will act
-    # as our movie database. The backend needs this database to query the movies.
-    item_database = (
-        pd.read_csv("./ml-32m/movies.csv", dtype={ITEM_HEADER: str})
-        .merge(
-            pd.read_csv("./ml-32m/links.csv", dtype={ITEM_HEADER: str}),
-            on=ITEM_HEADER,
-            how="left",
-        )
-        .assign(
-            genres=lambda df: df[FEATURE_TO_ENCODE].apply(
-                lambda genres: genres.split("|")
-            ),
-            features_hot_encoded=lambda df: df[FEATURE_TO_ENCODE].apply(
-                lambda g: vocabulary_based_one_hot_encode(
-                    words=g, vocabulary=ITEM_FEATURE_LIST
-                )
-            ),
-            features_count=lambda df: df["features_hot_encoded"].apply(lambda x: sum(x)),
-        )
-        .set_index(ITEM_HEADER)  # Set the movieId as the index
-        .to_dict(orient="index")  # Convert the DataFrame to a dictionary
+item_database = (
+    pd.read_csv("./ml-32m/movies.csv", dtype={ITEM_HEADER: str})
+    .merge(
+        pd.read_csv("./ml-32m/links.csv", dtype={ITEM_HEADER: str}),
+        on=ITEM_HEADER,
+        how="left",
     )
-    try:
-        save_pickle(item_database, item_database_file)
-    except Exception as exc:
-        logger.error(exc)
-
-assert item_database, item_database
+    .assign(
+        genres=lambda df: df[FEATURE_TO_ENCODE].apply(
+            lambda genres: genres.split("|")
+        ),
+        features_hot_encoded=lambda df: df[FEATURE_TO_ENCODE].apply(
+            lambda g: vocabulary_based_one_hot_encode(
+                words=g, vocabulary=ITEM_FEATURE_LIST
+            )
+        ),
+        features_count=lambda df: df["features_hot_encoded"].apply(lambda x: sum(x)),
+    )
+    .set_index(ITEM_HEADER)  # Set the movieId as the index
+    .to_dict(orient="index")  # Convert the DataFrame to a dictionary
+)
 
 
 # In[5]:
@@ -146,7 +131,7 @@ als_backend = Backend(
     # Whether we should resume by using the last state of
     # the algorithm the checkpoint manager folder or not.
     resume=False,
-    save_checkpoint=False,
+    save_checkpoint=True,
 )
 
 
@@ -165,10 +150,6 @@ recommender = recommender_builder.build(
 
 # In[ ]:
 
-
-# Pickling things everywhere is not the right way to go, but
-# done like this here to simplify the code of the frontend
-save_pickle(recommender, f"{settings.general.LINES_COUNT_TO_READ}_recommender.pkl")
 
 
 # In[ ]:
