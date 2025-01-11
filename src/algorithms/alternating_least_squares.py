@@ -74,7 +74,7 @@ class AlternatingLeastSquaresState(AlgorithmState):
                 else:
                     invalid_ratings.append((item, rating))
             if invalid_ratings:
-                logger.error(
+                logger.info(
                     f"The provided user ratings data contains the following unknown item rating(s), skipping unknown items' ratings {invalid_ratings}"
                 )
             return valid_ratings

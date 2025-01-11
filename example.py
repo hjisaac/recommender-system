@@ -123,8 +123,8 @@ als_backend = Backend(
     ),
     # The predictor needs this to render the name of the items
     item_database=item_database,
-    # Whether we should resume by using the last state of
-    # the algorithm the checkpoint manager folder or not.
+    # Whether we should resume by using the last state of the
+    # algorithm from the checkpoint manager folder or not.
     resume=False,
     save_checkpoint=False,
 )

@@ -1,9 +1,9 @@
  ??
 ---
 
-# Recommendation System Codebase
+# Recommender System Codebase
 
-This project demonstrates the development of a **high-performing recommender system** leveraging **matrix factorization** techniques. The **Alternating Least Squares (ALS)** algorithm is at the core of this system, enabling precise user-item rating predictions. It has been extensively validated using the **MovieLens dataset**, showcasing exceptional performance and adaptability to real-world scenarios.
+This project demonstrates the development of a **recommender system** leveraging **matrix factorization** techniques. The **Alternating Least Squares (ALS)** algorithm is at the core of this system, enabling precise user-item rating predictions. It has been validated using the **MovieLens dataset**, showcasing good performance and adaptability to real-world scenarios.
 
 ---
 
@@ -43,7 +43,6 @@ The codebase is crafted with a focus on **modularity** and **reusability**, ensu
 ---
 
 ## Algorithms
-
 
 
 ### Alternating Least Squares (ALS)
@@ -178,12 +177,12 @@ These results demonstrate the model's ability to generalize well to unseen data,
 artifacts/            # Stores generated artifacts such as model checkpoints, logs, and profiling data.
 ├── checkpoints/      # Saved model checkpoints for resuming or fine-tuning training.
 │   └── als/          # Checkpoints for the ALS algorithm specifically.
-│       ├── 1000000   # Checkpoint for ALS with 1 million interactions.
-│       └── 100000000 # Checkpoint for ALS with 100 million interactions.
+│       ├── 1000000   # Checkpoint for ALS with 1 million interactions as limit of lines to load.
+│       └── 100000000 # Checkpoint for ALS with 100 million interactions as limit of lines to load.
 ├── figures/          # Contains visualizations or figures generated during the project.
 └── logs/             # Logging files generated during training or testing.
 
-datasets/             # Datasets used for training and evaluation of the recommender system.
+datasets/             #  datasets/             # Documentation about the datasets used for training and evaluation of the recommender system.
 
 docs/                 # Documentation for the project, including detailed explanations and guidelines.
 
@@ -192,8 +191,6 @@ examples/             # Example scripts to demonstrate the usage of the system.
 └── movies_lens/      # Example using the MovieLens dataset.
 
 figures/              # Additional plots and figures for analysis and results.
-
-ml-32m/               # Preprocessed or raw data specifically for the MovieLens 32M dataset.
 
 src/                  # Source code for the project, organized by functional modules.
 ├── algorithms/       # Implementation of recommender system algorithms.
