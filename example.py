@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[12]:
 
 
 import pandas as pd
@@ -70,7 +70,7 @@ indexed_data = dataset_indexer.index_simple(
 )
 
 
-# In[4]:
+# In[6]:
 
 
 # Import the movie csv file that will act as our movie database
@@ -97,13 +97,13 @@ item_database = (
 # plot_data_item_distribution_as_hist(indexed_data)
 
 
-# In[24]:
+# In[7]:
 
 
 # plot_power_low_distribution(indexed_data,)
 
 
-# In[5]:
+# In[8]:
 
 
 als_instance = AlternatingLeastSquares(
@@ -130,7 +130,7 @@ als_backend = Backend(
 )
 
 
-# In[6]:
+# In[9]:
 
 
 recommender_builder = CollaborativeFilteringRecommenderBuilder(

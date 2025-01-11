@@ -1,4 +1,3 @@
-import sys
 from functools import cached_property
 from types import NoneType
 
@@ -51,6 +50,35 @@ class AlternatingLeastSquaresState(AlgorithmState):
     def to_predictor(
         als: "AlternatingLeastSquares", *args, item_database=None, **kwargs
     ) -> Predictor:
+
+        def validate_ratings_data(user_ratings_data):
+            """
+            Validates the rating data by checking if the provided item is known.
+
+            Parameters:
+            - user_ratings_data: List of tuples containing item IDs and their corresponding ratings.
+            - id_to_item_bmap: Dictionary mapping item IDs to item details.
+
+            Returns:
+            - A list of valid (item_id, rating) tuples where the item_id exists in id_to_item_bmap.
+            """
+
+            if not user_ratings_data:
+                return
+
+            valid_ratings = []
+            invalid_ratings = []
+            for item, rating in user_ratings_data:
+                if als.id_to_item_bmap.inverse[item]:
+                    valid_ratings.append((item, rating))
+                else:
+                    invalid_ratings.append((item, rating))
+            logger.error(
+                "The provided user ratings data contains unknown items, skipping unknown items' ratings ",
+                invalid_ratings,
+            )
+            return valid_ratings
+
         def predict(user_ratings_data: list = None):
             """
             Predict ratings for a user based on user and item factors and biases
@@ -62,6 +90,8 @@ class AlternatingLeastSquaresState(AlgorithmState):
             Returns:
                 np.ndarray: Predicted ratings for all items.
             """
+
+            user_ratings_data = validate_ratings_data(user_ratings_data)
 
             if not user_ratings_data:
                 # Return the averaged rating prediction for all the items
@@ -463,12 +493,19 @@ class AlternatingLeastSquares(Algorithm):
             )
             other_target_id = _id_to_target_bmap.inverse[other_target]
 
-            bias += (
-                rating
-                - other_target_biases[other_target_id]
-                - np.dot(factor, other_target_factors[other_target_id])
-            )
-            ratings_count += 1
+            try:
+
+                bias += (
+                    rating
+                    - other_target_biases[other_target_id]
+                    - np.dot(factor, other_target_factors[other_target_id])
+                )
+                ratings_count += 1
+
+            except ValueError as exc:
+                raise
+                print(exc)
+                pass
 
         bias = (self.hyper_lambda * bias) / (
             self.hyper_lambda * ratings_count + self.hyper_gamma

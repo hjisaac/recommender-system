@@ -19,7 +19,9 @@ This project demonstrates the development of a **high-performing recommender sys
 7. [Performance](#performance)
 8. [Code Structure](#code-structure)
 9. [Improvements](#improvements)
-10. [License](#license)
+10. [Resources](#resources)
+11. [License](#license)
+12. [Feedbacks](#feedbacks)
 
 ---
 
