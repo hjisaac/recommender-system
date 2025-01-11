@@ -6620,3 +6620,7 @@
 2025-01-11 13:37:15,503 [INFO] Initializing user and item's factors and biases, as none of them is provided.
 2025-01-11 13:37:15,537 [INFO] About to start training with the `include_features` parameter set to True.
 2025-01-11 13:37:15,537 [INFO] Epochs count to train for 10, entering the training loop now...
+2025-01-11 13:55:01,110 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 13:55:01,122 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 13:55:01,584 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 13:55:01,585 [INFO] The file ./ml-32m/ratings.csv to (simple) index has been opened successfully, starting reading its lines...
