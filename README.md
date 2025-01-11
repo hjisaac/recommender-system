@@ -46,6 +46,11 @@ The codebase is crafted with a focus on **modularity** and **reusability**, ensu
 
 **ALS** is a collaborative filtering technique based on **matrix factorization**. It models user and item interactions by discovering latent features that explain observed ratings. The algorithm alternates between optimizing user and item matrices to minimize the regularized objective function:
 
+- Without item features modeled:
+$$
+\min_{U, V} \lambda \sum_{(i,j) \in \mathcal{R}} (r_{ij} - (U_i^T V_j + b^{(u)}_i + b^{(v)}_j))^2 + \tau (\|U\|^2 + \|V\|^2) + \gamma (\|b^{(u)}\|^2 + \|b^{(v)}\|^2)
+$$
+- With item features modeled:
 $$
 \min_{U, V} \lambda \sum_{(i,j) \in \mathcal{R}} (r_{ij} - (U_i^T V_j + b^{(u)}_i + b^{(v)}_j))^2 + \tau (\|U\|^2 + \|V\|^2) + \gamma (\|b^{(u)}\|^2 + \|b^{(v)}\|^2)
 $$
@@ -158,7 +163,7 @@ $$
 
 Where:
 - $r_{ij}$: Actual rating.
-- $\hat{r}_{ij}$: Predicted rating.
+- $\hat{r}_{ij} = U_i^T V_j + b^{(u)}_i + b^{(v)}_j$: Predicted rating.
 
 ### Results (Example)
 - **Training RMSE**: 0.84
@@ -176,10 +181,10 @@ artifacts/            # Stores generated artifacts such as model checkpoints, lo
 │   └── als/          # Checkpoints for the ALS algorithm specifically.
 │       ├── 1000000   # Checkpoint for ALS with 1 million interactions as limit of lines to load.
 │       └── 100000000 # Checkpoint for ALS with 100 million interactions as limit of lines to load.
-├── figures/          # Contains visualizations or figures generated during the project.
+├── figures/          # Contains visualizations or figures generated during the project (for analysis and results...).
 └── logs/             # Logging files generated during training or testing.
 
-datasets/             #  datasets/             # Documentation about the datasets used for training and evaluation of the recommender system.
+datasets/             # Documentation about the datasets used for training and evaluation of the recommender system.
 
 docs/                 # Documentation for the project, including detailed explanations and guidelines.
 
@@ -231,7 +236,7 @@ This project is licensed under the MIT License. See the `LICENSE` file for more 
 
 ## Feedbacks
 
-Feel free to give any feedback or report any issue to me [<hjisaac.h at gmail.com>](hjisaac.h@gmail.com). 
+Feel free to give any feedback or report any issues to me [<hjisaac.h at gmail.com>](hjisaac.h@gmail.com). 
 
 
 

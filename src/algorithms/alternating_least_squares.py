@@ -21,10 +21,36 @@ from src.settings import settings
 
 _als_cache = {}
 
+_als_cache_key_error_message = (
+    "Expected '{key}' in `_als_cache`, but it was not found. "
+    "Current cache keys: {keys}. Exiting..."
+)
+
 
 def _clear_als_cache():  # noqa
     global _als_cache
     _als_cache = {}
+
+
+_CACHE_KEY_ITEM_FEATURES_COUNTS = "item_features_counts"
+
+
+def _cache_adjusted_item_features_counts(id_to_item_bmap, item_database) -> None:
+    # Access _als_cache
+    global _als_cache
+
+    if not (item_features_counts := _als_cache.get(_CACHE_KEY_ITEM_FEATURES_COUNTS)):
+        item_features_counts = np.zeros(shape=len(id_to_item_bmap))
+
+        for i, item in enumerate(id_to_item_bmap.inverse):
+            item_features_counts[i] = item_database[item]["features_count"]
+
+        # Set feature count to infinity for items with no features to avoid division
+        # by zero. This excludes feature extraction for items without features. Good hack, :=)
+        item_features_counts[item_features_counts == 0] = sys.maxsize  #
+
+        # Cache the result for the next time
+        _als_cache["features_counts"] = item_features_counts
 
 
 # Centralize this if needed somewhere else
@@ -570,11 +596,7 @@ class AlternatingLeastSquares(Algorithm):
             ratings_data=item_ratings_data,
         )
 
-    def learn_feature_factor(
-        self,
-        feature_id: Optional[int] = None,
-        feature_factor=None,
-    ) -> np.ndarray:
+    def learn_feature_factor(self, feature_id: int) -> np.ndarray:
         """
         Learn or compute the given feature_id related factor using the item vectors
         """
@@ -582,30 +604,22 @@ class AlternatingLeastSquares(Algorithm):
         # Access _als_cache
         global _als_cache
 
-        if not (item_features_counts := _als_cache.get("item_features_counts")):
-            item_features_counts = np.zeros(shape=len(self.id_to_item_bmap))
-
-            for i, item in enumerate(self.id_to_item_bmap.inverse):
-                item_features_counts[i] = self.item_database[item]["features_count"]
-
-            # DOCME: Here we will do an engineering hack to avoid zero division error.
-            #   For the items that have no feature, we will set their feature count to
-            #   infinity to make kinda nullify the factor `1 / np.sqrt(feature_count)`.
-            #   This idea makes sens because the feature term does not make sens for item
-            #   without features, which means that we should not include the feature extraction
-            #   term for those items.
-
-            item_features_counts[item_features_counts == 0] = sys.maxsize  #
-
-            # Cache the result for the next time
-            _als_cache["features_counts"] = item_features_counts
+        if not (
+            item_features_counts := _als_cache.get(_CACHE_KEY_ITEM_FEATURES_COUNTS)
+        ):
+            logger.error(
+                _als_cache_key_error_message.format(
+                    key=_CACHE_KEY_ITEM_FEATURES_COUNTS, keys=list(_als_cache.keys())
+                )
+            )
+            return
 
         # Accumulate the weighted feature factor for all items
         accumulated_weighted_feature_factor = np.zeros(shape=(1, self.hyper_n_factors))
         for item_id, item in enumerate(self.id_to_item_bmap.inverse):
             item_features_hot_encoded = self.item_database[item]["features_hot_encoded"]
             mask = np.array(item_features_hot_encoded, dtype=bool) & (
-                np.arange(len(item_features_hot_encoded)) != item_id
+                np.arange(len(item_features_hot_encoded)) != feature_id
             )
             accumulated_weighted_feature_factor += (
                 self.feature_factors[mask].sum(axis=0) / item_features_counts[item_id]
@@ -667,6 +681,18 @@ class AlternatingLeastSquares(Algorithm):
         """
         Calculate the accumulated scaled feature factor for a given item_id.
         """
+        # Access _als_cache
+        global _als_cache
+
+        if not (
+            item_features_counts := _als_cache.get(_CACHE_KEY_ITEM_FEATURES_COUNTS)
+        ):
+            logger.error(
+                _als_cache_key_error_message.format(
+                    key=_CACHE_KEY_ITEM_FEATURES_COUNTS, keys=list(_als_cache.keys())
+                )
+            )
+            return
 
         item = self.id_to_item_bmap[item_id]
         features_hot_encoded = self.item_database[item]["features_hot_encoded"]
@@ -675,7 +701,7 @@ class AlternatingLeastSquares(Algorithm):
         return (
             self.hyper_tau
             * self.feature_factors[mask].sum(axis=0)
-            / self.item_database[item]["features_count"]
+            / (item_features_counts[item_id])
         )
 
     def _get_accumulated_squared_residual_and_residuals_count(
@@ -837,6 +863,12 @@ class AlternatingLeastSquares(Algorithm):
             if self._include_features
             else 0
         )
+
+        # Cache the item features count as vector for fast access
+        if self._include_features:
+            _cache_adjusted_item_features_counts(
+                self.id_to_item_bmap, self.item_database
+            )
 
         for epoch in tqdm(range(n_epochs), desc="Epochs", unit="epoch"):
 
