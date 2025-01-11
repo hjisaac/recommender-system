@@ -1,3 +1,4 @@
+import contextlib
 import sys
 import numpy as np
 
@@ -32,25 +33,27 @@ def _clear_als_cache():  # noqa
     _als_cache = {}
 
 
-_CACHE_KEY_ITEM_FEATURES_COUNTS = "item_features_counts"
+_CACHE_KEY_ITEM_FEATURES_COUNTS = "_features_counts_cache"
 
 
 def _cache_adjusted_item_features_counts(id_to_item_bmap, item_database) -> None:
     # Access _als_cache
     global _als_cache
 
-    if not (item_features_counts := _als_cache.get(_CACHE_KEY_ITEM_FEATURES_COUNTS)):
-        item_features_counts = np.zeros(shape=len(id_to_item_bmap))
+    if _CACHE_KEY_ITEM_FEATURES_COUNTS in _als_cache:
+        return
 
-        for i, item in enumerate(id_to_item_bmap.inverse):
-            item_features_counts[i] = item_database[item]["features_count"]
+    item_features_counts = np.zeros(shape=len(id_to_item_bmap))
 
-        # Set feature count to infinity for items with no features to avoid division
-        # by zero. This excludes feature extraction for items without features. Good hack, :=)
-        item_features_counts[item_features_counts == 0] = sys.maxsize  #
+    for i, item in enumerate(id_to_item_bmap.inverse):
+        item_features_counts[i] = item_database[item]["features_count"]
 
-        # Cache the result for the next time
-        _als_cache["features_counts"] = item_features_counts
+    # Set feature count to infinity for items with no features to avoid division
+    # by zero. This excludes feature extraction for items without features. Good hack, :=)
+    item_features_counts[item_features_counts == 0] = sys.maxsize  #
+
+    # Cache the result for the next time
+    _als_cache[_CACHE_KEY_ITEM_FEATURES_COUNTS] = item_features_counts
 
 
 # Centralize this if needed somewhere else
@@ -553,7 +556,7 @@ class AlternatingLeastSquares(Algorithm):
         if target == LearningTargetEnum.ITEM and self._include_features:
             try:
                 _B += self._get_accumulated_scaled_feature_factor(target_id)
-            except np._core._exceptions._UFuncOutputCastingError:
+            except TypeError:
                 pass
         factor = np.linalg.solve(
             self.hyper_lambda * _A + self.hyper_tau * np.eye(self.hyper_n_factors),
@@ -606,15 +609,17 @@ class AlternatingLeastSquares(Algorithm):
         # Access _als_cache
         global _als_cache
 
-        if not (
-            item_features_counts := _als_cache.get(_CACHE_KEY_ITEM_FEATURES_COUNTS)
+        if (
+            (item_features_counts := _als_cache.get(_CACHE_KEY_ITEM_FEATURES_COUNTS)) is None
         ):
             logger.error(
                 _als_cache_key_error_message.format(
                     key=_CACHE_KEY_ITEM_FEATURES_COUNTS, keys=list(_als_cache.keys())
                 )
             )
-            return
+            raise self.AlternatingLeastSquaresError(
+                f"Cannot retrieve {_CACHE_KEY_ITEM_FEATURES_COUNTS} from cache"
+            )
 
         # Accumulate the weighted feature factor for all items
         accumulated_weighted_feature_factor = np.zeros(shape=(1, self.hyper_n_factors))
@@ -686,15 +691,17 @@ class AlternatingLeastSquares(Algorithm):
         # Access _als_cache
         global _als_cache
 
-        if not (
-            item_features_counts := _als_cache.get(_CACHE_KEY_ITEM_FEATURES_COUNTS)
+        if (
+            (item_features_counts := _als_cache.get(_CACHE_KEY_ITEM_FEATURES_COUNTS)) is None
         ):
             logger.error(
                 _als_cache_key_error_message.format(
                     key=_CACHE_KEY_ITEM_FEATURES_COUNTS, keys=list(_als_cache.keys())
                 )
             )
-            return
+            raise self.AlternatingLeastSquaresError(
+                f"Cannot retrieve {_CACHE_KEY_ITEM_FEATURES_COUNTS} from cache"
+            )
 
         item = self.id_to_item_bmap[item_id]
         features_hot_encoded = self.item_database[item]["features_hot_encoded"]
