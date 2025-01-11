@@ -215,6 +215,15 @@ tests/                # Test suite for validating the functionality of the proje
 
 ---
 
+## Limitations 
+
+Running the MovieLens example (32 million ratings) takes approximately 3 hours on CPU alone.
+
+The early use of `SerialUnidirectionalMapper` and `SerialBidirectionalMapper` data structures 
+complicates integrating Numba. These classes lack clear type specifications, making it nearly 
+impossible to leverage Numba's optimization capabilities. To use Numba effectively, we would 
+need to remove these data structures from the code.
+
 ## Improvements
 
 - **Integration of Additional Algorithms**: Incorporate other collaborative filtering and content-based methods.

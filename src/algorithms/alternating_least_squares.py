@@ -551,8 +551,10 @@ class AlternatingLeastSquares(Algorithm):
 
         # Adding of the feature factor related term it should be done
         if target == LearningTargetEnum.ITEM and self._include_features:
-            _B += self._get_accumulated_scaled_feature_factor(target_id)
-
+            try:
+                _B += self._get_accumulated_scaled_feature_factor(target_id)
+            except np._core._exceptions._UFuncOutputCastingError:
+                pass
         factor = np.linalg.solve(
             self.hyper_lambda * _A + self.hyper_tau * np.eye(self.hyper_n_factors),
             self.hyper_lambda * _B,
