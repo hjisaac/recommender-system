@@ -1,12 +1,12 @@
 [general]
 # Original: LINES_COUNT_TO_READ = 1_000_000_000
-LINES_COUNT_TO_READ = 1_000_000
+LINES_COUNT_TO_READ = 1_000
 APPROXIMATE_TRAIN_RATIO = 0.8
 LOG_FILE = "./artifacts/logs/app.log"
 
 [als]
 # Original: HYPER_N_EPOCH = 30
-HYPER_N_EPOCH = 20
+HYPER_N_EPOCH = 2 # 20
 
 # Original: HYPER_N_FACTOR = 10
 HYPER_N_FACTOR = 10
@@ -14,6 +14,7 @@ HYPER_N_FACTOR = 10
 HYPER_GAMMA = 0.1
 HYPER_LAMBDA = 0.1
 HYPER_TAU = 0.1
+HYPER_BETA = 10
 CHECKPOINT_FOLDER = "./artifacts/checkpoints/als"
 
 [figures]

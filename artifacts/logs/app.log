@@ -763,3 +763,487 @@
 2025-01-10 22:33:56,068 [INFO] All factors and biases are already provided, so no initialization is needed.
 2025-01-10 22:33:56,070 [ERROR] Cannot train the model more because hyperparameter 'hyper_n_epochs' (20) is already greater or equal to the final number of epochs wanted which is 20. Please check the value of 'hyper_n_epochs' and adjust accordingly. Exiting...
 2025-01-10 22:33:56,072 [INFO] Successfully built the recommender using AlternatingLeastSquares
+2025-01-11 00:28:29,296 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 20, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 00:28:29,298 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 00:28:29,302 [INFO] Checkpoint ./artifacts/checkpoints/als/1000000/20250109-175920_lambda0.1_gamma0.1_tau0.1_n_epochs20_n_factors10.pkl loaded with success
+2025-01-11 00:28:29,303 [INFO] All factors and biases are already provided, so no initialization is needed.
+2025-01-11 00:28:29,304 [ERROR] Cannot train the model more because hyperparameter 'hyper_n_epochs' (20) is already greater or equal to the final number of epochs wanted which is 20. Please check the value of 'hyper_n_epochs' and adjust accordingly. Exiting...
+2025-01-11 00:28:29,305 [INFO] Successfully built the recommender using AlternatingLeastSquares
+2025-01-11 00:28:59,296 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 20, 'hyper_n_factors': 10, 'user_factors': array([[ 0.66803859, -0.42017319,  1.79821248, ...,  2.01660122,
+         0.00609515, -0.18994888],
+       [-0.72676003, -0.97292564, -0.83542837, ..., -0.82822931,
+        -0.21256158, -0.88999392],
+       [-0.35849483,  0.52115392, -0.18519657, ..., -0.22866128,
+         0.32431674, -0.91523274],
+       ...,
+       [ 1.1906259 ,  0.90197813,  0.84796976, ..., -0.06321017,
+         0.4720177 , -0.15883818],
+       [ 0.0742606 ,  0.27838817,  0.05924231, ..., -0.31611786,
+        -0.26801993, -0.21589841],
+       [ 0.53660388,  0.41992396, -0.2110134 , ..., -0.55068589,
+         0.07160081,  0.11306214]]), 'item_factors': array([[-0.14566181, -0.22035893, -0.03858645, ...,  0.03635075,
+        -0.04661084, -0.35857518],
+       [ 0.69254094,  0.15864638, -0.07112142, ..., -0.52517401,
+        -0.87689369,  0.29035806],
+       [ 0.39030134,  0.80981618, -0.58111932, ..., -0.30118685,
+        -0.23282532,  0.0666118 ],
+       ...,
+       [-0.15228376, -0.32004006,  0.07791038, ..., -0.2491233 ,
+         0.19159474, -0.19344987],
+       [-0.11818416, -0.24837623,  0.06046458, ..., -0.19333925,
+         0.14869257, -0.15013229],
+       [-0.15228376, -0.32004006,  0.07791038, ..., -0.2491233 ,
+         0.19159474, -0.19344987]]), 'user_biases': array([3.08754976, 3.01240664, 3.23461301, ..., 2.83711568, 2.87175202,
+       0.95061821]), 'item_biases': array([1.27981379, 0.32527807, 0.57628962, ..., 0.27130104, 0.21596027,
+       0.27130104]), 'loss_train': [np.float64(-34790.247387690426), np.float64(-30434.39207322495), np.float64(-28505.575660181872), np.float64(-27424.112994930787), np.float64(-26727.813654206257), np.float64(-26234.007200814354), np.float64(-25857.7024917051), np.float64(-25558.45718760865), np.float64(-25312.034144288424), np.float64(-25097.513685063554), np.float64(-24912.099356707004), np.float64(-24742.018234728766), np.float64(-24591.164717324675), np.float64(-24451.697140696135), np.float64(-24323.532051402428), np.float64(-24203.383900366294), np.float64(-24092.149706656928), np.float64(-23987.665251744755), np.float64(-23890.889744707052), np.float64(-23797.734785464134)], 'loss_test': [np.float64(-18812.01782507389), np.float64(-18305.892795243322), np.float64(-17715.54452900091), np.float64(-17290.943863090975), np.float64(-16977.08743739604), np.float64(-16729.860522233954), np.float64(-16525.246901822557), np.float64(-16349.590246261288), np.float64(-16193.605258919142), np.float64(-16051.039319689984), np.float64(-15919.824349776854), np.float64(-15795.882817154961), np.float64(-15680.564161398044), np.float64(-15571.540907498143), np.float64(-15467.893190343388), np.float64(-15369.532589626957), np.float64(-15276.000807937233), np.float64(-15187.407706252248), np.float64(-15103.015784152238), np.float64(-15022.766807914024)], 'rmse_train': [np.float64(0.7817565668688028), np.float64(0.7125512059770251), np.float64(0.6844722824835088), np.float64(0.6698668250540903), np.float64(0.6610975326269364), np.float64(0.6553825784543453), np.float64(0.651415832226618), np.float64(0.6485747867188625), np.float64(0.6465056805788431), np.float64(0.6448762943923197), np.float64(0.6436471484406419), np.float64(0.6425864792755058), np.float64(0.6417701355710825), np.float64(0.6410719948573932), np.float64(0.6405027732977879), np.float64(0.6400018776341362), np.float64(0.6395956598647982), np.float64(0.6392455360020323), np.float64(0.6389833517488067), np.float64(0.6387279301427903)], 'rmse_test': [np.float64(0.9180982555504594), np.float64(0.9025350279647296), np.float64(0.8897600492808809), np.float64(0.8822266177399684), np.float64(0.87745922670067), np.float64(0.8743754019480581), np.float64(0.8723471690357081), np.float64(0.8709714292978358), np.float64(0.870016027268531), np.float64(0.8693189703667411), np.float64(0.8687962171638547), np.float64(0.8683142148018147), np.float64(0.8679479312666939), np.float64(0.8676401375120059), np.float64(0.8673732183619255), np.float64(0.8671517575250811), np.float64(0.8669748652488206), np.float64(0.8668594204101165), np.float64(0.8668011541907379), np.float64(0.8667931235127327)]}
+2025-01-11 00:28:59,299 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 00:28:59,302 [INFO] Checkpoint ./artifacts/checkpoints/als/1000000/20250109-175920_lambda0.1_gamma0.1_tau0.1_n_epochs20_n_factors10.pkl loaded with success
+2025-01-11 00:28:59,304 [INFO] All factors and biases are already provided, so no initialization is needed.
+2025-01-11 00:28:59,305 [ERROR] Cannot train the model more because hyperparameter 'hyper_n_epochs' (20) is already greater or equal to the final number of epochs wanted which is 20. Please check the value of 'hyper_n_epochs' and adjust accordingly. Exiting...
+2025-01-11 00:28:59,307 [INFO] Successfully built the recommender using AlternatingLeastSquares
+2025-01-11 00:29:26,345 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 20, 'hyper_n_factors': 10, 'user_factors': array([[ 0.66803859, -0.42017319,  1.79821248, ...,  2.01660122,
+         0.00609515, -0.18994888],
+       [-0.72676003, -0.97292564, -0.83542837, ..., -0.82822931,
+        -0.21256158, -0.88999392],
+       [-0.35849483,  0.52115392, -0.18519657, ..., -0.22866128,
+         0.32431674, -0.91523274],
+       ...,
+       [ 1.1906259 ,  0.90197813,  0.84796976, ..., -0.06321017,
+         0.4720177 , -0.15883818],
+       [ 0.0742606 ,  0.27838817,  0.05924231, ..., -0.31611786,
+        -0.26801993, -0.21589841],
+       [ 0.53660388,  0.41992396, -0.2110134 , ..., -0.55068589,
+         0.07160081,  0.11306214]]), 'item_factors': array([[-0.14566181, -0.22035893, -0.03858645, ...,  0.03635075,
+        -0.04661084, -0.35857518],
+       [ 0.69254094,  0.15864638, -0.07112142, ..., -0.52517401,
+        -0.87689369,  0.29035806],
+       [ 0.39030134,  0.80981618, -0.58111932, ..., -0.30118685,
+        -0.23282532,  0.0666118 ],
+       ...,
+       [-0.15228376, -0.32004006,  0.07791038, ..., -0.2491233 ,
+         0.19159474, -0.19344987],
+       [-0.11818416, -0.24837623,  0.06046458, ..., -0.19333925,
+         0.14869257, -0.15013229],
+       [-0.15228376, -0.32004006,  0.07791038, ..., -0.2491233 ,
+         0.19159474, -0.19344987]]), 'user_biases': array([3.08754976, 3.01240664, 3.23461301, ..., 2.83711568, 2.87175202,
+       0.95061821]), 'item_biases': array([1.27981379, 0.32527807, 0.57628962, ..., 0.27130104, 0.21596027,
+       0.27130104]), 'loss_train': [np.float64(-34790.247387690426), np.float64(-30434.39207322495), np.float64(-28505.575660181872), np.float64(-27424.112994930787), np.float64(-26727.813654206257), np.float64(-26234.007200814354), np.float64(-25857.7024917051), np.float64(-25558.45718760865), np.float64(-25312.034144288424), np.float64(-25097.513685063554), np.float64(-24912.099356707004), np.float64(-24742.018234728766), np.float64(-24591.164717324675), np.float64(-24451.697140696135), np.float64(-24323.532051402428), np.float64(-24203.383900366294), np.float64(-24092.149706656928), np.float64(-23987.665251744755), np.float64(-23890.889744707052), np.float64(-23797.734785464134)], 'loss_test': [np.float64(-18812.01782507389), np.float64(-18305.892795243322), np.float64(-17715.54452900091), np.float64(-17290.943863090975), np.float64(-16977.08743739604), np.float64(-16729.860522233954), np.float64(-16525.246901822557), np.float64(-16349.590246261288), np.float64(-16193.605258919142), np.float64(-16051.039319689984), np.float64(-15919.824349776854), np.float64(-15795.882817154961), np.float64(-15680.564161398044), np.float64(-15571.540907498143), np.float64(-15467.893190343388), np.float64(-15369.532589626957), np.float64(-15276.000807937233), np.float64(-15187.407706252248), np.float64(-15103.015784152238), np.float64(-15022.766807914024)], 'rmse_train': [np.float64(0.7817565668688028), np.float64(0.7125512059770251), np.float64(0.6844722824835088), np.float64(0.6698668250540903), np.float64(0.6610975326269364), np.float64(0.6553825784543453), np.float64(0.651415832226618), np.float64(0.6485747867188625), np.float64(0.6465056805788431), np.float64(0.6448762943923197), np.float64(0.6436471484406419), np.float64(0.6425864792755058), np.float64(0.6417701355710825), np.float64(0.6410719948573932), np.float64(0.6405027732977879), np.float64(0.6400018776341362), np.float64(0.6395956598647982), np.float64(0.6392455360020323), np.float64(0.6389833517488067), np.float64(0.6387279301427903)], 'rmse_test': [np.float64(0.9180982555504594), np.float64(0.9025350279647296), np.float64(0.8897600492808809), np.float64(0.8822266177399684), np.float64(0.87745922670067), np.float64(0.8743754019480581), np.float64(0.8723471690357081), np.float64(0.8709714292978358), np.float64(0.870016027268531), np.float64(0.8693189703667411), np.float64(0.8687962171638547), np.float64(0.8683142148018147), np.float64(0.8679479312666939), np.float64(0.8676401375120059), np.float64(0.8673732183619255), np.float64(0.8671517575250811), np.float64(0.8669748652488206), np.float64(0.8668594204101165), np.float64(0.8668011541907379), np.float64(0.8667931235127327)]}
+2025-01-11 00:29:26,348 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 00:29:26,356 [INFO] Checkpoint ./artifacts/checkpoints/als/1000000/20250109-175920_lambda0.1_gamma0.1_tau0.1_n_epochs20_n_factors10.pkl loaded with success
+2025-01-11 00:29:26,357 [INFO] All factors and biases are already provided, so no initialization is needed.
+2025-01-11 00:29:26,358 [ERROR] Cannot train the model more because hyperparameter 'hyper_n_epochs' (20) is already greater or equal to the final number of epochs wanted which is 20. Please check the value of 'hyper_n_epochs' and adjust accordingly. Exiting...
+2025-01-11 00:29:26,360 [INFO] Successfully built the recommender using AlternatingLeastSquares
+2025-01-11 00:29:37,421 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 20, 'hyper_n_factors': 10, 'user_factors': array([[ 0.66803859, -0.42017319,  1.79821248, ...,  2.01660122,
+         0.00609515, -0.18994888],
+       [-0.72676003, -0.97292564, -0.83542837, ..., -0.82822931,
+        -0.21256158, -0.88999392],
+       [-0.35849483,  0.52115392, -0.18519657, ..., -0.22866128,
+         0.32431674, -0.91523274],
+       ...,
+       [ 1.1906259 ,  0.90197813,  0.84796976, ..., -0.06321017,
+         0.4720177 , -0.15883818],
+       [ 0.0742606 ,  0.27838817,  0.05924231, ..., -0.31611786,
+        -0.26801993, -0.21589841],
+       [ 0.53660388,  0.41992396, -0.2110134 , ..., -0.55068589,
+         0.07160081,  0.11306214]]), 'item_factors': array([[-0.14566181, -0.22035893, -0.03858645, ...,  0.03635075,
+        -0.04661084, -0.35857518],
+       [ 0.69254094,  0.15864638, -0.07112142, ..., -0.52517401,
+        -0.87689369,  0.29035806],
+       [ 0.39030134,  0.80981618, -0.58111932, ..., -0.30118685,
+        -0.23282532,  0.0666118 ],
+       ...,
+       [-0.15228376, -0.32004006,  0.07791038, ..., -0.2491233 ,
+         0.19159474, -0.19344987],
+       [-0.11818416, -0.24837623,  0.06046458, ..., -0.19333925,
+         0.14869257, -0.15013229],
+       [-0.15228376, -0.32004006,  0.07791038, ..., -0.2491233 ,
+         0.19159474, -0.19344987]]), 'user_biases': array([3.08754976, 3.01240664, 3.23461301, ..., 2.83711568, 2.87175202,
+       0.95061821]), 'item_biases': array([1.27981379, 0.32527807, 0.57628962, ..., 0.27130104, 0.21596027,
+       0.27130104]), 'loss_train': [np.float64(-34790.247387690426), np.float64(-30434.39207322495), np.float64(-28505.575660181872), np.float64(-27424.112994930787), np.float64(-26727.813654206257), np.float64(-26234.007200814354), np.float64(-25857.7024917051), np.float64(-25558.45718760865), np.float64(-25312.034144288424), np.float64(-25097.513685063554), np.float64(-24912.099356707004), np.float64(-24742.018234728766), np.float64(-24591.164717324675), np.float64(-24451.697140696135), np.float64(-24323.532051402428), np.float64(-24203.383900366294), np.float64(-24092.149706656928), np.float64(-23987.665251744755), np.float64(-23890.889744707052), np.float64(-23797.734785464134)], 'loss_test': [np.float64(-18812.01782507389), np.float64(-18305.892795243322), np.float64(-17715.54452900091), np.float64(-17290.943863090975), np.float64(-16977.08743739604), np.float64(-16729.860522233954), np.float64(-16525.246901822557), np.float64(-16349.590246261288), np.float64(-16193.605258919142), np.float64(-16051.039319689984), np.float64(-15919.824349776854), np.float64(-15795.882817154961), np.float64(-15680.564161398044), np.float64(-15571.540907498143), np.float64(-15467.893190343388), np.float64(-15369.532589626957), np.float64(-15276.000807937233), np.float64(-15187.407706252248), np.float64(-15103.015784152238), np.float64(-15022.766807914024)], 'rmse_train': [np.float64(0.7817565668688028), np.float64(0.7125512059770251), np.float64(0.6844722824835088), np.float64(0.6698668250540903), np.float64(0.6610975326269364), np.float64(0.6553825784543453), np.float64(0.651415832226618), np.float64(0.6485747867188625), np.float64(0.6465056805788431), np.float64(0.6448762943923197), np.float64(0.6436471484406419), np.float64(0.6425864792755058), np.float64(0.6417701355710825), np.float64(0.6410719948573932), np.float64(0.6405027732977879), np.float64(0.6400018776341362), np.float64(0.6395956598647982), np.float64(0.6392455360020323), np.float64(0.6389833517488067), np.float64(0.6387279301427903)], 'rmse_test': [np.float64(0.9180982555504594), np.float64(0.9025350279647296), np.float64(0.8897600492808809), np.float64(0.8822266177399684), np.float64(0.87745922670067), np.float64(0.8743754019480581), np.float64(0.8723471690357081), np.float64(0.8709714292978358), np.float64(0.870016027268531), np.float64(0.8693189703667411), np.float64(0.8687962171638547), np.float64(0.8683142148018147), np.float64(0.8679479312666939), np.float64(0.8676401375120059), np.float64(0.8673732183619255), np.float64(0.8671517575250811), np.float64(0.8669748652488206), np.float64(0.8668594204101165), np.float64(0.8668011541907379), np.float64(0.8667931235127327)]}
+2025-01-11 00:29:37,426 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 00:29:37,431 [INFO] Checkpoint ./artifacts/checkpoints/als/1000000/20250109-175920_lambda0.1_gamma0.1_tau0.1_n_epochs20_n_factors10.pkl loaded with success
+2025-01-11 00:29:37,432 [INFO] All factors and biases are already provided, so no initialization is needed.
+2025-01-11 00:29:37,434 [ERROR] Cannot train the model more because hyperparameter 'hyper_n_epochs' (20) is already greater or equal to the final number of epochs wanted which is 20. Please check the value of 'hyper_n_epochs' and adjust accordingly. Exiting...
+2025-01-11 00:29:37,437 [INFO] Successfully built the recommender using AlternatingLeastSquares
+2025-01-11 00:29:47,513 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 20, 'hyper_n_factors': 10, 'user_factors': array([[ 0.66803859, -0.42017319,  1.79821248, ...,  2.01660122,
+         0.00609515, -0.18994888],
+       [-0.72676003, -0.97292564, -0.83542837, ..., -0.82822931,
+        -0.21256158, -0.88999392],
+       [-0.35849483,  0.52115392, -0.18519657, ..., -0.22866128,
+         0.32431674, -0.91523274],
+       ...,
+       [ 1.1906259 ,  0.90197813,  0.84796976, ..., -0.06321017,
+         0.4720177 , -0.15883818],
+       [ 0.0742606 ,  0.27838817,  0.05924231, ..., -0.31611786,
+        -0.26801993, -0.21589841],
+       [ 0.53660388,  0.41992396, -0.2110134 , ..., -0.55068589,
+         0.07160081,  0.11306214]]), 'item_factors': array([[-0.14566181, -0.22035893, -0.03858645, ...,  0.03635075,
+        -0.04661084, -0.35857518],
+       [ 0.69254094,  0.15864638, -0.07112142, ..., -0.52517401,
+        -0.87689369,  0.29035806],
+       [ 0.39030134,  0.80981618, -0.58111932, ..., -0.30118685,
+        -0.23282532,  0.0666118 ],
+       ...,
+       [-0.15228376, -0.32004006,  0.07791038, ..., -0.2491233 ,
+         0.19159474, -0.19344987],
+       [-0.11818416, -0.24837623,  0.06046458, ..., -0.19333925,
+         0.14869257, -0.15013229],
+       [-0.15228376, -0.32004006,  0.07791038, ..., -0.2491233 ,
+         0.19159474, -0.19344987]]), 'user_biases': array([3.08754976, 3.01240664, 3.23461301, ..., 2.83711568, 2.87175202,
+       0.95061821]), 'item_biases': array([1.27981379, 0.32527807, 0.57628962, ..., 0.27130104, 0.21596027,
+       0.27130104]), 'loss_train': [np.float64(-34790.247387690426), np.float64(-30434.39207322495), np.float64(-28505.575660181872), np.float64(-27424.112994930787), np.float64(-26727.813654206257), np.float64(-26234.007200814354), np.float64(-25857.7024917051), np.float64(-25558.45718760865), np.float64(-25312.034144288424), np.float64(-25097.513685063554), np.float64(-24912.099356707004), np.float64(-24742.018234728766), np.float64(-24591.164717324675), np.float64(-24451.697140696135), np.float64(-24323.532051402428), np.float64(-24203.383900366294), np.float64(-24092.149706656928), np.float64(-23987.665251744755), np.float64(-23890.889744707052), np.float64(-23797.734785464134)], 'loss_test': [np.float64(-18812.01782507389), np.float64(-18305.892795243322), np.float64(-17715.54452900091), np.float64(-17290.943863090975), np.float64(-16977.08743739604), np.float64(-16729.860522233954), np.float64(-16525.246901822557), np.float64(-16349.590246261288), np.float64(-16193.605258919142), np.float64(-16051.039319689984), np.float64(-15919.824349776854), np.float64(-15795.882817154961), np.float64(-15680.564161398044), np.float64(-15571.540907498143), np.float64(-15467.893190343388), np.float64(-15369.532589626957), np.float64(-15276.000807937233), np.float64(-15187.407706252248), np.float64(-15103.015784152238), np.float64(-15022.766807914024)], 'rmse_train': [np.float64(0.7817565668688028), np.float64(0.7125512059770251), np.float64(0.6844722824835088), np.float64(0.6698668250540903), np.float64(0.6610975326269364), np.float64(0.6553825784543453), np.float64(0.651415832226618), np.float64(0.6485747867188625), np.float64(0.6465056805788431), np.float64(0.6448762943923197), np.float64(0.6436471484406419), np.float64(0.6425864792755058), np.float64(0.6417701355710825), np.float64(0.6410719948573932), np.float64(0.6405027732977879), np.float64(0.6400018776341362), np.float64(0.6395956598647982), np.float64(0.6392455360020323), np.float64(0.6389833517488067), np.float64(0.6387279301427903)], 'rmse_test': [np.float64(0.9180982555504594), np.float64(0.9025350279647296), np.float64(0.8897600492808809), np.float64(0.8822266177399684), np.float64(0.87745922670067), np.float64(0.8743754019480581), np.float64(0.8723471690357081), np.float64(0.8709714292978358), np.float64(0.870016027268531), np.float64(0.8693189703667411), np.float64(0.8687962171638547), np.float64(0.8683142148018147), np.float64(0.8679479312666939), np.float64(0.8676401375120059), np.float64(0.8673732183619255), np.float64(0.8671517575250811), np.float64(0.8669748652488206), np.float64(0.8668594204101165), np.float64(0.8668011541907379), np.float64(0.8667931235127327)]}
+2025-01-11 00:29:47,516 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 00:29:47,526 [INFO] Checkpoint ./artifacts/checkpoints/als/1000000/20250109-175920_lambda0.1_gamma0.1_tau0.1_n_epochs20_n_factors10.pkl loaded with success
+2025-01-11 00:29:47,530 [INFO] All factors and biases are already provided, so no initialization is needed.
+2025-01-11 00:29:47,534 [ERROR] Cannot train the model more because hyperparameter 'hyper_n_epochs' (20) is already greater or equal to the final number of epochs wanted which is 20. Please check the value of 'hyper_n_epochs' and adjust accordingly. Exiting...
+2025-01-11 00:29:47,536 [INFO] Successfully built the recommender using AlternatingLeastSquares
+2025-01-11 00:30:12,394 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 00:30:22,040 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 00:30:22,041 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-11 00:33:30,689 [DEBUG] matplotlib data path: /home/hjisaac/.cache/pypoetry/virtualenvs/recommender-system-uSlwvUxw-py3.10/lib/python3.10/site-packages/matplotlib/mpl-data
+2025-01-11 00:33:30,699 [DEBUG] CONFIGDIR=/home/hjisaac/.config/matplotlib
+2025-01-11 00:33:30,722 [DEBUG] interactive is False
+2025-01-11 00:33:30,723 [DEBUG] platform is linux
+2025-01-11 00:33:30,840 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 00:33:30,847 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 00:34:27,527 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 00:34:37,164 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 00:34:37,165 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-11 00:35:26,578 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 20, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 00:35:26,581 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 00:35:26,588 [INFO] Checkpoint ./artifacts/checkpoints/als/1000000/20250109-175920_lambda0.1_gamma0.1_tau0.1_n_epochs20_n_factors10.pkl loaded with success
+2025-01-11 00:47:53,323 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 00:47:53,335 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 00:47:54,127 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 00:48:04,010 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 00:48:04,010 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-11 00:48:36,240 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 00:48:36,249 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 00:49:30,933 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 00:49:45,764 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 00:49:45,765 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-11 00:51:50,809 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 00:52:03,152 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 00:52:03,152 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-11 00:52:22,469 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 00:52:22,479 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 00:52:22,916 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 00:52:42,766 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 00:52:42,766 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-11 00:52:44,818 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 20, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 00:52:44,818 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 00:52:44,832 [INFO] Checkpoint ./artifacts/checkpoints/als/1000000/20250109-175920_lambda0.1_gamma0.1_tau0.1_n_epochs20_n_factors10.pkl loaded with success
+2025-01-11 00:53:30,781 [ERROR] State that is being loaded does not have `feature_factors`, so cannot run {self.__class__.__name__} algorithm with feature included, exiting...
+2025-01-11 00:53:30,782 [INFO] All factors and biases are already provided, so no initialization is needed.
+2025-01-11 00:53:30,782 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 00:53:30,782 [ERROR] Cannot train the model more because hyperparameter 'hyper_n_epochs' (20) is already greater or equal to the final number of epochs wanted which is 20. Please check the value of 'hyper_n_epochs' and adjust accordingly. Exiting...
+2025-01-11 00:53:30,783 [INFO] Successfully built the recommender using AlternatingLeastSquares
+2025-01-11 00:55:24,250 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 00:55:24,259 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 00:55:24,676 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 00:55:47,045 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 20, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 00:55:47,046 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 00:55:47,050 [INFO] Checkpoint ./artifacts/checkpoints/als/1000000/20250109-175920_lambda0.1_gamma0.1_tau0.1_n_epochs20_n_factors10.pkl loaded with success
+2025-01-11 00:55:47,050 [ERROR] State that is being loaded does not have `feature_factors`, so cannot run {self.__class__.__name__} algorithm with feature included, exiting...
+2025-01-11 00:55:47,051 [INFO] All factors and biases are already provided, so no initialization is needed.
+2025-01-11 00:55:47,051 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 00:55:47,051 [ERROR] Cannot train the model more because hyperparameter 'hyper_n_epochs' (20) is already greater or equal to the final number of epochs wanted which is 20. Please check the value of 'hyper_n_epochs' and adjust accordingly. Exiting...
+2025-01-11 00:55:47,051 [INFO] Successfully built the recommender using AlternatingLeastSquares
+2025-01-11 00:56:19,663 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 20, 'hyper_n_factors': 10, 'user_factors': array([[ 0.66803859, -0.42017319,  1.79821248, ...,  2.01660122,
+         0.00609515, -0.18994888],
+       [-0.72676003, -0.97292564, -0.83542837, ..., -0.82822931,
+        -0.21256158, -0.88999392],
+       [-0.35849483,  0.52115392, -0.18519657, ..., -0.22866128,
+         0.32431674, -0.91523274],
+       ...,
+       [ 1.1906259 ,  0.90197813,  0.84796976, ..., -0.06321017,
+         0.4720177 , -0.15883818],
+       [ 0.0742606 ,  0.27838817,  0.05924231, ..., -0.31611786,
+        -0.26801993, -0.21589841],
+       [ 0.53660388,  0.41992396, -0.2110134 , ..., -0.55068589,
+         0.07160081,  0.11306214]]), 'item_factors': array([[-0.14566181, -0.22035893, -0.03858645, ...,  0.03635075,
+        -0.04661084, -0.35857518],
+       [ 0.69254094,  0.15864638, -0.07112142, ..., -0.52517401,
+        -0.87689369,  0.29035806],
+       [ 0.39030134,  0.80981618, -0.58111932, ..., -0.30118685,
+        -0.23282532,  0.0666118 ],
+       ...,
+       [-0.15228376, -0.32004006,  0.07791038, ..., -0.2491233 ,
+         0.19159474, -0.19344987],
+       [-0.11818416, -0.24837623,  0.06046458, ..., -0.19333925,
+         0.14869257, -0.15013229],
+       [-0.15228376, -0.32004006,  0.07791038, ..., -0.2491233 ,
+         0.19159474, -0.19344987]]), 'user_biases': array([3.08754976, 3.01240664, 3.23461301, ..., 2.83711568, 2.87175202,
+       0.95061821]), 'item_biases': array([1.27981379, 0.32527807, 0.57628962, ..., 0.27130104, 0.21596027,
+       0.27130104]), 'feature_factors': None, 'loss_train': [np.float64(-34790.247387690426), np.float64(-30434.39207322495), np.float64(-28505.575660181872), np.float64(-27424.112994930787), np.float64(-26727.813654206257), np.float64(-26234.007200814354), np.float64(-25857.7024917051), np.float64(-25558.45718760865), np.float64(-25312.034144288424), np.float64(-25097.513685063554), np.float64(-24912.099356707004), np.float64(-24742.018234728766), np.float64(-24591.164717324675), np.float64(-24451.697140696135), np.float64(-24323.532051402428), np.float64(-24203.383900366294), np.float64(-24092.149706656928), np.float64(-23987.665251744755), np.float64(-23890.889744707052), np.float64(-23797.734785464134)], 'loss_test': [np.float64(-18812.01782507389), np.float64(-18305.892795243322), np.float64(-17715.54452900091), np.float64(-17290.943863090975), np.float64(-16977.08743739604), np.float64(-16729.860522233954), np.float64(-16525.246901822557), np.float64(-16349.590246261288), np.float64(-16193.605258919142), np.float64(-16051.039319689984), np.float64(-15919.824349776854), np.float64(-15795.882817154961), np.float64(-15680.564161398044), np.float64(-15571.540907498143), np.float64(-15467.893190343388), np.float64(-15369.532589626957), np.float64(-15276.000807937233), np.float64(-15187.407706252248), np.float64(-15103.015784152238), np.float64(-15022.766807914024)], 'rmse_train': [np.float64(0.7817565668688028), np.float64(0.7125512059770251), np.float64(0.6844722824835088), np.float64(0.6698668250540903), np.float64(0.6610975326269364), np.float64(0.6553825784543453), np.float64(0.651415832226618), np.float64(0.6485747867188625), np.float64(0.6465056805788431), np.float64(0.6448762943923197), np.float64(0.6436471484406419), np.float64(0.6425864792755058), np.float64(0.6417701355710825), np.float64(0.6410719948573932), np.float64(0.6405027732977879), np.float64(0.6400018776341362), np.float64(0.6395956598647982), np.float64(0.6392455360020323), np.float64(0.6389833517488067), np.float64(0.6387279301427903)], 'rmse_test': [np.float64(0.9180982555504594), np.float64(0.9025350279647296), np.float64(0.8897600492808809), np.float64(0.8822266177399684), np.float64(0.87745922670067), np.float64(0.8743754019480581), np.float64(0.8723471690357081), np.float64(0.8709714292978358), np.float64(0.870016027268531), np.float64(0.8693189703667411), np.float64(0.8687962171638547), np.float64(0.8683142148018147), np.float64(0.8679479312666939), np.float64(0.8676401375120059), np.float64(0.8673732183619255), np.float64(0.8671517575250811), np.float64(0.8669748652488206), np.float64(0.8668594204101165), np.float64(0.8668011541907379), np.float64(0.8667931235127327)]}
+2025-01-11 00:56:19,664 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 00:56:19,665 [INFO] Checkpoint ./artifacts/checkpoints/als/1000000/20250109-175920_lambda0.1_gamma0.1_tau0.1_n_epochs20_n_factors10.pkl loaded with success
+2025-01-11 00:56:19,665 [ERROR] State that is being loaded does not have `feature_factors`, so cannot run {self.__class__.__name__} algorithm with feature included, exiting...
+2025-01-11 00:56:19,666 [INFO] All factors and biases are already provided, so no initialization is needed.
+2025-01-11 00:56:19,666 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 00:56:19,666 [ERROR] Cannot train the model more because hyperparameter 'hyper_n_epochs' (20) is already greater or equal to the final number of epochs wanted which is 20. Please check the value of 'hyper_n_epochs' and adjust accordingly. Exiting...
+2025-01-11 00:56:19,666 [INFO] Successfully built the recommender using AlternatingLeastSquares
+2025-01-11 00:56:43,192 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 20, 'hyper_n_factors': 10, 'user_factors': array([[ 0.66803859, -0.42017319,  1.79821248, ...,  2.01660122,
+         0.00609515, -0.18994888],
+       [-0.72676003, -0.97292564, -0.83542837, ..., -0.82822931,
+        -0.21256158, -0.88999392],
+       [-0.35849483,  0.52115392, -0.18519657, ..., -0.22866128,
+         0.32431674, -0.91523274],
+       ...,
+       [ 1.1906259 ,  0.90197813,  0.84796976, ..., -0.06321017,
+         0.4720177 , -0.15883818],
+       [ 0.0742606 ,  0.27838817,  0.05924231, ..., -0.31611786,
+        -0.26801993, -0.21589841],
+       [ 0.53660388,  0.41992396, -0.2110134 , ..., -0.55068589,
+         0.07160081,  0.11306214]]), 'item_factors': array([[-0.14566181, -0.22035893, -0.03858645, ...,  0.03635075,
+        -0.04661084, -0.35857518],
+       [ 0.69254094,  0.15864638, -0.07112142, ..., -0.52517401,
+        -0.87689369,  0.29035806],
+       [ 0.39030134,  0.80981618, -0.58111932, ..., -0.30118685,
+        -0.23282532,  0.0666118 ],
+       ...,
+       [-0.15228376, -0.32004006,  0.07791038, ..., -0.2491233 ,
+         0.19159474, -0.19344987],
+       [-0.11818416, -0.24837623,  0.06046458, ..., -0.19333925,
+         0.14869257, -0.15013229],
+       [-0.15228376, -0.32004006,  0.07791038, ..., -0.2491233 ,
+         0.19159474, -0.19344987]]), 'user_biases': array([3.08754976, 3.01240664, 3.23461301, ..., 2.83711568, 2.87175202,
+       0.95061821]), 'item_biases': array([1.27981379, 0.32527807, 0.57628962, ..., 0.27130104, 0.21596027,
+       0.27130104]), 'feature_factors': None, 'loss_train': [np.float64(-34790.247387690426), np.float64(-30434.39207322495), np.float64(-28505.575660181872), np.float64(-27424.112994930787), np.float64(-26727.813654206257), np.float64(-26234.007200814354), np.float64(-25857.7024917051), np.float64(-25558.45718760865), np.float64(-25312.034144288424), np.float64(-25097.513685063554), np.float64(-24912.099356707004), np.float64(-24742.018234728766), np.float64(-24591.164717324675), np.float64(-24451.697140696135), np.float64(-24323.532051402428), np.float64(-24203.383900366294), np.float64(-24092.149706656928), np.float64(-23987.665251744755), np.float64(-23890.889744707052), np.float64(-23797.734785464134)], 'loss_test': [np.float64(-18812.01782507389), np.float64(-18305.892795243322), np.float64(-17715.54452900091), np.float64(-17290.943863090975), np.float64(-16977.08743739604), np.float64(-16729.860522233954), np.float64(-16525.246901822557), np.float64(-16349.590246261288), np.float64(-16193.605258919142), np.float64(-16051.039319689984), np.float64(-15919.824349776854), np.float64(-15795.882817154961), np.float64(-15680.564161398044), np.float64(-15571.540907498143), np.float64(-15467.893190343388), np.float64(-15369.532589626957), np.float64(-15276.000807937233), np.float64(-15187.407706252248), np.float64(-15103.015784152238), np.float64(-15022.766807914024)], 'rmse_train': [np.float64(0.7817565668688028), np.float64(0.7125512059770251), np.float64(0.6844722824835088), np.float64(0.6698668250540903), np.float64(0.6610975326269364), np.float64(0.6553825784543453), np.float64(0.651415832226618), np.float64(0.6485747867188625), np.float64(0.6465056805788431), np.float64(0.6448762943923197), np.float64(0.6436471484406419), np.float64(0.6425864792755058), np.float64(0.6417701355710825), np.float64(0.6410719948573932), np.float64(0.6405027732977879), np.float64(0.6400018776341362), np.float64(0.6395956598647982), np.float64(0.6392455360020323), np.float64(0.6389833517488067), np.float64(0.6387279301427903)], 'rmse_test': [np.float64(0.9180982555504594), np.float64(0.9025350279647296), np.float64(0.8897600492808809), np.float64(0.8822266177399684), np.float64(0.87745922670067), np.float64(0.8743754019480581), np.float64(0.8723471690357081), np.float64(0.8709714292978358), np.float64(0.870016027268531), np.float64(0.8693189703667411), np.float64(0.8687962171638547), np.float64(0.8683142148018147), np.float64(0.8679479312666939), np.float64(0.8676401375120059), np.float64(0.8673732183619255), np.float64(0.8671517575250811), np.float64(0.8669748652488206), np.float64(0.8668594204101165), np.float64(0.8668011541907379), np.float64(0.8667931235127327)]}
+2025-01-11 00:56:43,192 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 00:56:43,194 [INFO] Checkpoint ./artifacts/checkpoints/als/1000000/20250109-175920_lambda0.1_gamma0.1_tau0.1_n_epochs20_n_factors10.pkl loaded with success
+2025-01-11 00:56:43,194 [ERROR] State that is being loaded does not have `feature_factors`, so cannot run {self.__class__.__name__} algorithm with feature included, exiting...
+2025-01-11 00:56:43,194 [INFO] All factors and biases are already provided, so no initialization is needed.
+2025-01-11 00:56:43,194 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 00:56:43,194 [ERROR] Cannot train the model more because hyperparameter 'hyper_n_epochs' (20) is already greater or equal to the final number of epochs wanted which is 20. Please check the value of 'hyper_n_epochs' and adjust accordingly. Exiting...
+2025-01-11 00:56:43,194 [INFO] Successfully built the recommender using AlternatingLeastSquares
+2025-01-11 00:57:11,827 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 20, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 00:57:11,827 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 00:57:11,828 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 00:57:11,838 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 00:57:11,838 [INFO] Epochs count to train for 20, entering the training loop now...
+2025-01-11 00:58:29,103 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 00:58:29,112 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 00:58:29,524 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 00:58:50,167 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 00:58:50,168 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-11 00:58:52,258 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 00:58:52,258 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 00:59:07,350 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 00:59:07,358 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 00:59:07,358 [INFO] Epochs count to train for 2, entering the training loop now...
+2025-01-11 01:00:14,391 [DEBUG] matplotlib data path: /home/hjisaac/.cache/pypoetry/virtualenvs/recommender-system-uSlwvUxw-py3.10/lib/python3.10/site-packages/matplotlib/mpl-data
+2025-01-11 01:00:14,400 [DEBUG] CONFIGDIR=/home/hjisaac/.config/matplotlib
+2025-01-11 01:00:14,417 [DEBUG] interactive is False
+2025-01-11 01:00:14,418 [DEBUG] platform is linux
+2025-01-11 01:00:14,512 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 01:00:14,522 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 01:00:36,462 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 01:00:36,471 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 01:00:36,848 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 01:00:55,367 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 01:00:55,367 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-11 01:00:57,145 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 01:00:57,145 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 01:00:57,147 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 01:00:57,154 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 01:00:57,154 [INFO] Epochs count to train for 2, entering the training loop now...
+2025-01-11 01:02:26,397 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 01:02:26,406 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 01:02:26,782 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 01:02:45,097 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 01:02:45,097 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-11 01:02:46,905 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 01:02:46,905 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 01:02:46,907 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 01:02:46,915 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 01:02:46,915 [INFO] Epochs count to train for 2, entering the training loop now...
+2025-01-11 01:03:33,912 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 01:03:41,479 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 01:03:41,479 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-11 01:10:42,569 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 01:10:42,578 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 01:10:42,949 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 01:11:02,110 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 01:11:02,110 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-11 01:11:03,932 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 01:11:03,932 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 01:11:03,934 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 01:11:03,941 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 01:11:03,941 [INFO] Epochs count to train for 2, entering the training loop now...
+2025-01-11 01:11:43,023 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 01:11:43,032 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 01:11:43,399 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 01:12:03,111 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 01:12:03,112 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-11 01:12:05,052 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 01:12:05,052 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 01:12:05,054 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 01:12:05,062 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 01:12:05,062 [INFO] Epochs count to train for 2, entering the training loop now...
+2025-01-11 01:13:21,289 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 01:13:21,299 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 01:13:21,701 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 01:13:41,982 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 01:13:41,982 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-11 01:13:43,819 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 01:13:43,820 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 01:13:43,821 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 01:13:43,829 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 01:13:43,829 [INFO] Epochs count to train for 2, entering the training loop now...
+2025-01-11 01:32:49,169 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 01:32:49,179 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 01:32:49,550 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 01:33:08,735 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 01:33:08,735 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-11 01:33:10,575 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 01:33:10,575 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 01:33:46,776 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 01:33:46,784 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 01:33:47,226 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 01:34:06,868 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 01:34:06,868 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-11 01:34:08,700 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 01:34:08,700 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 01:35:27,754 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 01:35:27,764 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 01:35:28,136 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 01:35:47,883 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 01:35:47,883 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-11 01:35:49,674 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 01:35:49,674 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 01:36:10,006 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 01:36:10,016 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 01:36:10,016 [INFO] Epochs count to train for 2, entering the training loop now...
+2025-01-11 01:39:20,918 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 01:39:20,928 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 01:39:21,309 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 01:39:40,707 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 01:39:40,708 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-11 01:39:42,562 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 01:39:42,562 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 01:39:42,579 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 01:39:42,586 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 01:39:42,586 [INFO] Epochs count to train for 2, entering the training loop now...
+2025-01-11 01:42:01,955 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 01:42:01,964 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 01:42:02,345 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 01:42:20,680 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 01:42:20,680 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-11 01:42:22,477 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 01:42:22,477 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 01:42:22,479 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 01:42:22,487 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 01:42:22,487 [INFO] Epochs count to train for 2, entering the training loop now...
+2025-01-11 01:43:48,582 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 01:43:48,591 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 01:43:48,969 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 01:44:07,070 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 01:44:07,070 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-11 01:44:08,880 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 01:44:08,880 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 01:44:08,882 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 01:44:08,889 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 01:44:08,889 [INFO] Epochs count to train for 2, entering the training loop now...
+2025-01-11 01:45:12,494 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 01:45:12,503 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 01:45:12,929 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 01:45:31,988 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 01:45:31,988 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-11 01:45:33,768 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 01:45:33,769 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 01:45:33,770 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 01:45:33,777 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 01:45:33,777 [INFO] Epochs count to train for 2, entering the training loop now...
+2025-01-11 01:51:59,312 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 01:51:59,323 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 01:51:59,728 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 01:52:20,060 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 01:52:20,061 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-11 01:52:21,864 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 01:52:21,864 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 01:52:21,866 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 01:52:21,873 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 01:52:21,873 [INFO] Epochs count to train for 2, entering the training loop now...
+2025-01-11 01:56:43,297 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 01:56:43,306 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 01:56:43,675 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 01:57:02,043 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 01:57:02,043 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-11 01:57:03,818 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 01:57:03,818 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 01:57:03,820 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 01:57:03,827 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 01:57:03,827 [INFO] Epochs count to train for 2, entering the training loop now...
+2025-01-11 01:59:08,762 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 01:59:08,773 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 01:59:09,151 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 01:59:28,594 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 01:59:28,594 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-11 01:59:30,448 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 01:59:30,448 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 01:59:30,449 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 01:59:30,457 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 01:59:30,457 [INFO] Epochs count to train for 2, entering the training loop now...
+2025-01-11 02:01:10,164 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 02:01:18,301 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 02:01:18,302 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-11 02:01:21,869 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 02:01:21,884 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 02:01:22,367 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 02:01:41,115 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 02:01:41,115 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-11 02:01:42,899 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 02:01:42,899 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 02:01:42,901 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 02:01:42,908 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 02:01:42,908 [INFO] Epochs count to train for 2, entering the training loop now...
+2025-01-11 02:48:00,950 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 02:48:08,859 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 02:48:08,859 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-11 02:50:06,141 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 02:50:14,312 [WARNING] The limit of lines (.i.e 1000000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 02:50:14,313 [INFO] Successfully indexed 1000000 lines from ./ml-32m/ratings.csv
+2025-01-11 02:50:18,211 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 02:50:18,229 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 02:50:18,839 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 02:50:18,909 [WARNING] The limit of lines (.i.e 1000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 02:50:18,909 [INFO] Successfully indexed 1000 lines from ./ml-32m/ratings.csv
+2025-01-11 02:50:20,767 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 02:50:20,768 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 02:50:20,769 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 02:50:20,770 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 02:50:20,770 [INFO] Epochs count to train for 2, entering the training loop now...
+2025-01-11 02:51:39,151 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 02:51:39,160 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 02:51:39,559 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 02:51:39,612 [WARNING] The limit of lines (.i.e 1000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 02:51:39,612 [INFO] Successfully indexed 1000 lines from ./ml-32m/ratings.csv
+2025-01-11 02:51:41,192 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 02:51:41,192 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 02:51:41,193 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 02:51:41,194 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 02:51:41,194 [INFO] Epochs count to train for 2, entering the training loop now...
+2025-01-11 03:19:58,022 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 03:19:58,030 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 03:19:58,399 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 03:19:58,457 [WARNING] The limit of lines (.i.e 1000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 03:19:58,457 [INFO] Successfully indexed 1000 lines from ./ml-32m/ratings.csv
+2025-01-11 03:20:00,036 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 03:20:00,036 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 03:20:00,038 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 03:20:00,039 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 03:20:00,039 [INFO] Epochs count to train for 2, entering the training loop now...
+2025-01-11 03:24:59,586 [INFO] Successfully run AlternatingLeastSquares algorithm running till the end
+2025-01-11 03:24:59,587 [DEBUG] Cleaning the AlternatingLeastSquares algorithm self maintained cache, and exiting...
+2025-01-11 03:24:59,588 [INFO] Successfully built the recommender using AlternatingLeastSquares
+2025-01-11 03:25:03,261 [DEBUG] CACHEDIR=/home/hjisaac/.cache/matplotlib
+2025-01-11 03:25:03,271 [DEBUG] Using fontManager instance from /home/hjisaac/.cache/matplotlib/fontlist-v390.json
+2025-01-11 03:25:04,094 [WARNING] The current implementation does not split the data into train and test sets exactly with the provided ratio. We use the provided ratio as a probability for a Bernoulli distribution to know whether a given data point should be used as a training data or a test data.
+2025-01-11 03:25:04,105 [WARNING] The limit of lines (.i.e 1000) to index has been reached. Exiting without loading the rest... 
+2025-01-11 03:25:04,105 [INFO] Successfully indexed 1000 lines from ./ml-32m/ratings.csv
+2025-01-11 03:25:05,983 [INFO] Starting the build of the recommender using AlternatingLeastSquares with the state {'hyper_lambda': 0.1, 'hyper_tau': 0.1, 'hyper_gamma': 0.1, 'hyper_n_epochs': 2, 'hyper_n_factors': 10, 'user_factors': None, 'item_factors': None, 'user_biases': None, 'item_biases': None, 'feature_factors': None, 'loss_train': [], 'loss_test': [], 'rmse_train': [], 'rmse_test': []}
+2025-01-11 03:25:05,984 [INFO] Starting a model fitting using the backend AlternatingLeastSquares...
+2025-01-11 03:25:05,984 [INFO] Initializing user and item's factors and biases, as none of them is provided.
+2025-01-11 03:25:05,984 [INFO] About to start training with the `include_features` parameter set to True.
+2025-01-11 03:25:05,984 [INFO] Epochs count to train for 2, entering the training loop now...
