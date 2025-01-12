@@ -41,7 +41,7 @@ class Backend(object):
         self.checkpoint_manager = checkpoint_manager
         self.checkpoint_to_resume = checkpoint_to_resume
 
-    def __call__(self, data):
+    def __call__(self, data, *args, **kwargs):
         initial_state = None
 
         if self.resume:
@@ -54,8 +54,9 @@ class Backend(object):
 
         # Run the algorithm
         self.algorithm.run(
-            data=data,
+            data,
             initial_state=initial_state,
+            **kwargs,
         )
 
         if self.save_checkpoint:

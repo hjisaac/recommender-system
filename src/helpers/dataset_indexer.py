@@ -247,6 +247,9 @@ class DatasetIndexer(AbstractDatasetIndexer):
         belongs_to_test_split: bool
         try:
             with open(self._file_path, mode="r", newline="") as csvfile:
+                logger.info(
+                    f"The file {self._file_path} to (simple) index has been opened successfully, starting reading its lines..."
+                )
                 for line_count, line in enumerate(DictReader(csvfile)):
                     user, item = line[self._user_header], line[self._item_header]
 

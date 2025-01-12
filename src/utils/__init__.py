@@ -99,3 +99,11 @@ def load_pickle(path):
             return pickle.load(f)
         except Exception:
             raise
+
+
+def save_pickle(state, file_path):
+    try:
+        with open(file_path, "wb") as f:
+            pickle.dump(state, f)
+    except Exception:
+        raise
