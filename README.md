@@ -72,11 +72,14 @@ Where:
 #### Workflow:
 
 1. Solve the optimization problem for $b^{(u)}$ keeping all the other matrices (.i.e $U$, $V$, $b^{(v)}$) fixed.
-      $$ b^{(u)}_i = $$
+
+   $$ b^{(u)}_i = $$
 2. Solve the optimization problem for $U$ keeping all the other matrices fixed.
-      $$ u_i = $$
+
+   $$ u_i = $$
 3. Solve the optimization problem for $b^{(v)}$ keeping all the other matrices fixed.
-      $$ b^{(v)}_j = $$
+
+   $$ b^{(v)}_j = $$
 4. Solve the optimization problem for $V$ keeping all the other matrices fixed.
    - When F is modeled:
       $$ v_j = $$
