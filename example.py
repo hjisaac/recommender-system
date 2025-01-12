@@ -26,7 +26,6 @@ from src.helpers.graphing import (
 
 # In[2]:
 
-
 USER_HEADER = "userId"
 ITEM_HEADER = "movieId"
 RATING_HEADER = "rating"
@@ -175,7 +174,7 @@ recommender = recommender_builder.build(
 prediction_input = [("17", 5)] # Sense and Sensibility (1995)
 predictions = recommender.recommend(prediction_input)
 logger.info(
-    f"Prediction for Sense and Sensibility (1995) (id=17) is {predictions}"
+    f'Prediction for Sense and Sensibility (1995) (id=17) is {[p["title"] + ": " + "|".join(p["genres"])  for p in predictions]}'
 )
 
 # In[12]:
@@ -185,7 +184,7 @@ prediction_input = [("267654", 5)]  # Harry Poter
 predictions = recommender.recommend(prediction_input)
 
 logger.info(
-    f"Prediction for Harry Poter (id=267654) is {predictions}"
+    f'Prediction for Harry Poter (id=267654) is {[p["title"] + ": " + "|".join(p["genres"])  for p in predictions]}'
 )
 
 
@@ -196,7 +195,7 @@ prediction_input = [("279178", 5)]  # Lord of the ring
 predictions = recommender.recommend(prediction_input)
 
 logger.info(
-    f"Prediction for Lord of the ring (id=279178) is {predictions}"
+    f'Prediction for Lord of the ring (id=279178) is {[p["title"] + ": " + "|".join(p["genres"])  for p in predictions]}'
 )
 
 

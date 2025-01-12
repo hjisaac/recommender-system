@@ -151,9 +151,9 @@ class AlternatingLeastSquaresState(AlgorithmState):
             return [
                 item_database[als.id_to_item_bmap[item_id]]
                 # The minus in front of the prediction (ndarray) makes `np.argsort`
-                # to do the arg-sorting in descending order. The hardcoded `10` should
+                # to do the arg-sorting in descending order. The hardcoded `20` should
                 # be a parameter provided through the recommender object.
-                for item_id in np.argsort(-predictions)[:10]
+                for item_id in np.argsort(-predictions)[:20]
             ]
 
         return Predictor(predict_func=predict, render_func=render)
