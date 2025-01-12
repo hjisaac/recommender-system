@@ -308,7 +308,7 @@ class AlternatingLeastSquares(Algorithm):
         This is not exposed to client code to ensure encapsulation.
         """
         if (
-            not (feature_factor := getattr(state, "feature_factors", None))
+            (feature_factor := getattr(state, "feature_factors", None)) is None
             and self._include_features
         ):
             logger.error(

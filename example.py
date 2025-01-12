@@ -167,31 +167,43 @@ recommender = recommender_builder.build(
 
 # plot_als_train_test_loss_evolution(als_backend.algorithm)
 
-
+279178
 # In[11]:
 
 
 #
-prediction_input = [("17", 4)]
-recommender.recommend(prediction_input)
-
+prediction_input = [("17", 5)] # Sense and Sensibility (1995)
+predictions = recommender.recommend(prediction_input)
+logger.info(
+    f"Prediction for Sense and Sensibility (1995) (id=17) is {predictions}"
+)
 
 # In[12]:
 
 
-prediction_input = [("267654", 4)]  # Harry Poter
-recommender.recommend(prediction_input)
+prediction_input = [("267654", 5)]  # Harry Poter
+predictions = recommender.recommend(prediction_input)
+
+logger.info(
+    f"Prediction for Harry Poter (id=267654) is {predictions}"
+)
 
 
 # In[13]:
 
 
-#
-recommender.recommend()
+prediction_input = [("279178", 5)]  # Lord of the ring
+predictions = recommender.recommend(prediction_input)
+
+logger.info(
+    f"Prediction for Lord of the ring (id=279178) is {predictions}"
+)
 
 
-# In[ ]:
+# In[14]:
 
-
+# Trends prediction
+# This needs a lot of RAMS
+# recommender.recommend()
 
 
