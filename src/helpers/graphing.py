@@ -152,7 +152,7 @@ def plot_als_train_test_rmse_evolution(als_model):  # noqa
     """
     Plots the error evolution over iterations for a given set of error values.
 
-    Parameters:
+    Parameters:False
     error_values: List or array of error values (e.g., RMSE, loss) for each iteration.
     label: Label for the plot (default is "Test MSE").
     """
@@ -174,7 +174,7 @@ def plot_als_train_test_rmse_evolution(als_model):  # noqa
     # Show legend
     plt.legend()
 
-    plt.savefig(get_plt_figure_path("rmse_test_train"))
+    plt.savefig(get_plt_figure_path("rmse_test_train"), format=settings.figures.PLT_FIGURE_FORMAT)
 
     # Display the plot
     plt.show()

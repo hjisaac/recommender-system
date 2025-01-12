@@ -100,7 +100,7 @@ item_database = (
 # In[5]:
 
 
-# plot_data_item_distribution_as_hist(indexed_data)
+plot_data_item_distribution_as_hist(indexed_data)
 
 
 # In[6]:
