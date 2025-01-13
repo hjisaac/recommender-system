@@ -186,14 +186,22 @@ Where:
 - $\hat{r}_{ij} = U_i^T V_j + b^{(u)}_i + b^{(v)}_j$: Predicted rating.
 
 ### Results (Example)
+
+Here we will present the performance of the model **20250112-211340_lambda0.5_gamma0.01_tau2_n_epochs20_n_factors10**. 
+
+
 #### RMSE
 
-![Alt text](./artifacts/figures/rmse_test_train_20250112-220603_lambda0.5_gamma0.01_tau2_epochs20_factors10_input1000000000_lambda0.svg)
+![RMSE test train image](./artifacts/figures/rmse_test_train_20250112-220603_lambda0.5_gamma0.01_tau2_epochs20_factors10_input1000000000_lambda0.svg)
 
 - RMSE Train: 0.7814
 - RMSE Test:  0.7041
 
 #### Loss
+
+![RMSE test train image](./artifacts/figures/loss_test_train.svg)
+
+#### Latent space
 
 
 
