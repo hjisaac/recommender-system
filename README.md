@@ -238,7 +238,7 @@ tests/                # Test suite for validating the functionality of the proje
 
 ## Limitations 
 
-Running the MovieLens example (32 million ratings) takes approximately 3 hours on CPU alone.
+Running the MovieLens example (32 million rating entries) takes approximately 3 hours on CPU alone if feature vector functionnality is activated and 2 hours if not.
 
 The early use of `SerialUnidirectionalMapper` and `SerialBidirectionalMapper` data structures 
 complicates integrating [Numba](https://numba.pydata.org/). These classes lack clear type specifications, making it nearly 
