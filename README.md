@@ -50,7 +50,7 @@ The codebase is crafted with a focus on **modularity** and **reusability**, ensu
 
 ### Alternating Least Squares (ALS)
 
-<details open> 
+<details> 
 <summary>Click me</summary>
 
 **ALS** is a collaborative filtering technique based on **matrix factorization**. It models user and item interactions by discovering latent features that explain observed ratings. The algorithm alternates between optimizing user and item matrices to minimize the regularized objective function:
@@ -153,6 +153,8 @@ To set up the project:
 
 ## Usage
 
+<details> 
+<summary>Click me</summary>
 Only collaborative filtering is implemented now, and it is encaspsulated in the class `CollaborativeFilteringRecommenderBuilder`.
 
    ```py
@@ -179,6 +181,8 @@ Only collaborative filtering is implemented now, and it is encaspsulated in the 
     (to save the model as checkpoint, one can pass `save_checkpoint=True` to the backend object used to do the training). There are 
    also some logs that will be generated in the `artifacts/logs` folder each time the backend runs. Those logs can be very usefull
     for debugging purposes.
+
+</details>
 
 ---
 
