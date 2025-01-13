@@ -51,7 +51,7 @@ The codebase is crafted with a focus on **modularity** and **reusability**, ensu
 ### Alternating Least Squares (ALS)
 
 <details> 
-<summary>Click me</summary>
+<summary>_collapse_</summary>
 
 **ALS** is a collaborative filtering technique based on **matrix factorization**. It models user and item interactions by discovering latent features that explain observed ratings. The algorithm alternates between optimizing user and item matrices to minimize the regularized objective function:
 
@@ -127,7 +127,7 @@ The folder `dataset` contains information about examples' dataset.
 ## Installation
 
 <details>
-<summary>Click me</summary>
+<summary>_collapse_</summary>
 
 To set up the project:
 
@@ -154,7 +154,7 @@ To set up the project:
 ## Usage
 
 <details> 
-<summary>Click me</summary>
+<summary>_collapse_</summary>
 
 Only collaborative filtering is implemented now, and it is encaspsulated in the class `CollaborativeFilteringRecommenderBuilder`.
 
@@ -227,7 +227,7 @@ These results demonstrate the model's ability to generalize well to unseen data,
 
 ## Code Structure
 <details>
-<summary>Click me</summary>
+<summary>_collapse_</summary>
 
 ```txt
 artifacts/            # Stores generated artifacts such as model checkpoints, logs, and profiling data.
@@ -275,7 +275,7 @@ tests/                # Test suite for validating the functionality of the proje
 ## Limitations 
 
 <details open> 
-<summary>Click me</summary>
+<summary>_collapse_</summary>
 
 Running the MovieLens example (32 million ratings) takes approximately 3 hours on CPU alone.
 
@@ -289,7 +289,7 @@ need to remove these data structures from the code. There is an issue opened to 
 ## Improvements
 
 <details open> 
-<summary>Click me</summary>
+<summary>_collapse_</summary>
 
 - **Integration of Additional Algorithms**: Incorporate other collaborative filtering and content-based methods.
 - **Hybrid Recommender Systems**: Combine collaborative and content-based filtering for improved performance.
@@ -305,7 +305,7 @@ need to remove these data structures from the code. There is an issue opened to 
 ## Resources
 
 <details open> 
-<summary>Click me</summary>
+<summary>_collapse_</summary>
 
 The `docs` folder contains useful resources (papers, ...)
 
