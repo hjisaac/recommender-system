@@ -79,17 +79,17 @@ Where:
 
 1. Solve the optimization problem for $b^{(u)}$ keeping all the other matrices (.i.e $U$, $V$, $b^{(v)}$) fixed.
 
-    ![Equation](https://latex.codecogs.com/png.latex?b^{(u)}_i%20=%20\frac{\lambda%20\sum_{j%20\in%20\Omega(i)}%20\left(%20r_{ij}-%20\left(%20u_i^T%20v_j%20+%20b_j^{(v)}%20\right)%20\right)}{\lambda%20|\Omega(i)|%20+%20\gamma})
+    ![Equation]([https://latex.codecogs.com/png.latex?b^{(u)}_i%20=%20\frac{\lambda%20\sum_{j%20\in%20\Omega(i)}%20\left(%20r_{ij}-%20\left(%20u_i^T%20v_j%20+%20b_j^{(v)}%20\right)%20\right)}{\lambda%20|\Omega(i)|%20+%20\gamma}](https://latex.codecogs.com/svg.image?b^{(u)}_i=\frac{\lambda\sum_{j\in\Omega(i)}\left(r_{ij}-\left(u_i^T&space;v_j&plus;b_j^{(v)}\right)\right)}{\lambda|\Omega(i)|&plus;\gamma}))
 
-3. Solve the optimization problem for $U$ keeping all the other matrices fixed.
+2. Solve the optimization problem for $U$ keeping all the other matrices fixed.
 
     ![Equation](https://latex.codecogs.com/svg.image?\left(\lambda\sum_{j\in\Omega(i)}v_j&space;v_j^T&plus;\tau&space;I\right)^{-1}\left(\lambda\sum_{j\in\Omega(i)}v_j(r_{ij}-b^{(u)}_i-b^{(v)}_j)\right))
 
-4. Solve the optimization problem for $b^{(v)}$ keeping all the other matrices fixed.
+3. Solve the optimization problem for $b^{(v)}$ keeping all the other matrices fixed.
 
     ![Equation](https://latex.codecogs.com/svg.image?\frac{\lambda\sum_{i\in\Omega(j)}\left(r_{ij}-\left(u_i^T&space;v_j&plus;b_i^{(u)}\right)\right)}{\lambda|\Omega(j)|&plus;\gamma})
    
-5. Solve the optimization problem for $V$ keeping all the other matrices fixed.
+4. Solve the optimization problem for $V$ keeping all the other matrices fixed.
    - When F is modeled:
    
       ![Equation](https://latex.codecogs.com/svg.image?\left(\lambda\sum_{i\in\Omega(j)}u_i&space;u_i^T&plus;\tau&space;I\right)^{-1}\left(\lambda\sum_{i\in\Omega(j)}u_i(r_{ij}-b^{(u)}_i-b^{(v)}_j)&plus;\sum_{\substack{t\in\text{features}(j)}}f_t\right))
@@ -98,11 +98,11 @@ Where:
    
       ![Equation](https://latex.codecogs.com/svg.image?\left(\lambda\sum_{i\in\Omega(j)}u_i^Tu_i&plus;\tau&space;I\right)^{-1}\left(\lambda\sum_{i\in\Omega(j)}u_i(r_{ij}-b^{(u)}_i-b^{(v)}_j)\right))
    
-6. (When F modeled) Solve the optimization problem for $F$ keeping all the other matrices fixed.
+5. (When F modeled) Solve the optimization problem for $F$ keeping all the other matrices fixed.
 
     ![Equation](https://latex.codecogs.com/svg.image?\frac{\sum_{j=1}^{n}\frac{1}{\sqrt{F_j}}V_j-\sum_{j=1}^{n}\frac{1}{F_j}\left(\sum_{\substack{t\in\text{features}(j)\\t\neq&space;l}}f_t\right)}{\sqrt{1&plus;\sum_{j=1}^{n}\frac{1}{F_j}}})
 
-7. Repeat until convergence.
+6. Repeat until convergence.
 
 
 #### Advantages
