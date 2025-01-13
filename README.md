@@ -79,10 +79,10 @@ Where:
 
 1. Solve the optimization problem for $b^{(u)}$ keeping all the other matrices (.i.e $U$, $V$, $b^{(v)}$) fixed.
 
-   $$b^{(u)}_i = \frac{\lambda \sum_{j \in \Omega(i)} \left( r_{ij} - \left( u_i^T v_j + b_j^{(v)} \right) \right)}{\lambda |\Omega(i)| + \gamma}$$
-    <script type="text/javascript" async
-      src="[https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML](https://latex.codecogs.com/svg.image?b^{(u)}_i=\frac{\lambda\sum_{j\in\Omega(i)}\left(r_{ij}-\left(u_i^T&space;v_j&plus;b_j^{(v)}\right)\right)}{\lambda|\Omega(i)|&plus;\gamma})">
-    </script>
+   $$
+    b^{(u)}_i = \frac{\lambda \sum_{j \in \Omega(i)} \left( r_{ij} - \left( u_i^T v_j + b_j^{(v)} \right) \right)}{\lambda |\Omega(i)| + \gamma}
+   $$
+   
 
     ![Equation](https://latex.codecogs.com/png.latex?b^{(u)}_i%20=%20\frac{\lambda%20\sum_{j%20\in%20\Omega(i)}%20\left(%20r_{ij}-%20\left(%20u_i^T%20v_j%20+%20b_j^{(v)}%20\right)%20\right)}{\lambda%20|\Omega(i)|%20+%20\gamma})
     ![Equation]([https://latex.codecogs.com/png.latex?b^{(u)}_i%20=%20\frac{\lambda%20\sum_{j%20\in%20\Omega(i)}%20\left(%20r_{ij}-%20\left(%20u_i^T%20v_j%20+%20b_j^{(v)}%20\right)%20\right)}{\lambda%20|\Omega(i)|%20+%20\gamma}](https://latex.codecogs.com/svg.image?b^{(u)}_i=\frac{\lambda\sum_{j\in\Omega(i)}\left(r_{ij}-\left(u_i^T&space;v_j&plus;b_j^{(v)}\right)\right)}{\lambda|\Omega(i)|&plus;\gamma}))
