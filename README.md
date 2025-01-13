@@ -79,28 +79,29 @@ Where:
 
 1. Solve the optimization problem for $b^{(u)}$ keeping all the other matrices (.i.e $U$, $V$, $b^{(v)}$) fixed.
 
-   $$b^{(u)}_i = \frac{\lambda \sum_{j \in \Omega(i)} \left( r_{ij} - \left( u_i^T v_j + b_j^{(v)} \right) \right)}{\lambda |\Omega(i)| + \gamma}$$
- 
-
-
     ![Equation](https://latex.codecogs.com/png.latex?b^{(u)}_i%20=%20\frac{\lambda%20\sum_{j%20\in%20\Omega(i)}%20\left(%20r_{ij}-%20\left(%20u_i^T%20v_j%20+%20b_j^{(v)}%20\right)%20\right)}{\lambda%20|\Omega(i)|%20+%20\gamma})
 
-
-     src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
 3. Solve the optimization problem for $U$ keeping all the other matrices fixed.
 
-   $$ u_i = $$
+    ![Equation](https://latex.codecogs.com/svg.image?\left(\lambda\sum_{j\in\Omega(i)}v_j&space;v_j^T&plus;\tau&space;I\right)^{-1}\left(\lambda\sum_{j\in\Omega(i)}v_j(r_{ij}-b^{(u)}_i-b^{(v)}_j)\right))
+
 4. Solve the optimization problem for $b^{(v)}$ keeping all the other matrices fixed.
 
-   $$ b^{(v)}_j = $$
+    ![Equation](https://latex.codecogs.com/svg.image?\frac{\lambda\sum_{i\in\Omega(j)}\left(r_{ij}-\left(u_i^T&space;v_j&plus;b_i^{(u)}\right)\right)}{\lambda|\Omega(j)|&plus;\gamma})
+   
 5. Solve the optimization problem for $V$ keeping all the other matrices fixed.
    - When F is modeled:
-      $$ v_j = $$
+   
+      ![Equation](https://latex.codecogs.com/svg.image?\left(\lambda\sum_{i\in\Omega(j)}u_i&space;u_i^T&plus;\tau&space;I\right)^{-1}\left(\lambda\sum_{i\in\Omega(j)}u_i(r_{ij}-b^{(u)}_i-b^{(v)}_j)&plus;\sum_{\substack{t\in\text{features}(j)}}f_t\right))
+   
    - When is not modeled:
-     $$ v_j = $$
+   
+      ![Equation](https://latex.codecogs.com/svg.image?\left(\lambda\sum_{i\in\Omega(j)}u_i^Tu_i&plus;\tau&space;I\right)^{-1}\left(\lambda\sum_{i\in\Omega(j)}u_i(r_{ij}-b^{(u)}_i-b^{(v)}_j)\right))
    
 6. (When F modeled) Solve the optimization problem for $F$ keeping all the other matrices fixed.
-   $$f_{\ell} = \frac{\sum_{n=1}^{N} \frac{N}{n \sqrt{F_{n}}} X_{n} - \left(\sum_{t=1}^{\ell} f_{t}\right) \sum_{n=1}^{N} \frac{1}{F_{n}}}{\sqrt{\sum_{n=1}^{N} \left(1 + \sum_{i=1}^{n} \frac{1}{F_{i}}\right)}}$$
+
+    ![Equation](https://latex.codecogs.com/svg.image?\frac{\sum_{j=1}^{n}\frac{1}{\sqrt{F_j}}V_j-\sum_{j=1}^{n}\frac{1}{F_j}\left(\sum_{\substack{t\in\text{features}(j)\\t\neq&space;l}}f_t\right)}{\sqrt{1&plus;\sum_{j=1}^{n}\frac{1}{F_j}}})
+
 7. Repeat until convergence.
 
 
