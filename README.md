@@ -12,8 +12,8 @@ This project demonstrates the development of a **recommender system** leveraging
   - [Key Features](#key-features)
   - [Algorithms](#algorithms)
     - [Alternating Least Squares (ALS)](#alternating-least-squares-als)
-      - [Workflow:](#workflow)
-      - [Advantages:](#advantages)
+      - [Workflow](#workflow)
+      - [Advantages](#advantages)
   - [Datasets](#datasets)
   - [Installation](#installation)
   - [Usage](#usage)
@@ -75,7 +75,7 @@ Where:
 - $\tau$: Regularization parameters accounting for $U$ and $V$
 - $\gamma$: Regularization parameters accounting for $b^{(u)}$ and $b^{(v)}$
 
-#### Workflow:
+#### Workflow
 
 1. Solve the optimization problem for $b^{(u)}$ keeping all the other matrices (.i.e $U$, $V$, $b^{(v)}$) fixed.
 
@@ -97,7 +97,7 @@ Where:
 6. Repeat until convergence.
 
 
-#### Advantages:
+#### Advantages
 - Scalable to large datasets.
 - Support for parallelization for computation performance.
 - Handles sparsity in user-item interaction matrices effectively.
