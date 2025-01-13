@@ -6,19 +6,25 @@ This project demonstrates the development of a **recommender system** leveraging
 
 ## Table of Contents
 
-1. [Introduction](#introduction)
-2. [Key Features](#key-features)
-3. [Algorithms](#algorithms)
-   - [Alternating Least Squares (ALS)](#alternating-least-squares-als)
-4. [Dataset](#dataset)
-5. [Installation](#installation)
-6. [Usage](#usage)
-7. [Performance](#performance)
-8. [Code Structure](#code-structure)
-9. [Improvements](#improvements)
-10. [Resources](#resources)
-11. [License](#license)
-12. [Feedbacks](#feedbacks)
+- [Recommender System Codebase](#recommender-system-codebase)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [Key Features](#key-features)
+  - [Algorithms](#algorithms)
+    - [Alternating Least Squares (ALS)](#alternating-least-squares-als)
+      - [Workflow:](#workflow)
+      - [Advantages:](#advantages)
+  - [Datasets](#datasets)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [Performance](#performance)
+    - [Results (Example)](#results-example)
+  - [Code Structure](#code-structure)
+  - [Limitations](#limitations)
+  - [Improvements](#improvements)
+  - [Resources](#resources)
+  - [License](#license)
+  - [Feedbacks](#feedbacks)
 
 ---
 
@@ -73,7 +79,7 @@ Where:
 
 1. Solve the optimization problem for $b^{(u)}$ keeping all the other matrices (.i.e $U$, $V$, $b^{(v)}$) fixed.
 
-   $$ b^{(u)}_i = $$
+   $$ b^{(u)}_i = \frac{\lambda \sum_{j \in \Omega(i)} \left( r_{ij} - \left( u_i^T v_j + b_j^{(v)} \right) \right)}{\lambda |\Omega(i)| + \gamma}$$
 2. Solve the optimization problem for $U$ keeping all the other matrices fixed.
 
    $$ u_i = $$
