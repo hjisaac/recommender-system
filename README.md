@@ -83,6 +83,8 @@ Where:
     <script type="text/javascript" async
       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
+
+    ![Equation](https://latex.codecogs.com/png.latex?b^{(u)}_i%20=%20\frac{\lambda%20\sum_{j%20\in%20\Omega(i)}%20\left(%20r_{ij}-%20\left(%20u_i^T%20v_j%20+%20b_j^{(v)}%20\right)%20\right)}{\lambda%20|\Omega(i)|%20+%20\gamma})
 2. Solve the optimization problem for $U$ keeping all the other matrices fixed.
 
    $$ u_i = $$
