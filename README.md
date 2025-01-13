@@ -81,25 +81,29 @@ Where:
 
    $$b^{(u)}_i = \frac{\lambda \sum_{j \in \Omega(i)} \left( r_{ij} - \left( u_i^T v_j + b_j^{(v)} \right) \right)}{\lambda |\Omega(i)| + \gamma}$$
     <script type="text/javascript" async
-      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+      src="[https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML](https://latex.codecogs.com/svg.image?b^{(u)}_i=\frac{\lambda\sum_{j\in\Omega(i)}\left(r_{ij}-\left(u_i^T&space;v_j&plus;b_j^{(v)}\right)\right)}{\lambda|\Omega(i)|&plus;\gamma})">
     </script>
 
     ![Equation](https://latex.codecogs.com/png.latex?b^{(u)}_i%20=%20\frac{\lambda%20\sum_{j%20\in%20\Omega(i)}%20\left(%20r_{ij}-%20\left(%20u_i^T%20v_j%20+%20b_j^{(v)}%20\right)%20\right)}{\lambda%20|\Omega(i)|%20+%20\gamma})
-2. Solve the optimization problem for $U$ keeping all the other matrices fixed.
+    ![Equation]([https://latex.codecogs.com/png.latex?b^{(u)}_i%20=%20\frac{\lambda%20\sum_{j%20\in%20\Omega(i)}%20\left(%20r_{ij}-%20\left(%20u_i^T%20v_j%20+%20b_j^{(v)}%20\right)%20\right)}{\lambda%20|\Omega(i)|%20+%20\gamma}](https://latex.codecogs.com/svg.image?b^{(u)}_i=\frac{\lambda\sum_{j\in\Omega(i)}\left(r_{ij}-\left(u_i^T&space;v_j&plus;b_j^{(v)}\right)\right)}{\lambda|\Omega(i)|&plus;\gamma}))
+
+
+     src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+3. Solve the optimization problem for $U$ keeping all the other matrices fixed.
 
    $$ u_i = $$
-3. Solve the optimization problem for $b^{(v)}$ keeping all the other matrices fixed.
+4. Solve the optimization problem for $b^{(v)}$ keeping all the other matrices fixed.
 
    $$ b^{(v)}_j = $$
-4. Solve the optimization problem for $V$ keeping all the other matrices fixed.
+5. Solve the optimization problem for $V$ keeping all the other matrices fixed.
    - When F is modeled:
       $$ v_j = $$
    - When is not modeled:
      $$ v_j = $$
    
-5. (When F modeled) Solve the optimization problem for $F$ keeping all the other matrices fixed.
+6. (When F modeled) Solve the optimization problem for $F$ keeping all the other matrices fixed.
    $$f_{\ell} = \frac{\sum_{n=1}^{N} \frac{N}{n \sqrt{F_{n}}} X_{n} - \left(\sum_{t=1}^{\ell} f_{t}\right) \sum_{n=1}^{N} \frac{1}{F_{n}}}{\sqrt{\sum_{n=1}^{N} \left(1 + \sum_{i=1}^{n} \frac{1}{F_{i}}\right)}}$$
-6. Repeat until convergence.
+7. Repeat until convergence.
 
 
 #### Advantages
