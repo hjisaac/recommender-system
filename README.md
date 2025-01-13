@@ -186,8 +186,16 @@ Where:
 - $\hat{r}_{ij} = U_i^T V_j + b^{(u)}_i + b^{(v)}_j$: Predicted rating.
 
 ### Results (Example)
-- **Training RMSE**: 0.84
-- **Test RMSE**: 0.88
+#### RMSE
+
+![Alt text](./artifacts/figures/rmse_test_train_20250112-220603_lambda0.5_gamma0.01_tau2_epochs20_factors10_input1000000000_lambda0.svg)
+
+- RMSE Train: 0.7814
+- RMSE Test:  0.7041
+
+#### Loss
+
+
 
 These results demonstrate the model's ability to generalize well to unseen data, confirming its practical applicability.
 
