@@ -127,8 +127,8 @@ The folder `dataset` contains information about examples' dataset.
 ## Installation
 
 <details>
-
 <summary>Click me</summary>
+
 To set up the project:
 
 1. **Clone the repository**:
@@ -155,6 +155,7 @@ To set up the project:
 
 <details> 
 <summary>Click me</summary>
+
 Only collaborative filtering is implemented now, and it is encaspsulated in the class `CollaborativeFilteringRecommenderBuilder`.
 
    ```py
@@ -275,6 +276,7 @@ tests/                # Test suite for validating the functionality of the proje
 
 <details open> 
 <summary>Click me</summary>
+
 Running the MovieLens example (32 million ratings) takes approximately 3 hours on CPU alone.
 
 The early use of `SerialUnidirectionalMapper` and `SerialBidirectionalMapper` data structures 
@@ -288,12 +290,14 @@ need to remove these data structures from the code. There is an issue opened to 
 
 <details open> 
 <summary>Click me</summary>
+
 - **Integration of Additional Algorithms**: Incorporate other collaborative filtering and content-based methods.
 - **Hybrid Recommender Systems**: Combine collaborative and content-based filtering for improved performance.
 - **More Examples**: Implement more examples potentially with different datasets for real-time recommendations.
 - **Numba and Jax**: Currently it is not possible to use numba/jax, cause the code contains a lot of custom objects. Plan a fix.
 - **Issues**: Resolve the remaining issues, including the adding of unit tests.
 - **Comparison**: Compare with existing libraries.
+
 ---
 
 </details>
