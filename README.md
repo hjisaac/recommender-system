@@ -50,6 +50,9 @@ The codebase is crafted with a focus on **modularity** and **reusability**, ensu
 
 ### Alternating Least Squares (ALS)
 
+<details open> 
+<summary>Click me</summary>
+
 **ALS** is a collaborative filtering technique based on **matrix factorization**. It models user and item interactions by discovering latent features that explain observed ratings. The algorithm alternates between optimizing user and item matrices to minimize the regularized objective function:
 
 - Without item features modeled:
@@ -109,6 +112,9 @@ Where:
 - Scalable to large datasets.
 - Support for parallelization for computation performance.
 - Handles sparsity in user-item interaction matrices effectively.
+
+
+</details>
 
 ---
 
@@ -253,14 +259,18 @@ tests/                # Test suite for validating the functionality of the proje
 │   └── test_checkpoints/ # Tests for the checkpoint loading and saving functionality.
 └── utils/            # Tests for utilities used across the codebase.
 
-</details>
 
 ```
+
+</details>
+
 
 ---
 
 ## Limitations 
 
+<details open> 
+<summary>Click me</summary>
 Running the MovieLens example (32 million ratings) takes approximately 3 hours on CPU alone.
 
 The early use of `SerialUnidirectionalMapper` and `SerialBidirectionalMapper` data structures 
@@ -268,8 +278,12 @@ complicates integrating [Numba](https://numba.pydata.org/). These classes lack c
 impossible to leverage **Numba**'s optimization capabilities. To use Numba effectively, we would 
 need to remove these data structures from the code. There is an issue opened to fix that.
 
+</details>
+
 ## Improvements
 
+<details open> 
+<summary>Click me</summary>
 - **Integration of Additional Algorithms**: Incorporate other collaborative filtering and content-based methods.
 - **Hybrid Recommender Systems**: Combine collaborative and content-based filtering for improved performance.
 - **More Examples**: Implement more examples potentially with different datasets for real-time recommendations.
@@ -278,9 +292,16 @@ need to remove these data structures from the code. There is an issue opened to 
 - **Comparison**: Compare with existing libraries.
 ---
 
+</details>
+
 ## Resources
 
+<details open> 
+<summary>Click me</summary>
+
 The `docs` folder contains useful resources (papers, ...)
+
+</details>
 
 ---
 ## License
