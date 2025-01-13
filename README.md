@@ -67,7 +67,7 @@ $$
 Where:
 - $U$: Matrix of user latent factors $n \times k$.
 - $V$: Matrix of item latent factors $m \times k$.
-- $F$: Matrix of feature (when item features are also modeled) 
+- $F$: Matrix of feature (when item features are modeled separately) 
 - $b^{(u)}$: Matrix of the user biases $1 \times k$.
 - $b^{(v)}$: Matrix of the item biases $1 \times k$.
 - $r_{ij}$: Observed rating for user $i$ and item $j$.
@@ -120,6 +120,9 @@ The folder `dataset` contains information about examples' dataset.
 
 ## Installation
 
+<details>
+
+<summary>Click me</summary>
 To set up the project:
 
 1. **Clone the repository**:
@@ -137,7 +140,9 @@ To set up the project:
    To run the movielens example, download the dataset from [here](https://grouplens.org/datasets/movielens/).
    Ideally, put that dataset in the example folder and change the path of rating.csv file passed to the indexer.
    And run `poetry run python examples/path_to_example_file.py`
-   
+
+</details>   
+
 ---  
 
 ## Usage
@@ -210,6 +215,8 @@ These results demonstrate the model's ability to generalize well to unseen data,
 ---
 
 ## Code Structure
+<details>
+<summary>Click me</summary>
 
 ```txt
 artifacts/            # Stores generated artifacts such as model checkpoints, logs, and profiling data.
@@ -246,6 +253,7 @@ tests/                # Test suite for validating the functionality of the proje
 │   └── test_checkpoints/ # Tests for the checkpoint loading and saving functionality.
 └── utils/            # Tests for utilities used across the codebase.
 
+</details>
 
 ```
 
