@@ -79,15 +79,15 @@ Where:
 
 1. Solve the optimization problem for $b^{(u)}$ keeping all the other matrices (.i.e $U$, $V$, $b^{(v)}$) fixed.
 
-    ![Equation]([https://latex.codecogs.com/svg.image?b^{(u)}_i%20=%20\frac{\lambda%20\sum_{j%20\in%20\Omega(i)}%20\left(%20r_{ij}-%20\left(%20u_i^T%20v_j%20+%20b_j^{(v)}%20\right)%20\right)}{\lambda%20|\Omega(i)|%20+%20\gamma}](https://latex.codecogs.com/svg.image?b^{(u)}_i=\frac{\lambda\sum_{j\in\Omega(i)}\left(r_{ij}-\left(u_i^T&space;v_j&plus;b_j^{(v)}\right)\right)}{\lambda|\Omega(i)|&plus;\gamma}))
+    ![Equation](https://latex.codecogs.com/svg.image?b^{(u)}_i=\frac{\lambda\sum_{j\in\Omega(i)}\left(r_{ij}-\left(u_i^T&space;v_j&plus;b_j^{(v)}\right)\right)}{\lambda|\Omega(i)|&plus;\gamma})
 
 2. Solve the optimization problem for $U$ keeping all the other matrices fixed.
 
-    ![Equation](https://latex.codecogs.com/svg.image?u_i\left(\lambda\sum_{j\in\Omega(i)}v_j&space;v_j^T&plus;\tau&space;I\right)^{-1}\left(\lambda\sum_{j\in\Omega(i)}v_j(r_{ij}-b^{(u)}_i-b^{(v)}_j)\right))
+    ![Equation](https://latex.codecogs.com/svg.image?u_i=\left(\lambda\sum_{j\in\Omega(i)}v_j&space;v_j^T&plus;\tau&space;I\right)^{-1}\left(\lambda\sum_{j\in\Omega(i)}v_j(r_{ij}-b^{(u)}_i-b^{(v)}_j)\right))
 
 3. Solve the optimization problem for $b^{(v)}$ keeping all the other matrices fixed.
 
-    ![Equation](https://latex.codecogs.com/svg.image?b^{(v)}_j\frac{\lambda\sum_{i\in\Omega(j)}\left(r_{ij}-\left(u_i^T&space;v_j&plus;b_i^{(u)}\right)\right)}{\lambda|\Omega(j)|&plus;\gamma})
+    ![Equation](https://latex.codecogs.com/svg.image?b^{(v)}_j=\frac{\lambda\sum_{i\in\Omega(j)}\left(r_{ij}-\left(u_i^T&space;v_j&plus;b_i^{(u)}\right)\right)}{\lambda|\Omega(j)|&plus;\gamma})
    
 4. Solve the optimization problem for $V$ keeping all the other matrices fixed.
    - When F is modeled:
