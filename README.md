@@ -6,6 +6,10 @@ This project demonstrates the development of a **recommender system** leveraging
 
 ## Table of Contents
 
+<details>
+<summary><i>collapse</i></summary>
+</details>
+
 - [Recommender System Codebase](#recommender-system-codebase)
   - [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
