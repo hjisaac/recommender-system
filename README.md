@@ -79,28 +79,28 @@ Where:
 
 1. Solve the optimization problem for $b^{(u)}$ keeping all the other matrices (.i.e $U$, $V$, $b^{(v)}$) fixed.
 
-    ![Equation]([https://latex.codecogs.com/png.latex?b^{(u)}_i%20=%20\frac{\lambda%20\sum_{j%20\in%20\Omega(i)}%20\left(%20r_{ij}-%20\left(%20u_i^T%20v_j%20+%20b_j^{(v)}%20\right)%20\right)}{\lambda%20|\Omega(i)|%20+%20\gamma}](https://latex.codecogs.com/svg.image?b^{(u)}_i=\frac{\lambda\sum_{j\in\Omega(i)}\left(r_{ij}-\left(u_i^T&space;v_j&plus;b_j^{(v)}\right)\right)}{\lambda|\Omega(i)|&plus;\gamma}))
+    ![Equation](https://latex.codecogs.com/svg.image?b^{(u)}_i=\frac{\lambda\sum_{j\in\Omega(i)}\left(r_{ij}-\left(u_i^T&space;v_j&plus;b_j^{(v)}\right)\right)}{\lambda|\Omega(i)|&plus;\gamma})
 
 2. Solve the optimization problem for $U$ keeping all the other matrices fixed.
 
-    ![Equation](https://latex.codecogs.com/svg.image?\left(\lambda\sum_{j\in\Omega(i)}v_j&space;v_j^T&plus;\tau&space;I\right)^{-1}\left(\lambda\sum_{j\in\Omega(i)}v_j(r_{ij}-b^{(u)}_i-b^{(v)}_j)\right))
+    ![Equation](https://latex.codecogs.com/svg.image?u_i=\left(\lambda\sum_{j\in\Omega(i)}v_j&space;v_j^T&plus;\tau&space;I\right)^{-1}\left(\lambda\sum_{j\in\Omega(i)}v_j(r_{ij}-b^{(u)}_i-b^{(v)}_j)\right))
 
 3. Solve the optimization problem for $b^{(v)}$ keeping all the other matrices fixed.
 
-    ![Equation](https://latex.codecogs.com/svg.image?\frac{\lambda\sum_{i\in\Omega(j)}\left(r_{ij}-\left(u_i^T&space;v_j&plus;b_i^{(u)}\right)\right)}{\lambda|\Omega(j)|&plus;\gamma})
+    ![Equation](https://latex.codecogs.com/svg.image?b^{(v)}_j=\frac{\lambda\sum_{i\in\Omega(j)}\left(r_{ij}-\left(u_i^T&space;v_j&plus;b_i^{(u)}\right)\right)}{\lambda|\Omega(j)|&plus;\gamma})
    
 4. Solve the optimization problem for $V$ keeping all the other matrices fixed.
    - When F is modeled:
    
-      ![Equation](https://latex.codecogs.com/svg.image?\left(\lambda\sum_{i\in\Omega(j)}u_i&space;u_i^T&plus;\tau&space;I\right)^{-1}\left(\lambda\sum_{i\in\Omega(j)}u_i(r_{ij}-b^{(u)}_i-b^{(v)}_j)&plus;\sum_{\substack{t\in\text{features}(j)}}f_t\right))
+      ![Equation](https://latex.codecogs.com/svg.image?v_j=\left(\lambda\sum_{i\in\Omega(j)}u_i&space;u_i^T&plus;\tau&space;I\right)^{-1}\left(\lambda\sum_{i\in\Omega(j)}u_i(r_{ij}-b^{(u)}_i-b^{(v)}_j)&plus;\sum_{\substack{t\in\text{features}(j)}}f_t\right))
    
    - When is not modeled:
    
-      ![Equation](https://latex.codecogs.com/svg.image?\left(\lambda\sum_{i\in\Omega(j)}u_i^Tu_i&plus;\tau&space;I\right)^{-1}\left(\lambda\sum_{i\in\Omega(j)}u_i(r_{ij}-b^{(u)}_i-b^{(v)}_j)\right))
+      ![Equation](https://latex.codecogs.com/svg.image?v_j=\left(\lambda\sum_{i\in\Omega(j)}u_i^Tu_i&plus;\tau&space;I\right)^{-1}\left(\lambda\sum_{i\in\Omega(j)}u_i(r_{ij}-b^{(u)}_i-b^{(v)}_j)\right))
    
 5. (When F modeled) Solve the optimization problem for $F$ keeping all the other matrices fixed.
 
-    ![Equation](https://latex.codecogs.com/svg.image?\frac{\sum_{j=1}^{n}\frac{1}{\sqrt{F_j}}V_j-\sum_{j=1}^{n}\frac{1}{F_j}\left(\sum_{\substack{t\in\text{features}(j)\\t\neq&space;l}}f_t\right)}{\sqrt{1&plus;\sum_{j=1}^{n}\frac{1}{F_j}}})
+    ![Equation](https://latex.codecogs.com/svg.image?f_l=\left(\lambda\sum_{i\in\Omega(j)}u_i&space;u_i^T&plus;\tau&space;I\right)^{-1}\left(\lambda\sum_{i\in\Omega(j)}u_i(r_{ij}-b^{(u)}_i-b^{(v)}_j)&plus;\sum_{\substack{t\in\text{features}(j)}}f_t\right))
 
 6. Repeat until convergence.
 
@@ -186,8 +186,24 @@ Where:
 - $\hat{r}_{ij} = U_i^T V_j + b^{(u)}_i + b^{(v)}_j$: Predicted rating.
 
 ### Results (Example)
-- **Training RMSE**: 0.84
-- **Test RMSE**: 0.88
+
+Here we will present the performance of the model **20250112-211340_lambda0.5_gamma0.01_tau2_n_epochs20_n_factors10**. 
+
+
+#### RMSE
+
+![RMSE test train image](./artifacts/figures/rmse_test_train_20250112-220603_lambda0.5_gamma0.01_tau2_epochs20_factors10_input1000000000_lambda0.svg)
+
+- RMSE Train: 0.7814
+- RMSE Test:  0.7041
+
+#### Loss
+
+![RMSE test train image](./artifacts/figures/loss_test_train.svg)
+
+#### Latent space
+
+
 
 These results demonstrate the model's ability to generalize well to unseen data, confirming its practical applicability.
 
