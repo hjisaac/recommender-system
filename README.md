@@ -79,7 +79,7 @@ Where:
 
 1. Solve the optimization problem for $b^{(u)}$ keeping all the other matrices (.i.e $U$, $V$, $b^{(v)}$) fixed.
 
-   $$ b^{(u)}_i = \frac{\lambda \sum_{j \in \Omega(i)} \left( r_{ij} - \left( u_i^T v_j + b_j^{(v)} \right) \right)}{\lambda |\Omega(i)| + \gamma}$$
+   $$b^{(u)}_i = \frac{\lambda \sum_{j \in \Omega(i)} \left( r_{ij} - \left( u_i^T v_j + b_j^{(v)} \right) \right)}{\lambda |\Omega(i)| + \gamma}$$
 2. Solve the optimization problem for $U$ keeping all the other matrices fixed.
 
    $$ u_i = $$
