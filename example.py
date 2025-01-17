@@ -132,8 +132,8 @@ als_backend = Backend(
     item_database=item_database,
     # Whether we should resume by using the last state of
     # the algorithm the checkpoint manager folder or not.
-    resume=False,
-    save_checkpoint=True,
+    resume=True,
+    save_checkpoint=False,
 )
 
 
@@ -187,7 +187,7 @@ recommender.recommend(prediction_input)
 
 
 #
-recommender.recommend()
+# recommender.recommend()
 
 
 # In[ ]:
