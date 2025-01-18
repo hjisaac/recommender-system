@@ -940,7 +940,7 @@ class AlternatingLeastSquares(Algorithm):
         logger.info(
             f"Successfully run {self.__class__.__name__} algorithm running till the end"
         )
-        logger.debug(
+        logger.info(
             f"Cleaning the {self.__class__.__name__} algorithm self maintained cache, and exiting..."
         )
 

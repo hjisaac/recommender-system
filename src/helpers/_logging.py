@@ -8,7 +8,7 @@ from src.settings import settings, ROOT_DIR
 logger = logging.getLogger()
 
 # Set the logging level
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 # Create a formatter
 formatter = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s")
