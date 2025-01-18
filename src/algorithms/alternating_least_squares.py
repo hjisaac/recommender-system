@@ -308,7 +308,7 @@ class AlternatingLeastSquares(Algorithm):
         This is not exposed to client code to ensure encapsulation.
         """
         if (
-            not (feature_factor := getattr(state, "feature_factors", None))
+            (feature_factor := getattr(state, "feature_factors", None)) is None
             and self._include_features
         ):
             logger.error(
@@ -554,10 +554,7 @@ class AlternatingLeastSquares(Algorithm):
 
         # Adding of the feature factor related term it should be done
         if target == LearningTargetEnum.ITEM and self._include_features:
-            try:
-                _B += self._get_accumulated_scaled_feature_factor(target_id)
-            except TypeError:
-                pass
+            _B += self._get_accumulated_scaled_feature_factor(target_id)
         factor = np.linalg.solve(
             self.hyper_lambda * _A + self.hyper_tau * np.eye(self.hyper_n_factors),
             self.hyper_lambda * _B,
