@@ -144,7 +144,7 @@ recommender = get_recommender(indexed_data, item_database)
 
 # Function to fetch movie details from TMDB
 def fetch_movie_from_server(movie_tmdb_id):
-    api_key = "63278f37c689ce940e6ded2618abeffe"
+    api_key = None
     url = f"https://api.themoviedb.org/3/movie/{movie_tmdb_id}?api_key={api_key}"
     try:
         response = requests.get(url)
