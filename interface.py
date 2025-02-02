@@ -97,7 +97,7 @@ def index_data():
             rating_header=RATING_HEADER,
             limit=1_000_000,
         )
-        indexed_data = dataset_indexer.index_simple(
+        indexed_data = dataset_indexer.index_simple( # noqa
             approximate_train_ratio=settings.general.APPROXIMATE_TRAIN_RATIO
         )
         save_pickle(indexed_data, "indexed_data.pkl")
