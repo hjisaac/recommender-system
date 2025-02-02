@@ -121,7 +121,6 @@ class AlternatingLeastSquaresState(AlgorithmState):
             """
 
             user_ratings_data = validate_ratings_data(user_ratings_data)
-
             if not user_ratings_data:
                 # Return the averaged rating prediction for all the items
                 return np.mean(
@@ -149,11 +148,11 @@ class AlternatingLeastSquaresState(AlgorithmState):
         def render(predictions: np.ndarray):
 
             return [
-                item_database[als.id_to_item_bmap[item_id]]
+                {"item_id": item_id, **item_database[als.id_to_item_bmap[item_id]]}
                 # The minus in front of the prediction (ndarray) makes `np.argsort`
                 # to do the arg-sorting in descending order. The hardcoded `10` should
                 # be a parameter provided through the recommender object.
-                for item_id in np.argsort(-predictions)[:10]
+                for item_id in np.argsort(-predictions)[:20]
             ]
 
         return Predictor(predict_func=predict, render_func=render)
@@ -308,9 +307,8 @@ class AlternatingLeastSquares(Algorithm):
         This is not exposed to client code to ensure encapsulation.
         """
         if (
-            (feature_factor := getattr(state, "feature_factors", None)) is None
-            and self._include_features
-        ):
+            feature_factor := getattr(state, "feature_factors", None)
+        ) is None and self._include_features:
             logger.error(
                 "State that is being loaded does not have `feature_factors`, so cannot run {self.__class__.__name__} "
                 "algorithm with feature included, exiting..."
@@ -607,8 +605,8 @@ class AlternatingLeastSquares(Algorithm):
         global _als_cache
 
         if (
-            (item_features_counts := _als_cache.get(_CACHE_KEY_ITEM_FEATURES_COUNTS)) is None
-        ):
+            item_features_counts := _als_cache.get(_CACHE_KEY_ITEM_FEATURES_COUNTS)
+        ) is None:
             logger.error(
                 _als_cache_key_error_message.format(
                     key=_CACHE_KEY_ITEM_FEATURES_COUNTS, keys=list(_als_cache.keys())
@@ -689,8 +687,8 @@ class AlternatingLeastSquares(Algorithm):
         global _als_cache
 
         if (
-            (item_features_counts := _als_cache.get(_CACHE_KEY_ITEM_FEATURES_COUNTS)) is None
-        ):
+            item_features_counts := _als_cache.get(_CACHE_KEY_ITEM_FEATURES_COUNTS)
+        ) is None:
             logger.error(
                 _als_cache_key_error_message.format(
                     key=_CACHE_KEY_ITEM_FEATURES_COUNTS, keys=list(_als_cache.keys())

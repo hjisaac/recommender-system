@@ -11,6 +11,7 @@ from src.backends import Backend
 from src.helpers._logging import logger  # noqa
 from src.settings import settings
 from src.utils import vocabulary_based_one_hot_encode
+
 USER_HEADER = "userId"
 ITEM_HEADER = "movieId"
 RATING_HEADER = "rating"
@@ -39,8 +40,8 @@ ITEM_FEATURE_LIST = [
     "Western",
 ]
 
-#%%
-CSV_FILES_DIR = "../../ml-32m/" # The dataset subfolder
+# %%
+CSV_FILES_DIR = "../../ml-32m/"  # The dataset subfolder
 
 # Import the movies csv file joined with the movie links csv file and that will act
 # as our movie database. The backend needs this database to query the movies.
@@ -52,9 +53,7 @@ item_database = (
         how="left",
     )
     .assign(
-        genres=lambda df: df[FEATURE_TO_ENCODE].apply(
-            lambda genres: genres.split("|")
-        ),
+        genres=lambda df: df[FEATURE_TO_ENCODE].apply(lambda genres: genres.split("|")),
         features_hot_encoded=lambda df: df[FEATURE_TO_ENCODE].apply(
             lambda g: vocabulary_based_one_hot_encode(
                 words=g, vocabulary=ITEM_FEATURE_LIST
@@ -65,7 +64,7 @@ item_database = (
     .set_index(ITEM_HEADER)  # Set the movieId as the index
     .to_dict(orient="index")  # Convert the DataFrame to a dictionary
 )
-#%%
+# %%
 dataset_indexer = DatasetIndexer(
     # Path to the ratings.csv file
     file_path=f"{CSV_FILES_DIR}/ratings.csv",
@@ -73,14 +72,13 @@ dataset_indexer = DatasetIndexer(
     item_header=ITEM_HEADER,
     rating_header=RATING_HEADER,
     limit=1_000_000,
-
     # limit=settings.general.LINES_COUNT_TO_READ,
 )
 
 indexed_data = dataset_indexer.index_simple(
     approximate_train_ratio=settings.general.APPROXIMATE_TRAIN_RATIO
 )
-#%%
+# %%
 
 als_instance = AlternatingLeastSquares(
     hyper_lambda=settings.als.HYPER_LAMBDA,
@@ -115,6 +113,8 @@ recommender = recommender_builder.build(
     data=indexed_data,
     item_database=item_database,
     # Whether to include feature functionality or not
-    include_features=True
+    include_features=True,
 )
-#%%
+# %%
+
+print("Getting the cache of reloading everything ?")

@@ -16,13 +16,13 @@ from src.recommenders import CollaborativeFilteringRecommenderBuilder
 from src.backends import Backend
 from src.helpers._logging import logger  # noqa
 from src.settings import settings
-from src.utils import vocabulary_based_one_hot_encode
+from src.utils import vocabulary_based_one_hot_encode, save_pickle, load_pickle
 
 USER_HEADER = "userId"
 ITEM_HEADER = "movieId"
 RATING_HEADER = "rating"
 FEATURE_TO_ENCODE = "genres"
-CSV_FILES_DIR = "../../ml-32m/" # The dataset subfolder
+CSV_FILES_DIR = "ml-32m/"  # The dataset subfolder
 
 
 # https://files.grouplens.org/datasets/movielens/ml-32m-README.html
@@ -48,87 +48,127 @@ ITEM_FEATURE_LIST = [
     "Western",
 ]
 
-item_database = (
-    pd.read_csv(f"{CSV_FILES_DIR}/movies.csv", dtype={ITEM_HEADER: str})
-    .merge(
-        pd.read_csv(f"{CSV_FILES_DIR}/links.csv", dtype={ITEM_HEADER: str}),
-        on=ITEM_HEADER,
-        how="left",
+
+@st.cache_resource
+def load_item_database():
+    print("Calling load_item_database")
+    item_database = (
+        pd.read_csv(f"{CSV_FILES_DIR}/movies.csv", dtype={ITEM_HEADER: str})
+        .merge(
+            pd.read_csv(f"{CSV_FILES_DIR}/links.csv", dtype={ITEM_HEADER: str}),
+            on=ITEM_HEADER,
+            how="left",
+        )
+        .assign(
+            genres=lambda df: df[FEATURE_TO_ENCODE].apply(
+                lambda genres: genres.split("|")
+            ),
+            features_hot_encoded=lambda df: df[FEATURE_TO_ENCODE].apply(
+                lambda g: vocabulary_based_one_hot_encode(
+                    words=g, vocabulary=ITEM_FEATURE_LIST
+                )
+            ),
+            features_count=lambda df: df["features_hot_encoded"].apply(
+                lambda x: sum(x)
+            ),
+        )
+        .set_index(ITEM_HEADER)  # Set the movieId as the index
+        .to_dict(orient="index")  # Convert the DataFrame to a dictionary
     )
-    .assign(
-        genres=lambda df: df[FEATURE_TO_ENCODE].apply(
-            lambda genres: genres.split("|")
-        ),
-        features_hot_encoded=lambda df: df[FEATURE_TO_ENCODE].apply(
-            lambda g: vocabulary_based_one_hot_encode(
-                words=g, vocabulary=ITEM_FEATURE_LIST
-            )
-        ),
-        features_count=lambda df: df["features_hot_encoded"].apply(lambda x: sum(x)),
-    )
-    .set_index(ITEM_HEADER)  # Set the movieId as the index
-    .to_dict(orient="index")  # Convert the DataFrame to a dictionary
-)
+
+    return item_database
 
 
-dataset_indexer = DatasetIndexer(
-    # Path to the ratings.csv file
-    file_path=f"{CSV_FILES_DIR}/ratings.csv",
-    user_header=USER_HEADER,
-    item_header=ITEM_HEADER,
-    rating_header=RATING_HEADER,
-    limit=1_000_000,
-
-    # limit=settings.general.LINES_COUNT_TO_READ,
-)
-
-indexed_data = dataset_indexer.index_simple(
-    approximate_train_ratio=settings.general.APPROXIMATE_TRAIN_RATIO
-)
-#%%
-
-als_instance = AlternatingLeastSquares(
-    hyper_lambda=settings.als.HYPER_LAMBDA,
-    hyper_gamma=settings.als.HYPER_GAMMA,
-    hyper_tau=settings.als.HYPER_TAU,
-    hyper_n_epochs=settings.als.HYPER_N_EPOCH,
-    hyper_n_factors=settings.als.HYPER_N_FACTOR,
-)
-
-als_backend = Backend(
-    # Define the algorithm
-    algorithm=als_instance,
-    checkpoint_manager=CheckpointManager(
-        checkpoint_folder=settings.als.CHECKPOINT_FOLDER,
-        sub_folder=str(settings.general.LINES_COUNT_TO_READ),
-    ),
-    # The predictor needs this to render the name of the items
-    item_database=item_database,
-    # Whether we should resume by using the last state of
-    # the algorithm the checkpoint manager folder or not.
-    resume=True,
-    save_checkpoint=False,
-)
+item_database = load_item_database()
 
 
-recommender_builder = CollaborativeFilteringRecommenderBuilder(
-    backend=als_backend,
-)
+@st.cache_resource
+def index_data():
+    print("Calling index_data")
+    try:
+        print("unpickling")
+        return load_pickle("indexed_data.pkl")
+    except Exception as e:
+        print("Pickling")
+        logger.error(e)
+        dataset_indexer = DatasetIndexer(
+            # Path to the ratings.csv file
+            file_path=f"{CSV_FILES_DIR}/ratings.csv",
+            user_header=USER_HEADER,
+            item_header=ITEM_HEADER,
+            rating_header=RATING_HEADER,
+            limit=1_000_000,
+            # limit=settings.general.LINES_COUNT_TO_READ,
+        )
+
+        indexed_data = dataset_indexer.index_simple(  # noqa
+            approximate_train_ratio=settings.general.APPROXIMATE_TRAIN_RATIO
+        )
+
+        save_pickle(indexed_data, "indexed_data.pkl.backup")
+
+        return indexed_data
 
 
-recommender = recommender_builder.build(
-    data=indexed_data,
-    item_database=item_database,
-    # Whether to include feature functionality or not
-    include_features=True
-)
+indexed_data = index_data()
+# %%
 
 
-#%%
+def hash_recommender(val):
+    """It is okaè"""
+    return "_recommender"
+
+
+@st.cache_resource
+def get_recommender(_indexed_data, item_database):  # noqa
+    try:
+        return load_pickle("./recommender.pkl")
+    except Exception as e:
+        logger.error(e)
+        als_instance = AlternatingLeastSquares(
+            hyper_lambda=settings.als.HYPER_LAMBDA,
+            hyper_gamma=settings.als.HYPER_GAMMA,
+            hyper_tau=settings.als.HYPER_TAU,
+            hyper_n_epochs=settings.als.HYPER_N_EPOCH,
+            hyper_n_factors=settings.als.HYPER_N_FACTOR,
+        )
+
+        als_backend = Backend(
+            # Define the algorithm
+            algorithm=als_instance,
+            checkpoint_manager=CheckpointManager(
+                checkpoint_folder=settings.als.CHECKPOINT_FOLDER,
+                sub_folder=str(settings.general.LINES_COUNT_TO_READ),
+            ),
+            # The predictor needs this to render the name of the items
+            item_database=item_database,
+            # Whether we should resume by using the last state of
+            # the algorithm the checkpoint manager folder or not.
+            resume=True,
+            save_checkpoint=False,
+        )
+
+        recommender_builder = CollaborativeFilteringRecommenderBuilder(
+            backend=als_backend,
+        )
+
+        recommender = recommender_builder.build(  # noqa
+            data=_indexed_data,
+            item_database=item_database,
+            # Whether to include feature functionality or not
+            include_features=True,
+        )
+        save_pickle(recommender, "./recommender.pkl")
+
+        return recommender
+
+
+recommender = get_recommender(indexed_data, item_database)
+# %%
 
 
 BASE_URL = "https://image.tmdb.org/t/p/w500"
-MOVIES_COUNT = len(indexed_data.id_to_item_bmap)
+TOTAL_MOVIES_COUNT = len(indexed_data.id_to_item_bmap)
 COLUMNS_PER_ROW = 4
 
 
@@ -150,7 +190,8 @@ def get_movie_poster_url(movie_tmdb_id):
         data = fetch_movie_from_server(movie_tmdb_id)
         return f"{BASE_URL}{data['poster_path']}"
     except Exception as e:
-        logger.error(e)
+        pass
+        # logger.error(e)
 
 
 # Sample movie data
@@ -167,20 +208,27 @@ def filter_movies(movies, search_term, genres):
         movie
         for movie in movies
         if search_term.lower() in movie["title"].lower()
-           and (not genres or any(g.strip() in movie["genres"] for g in genres))
+        and (not genres or any(g.strip() in movie["genres"] for g in genres))
     ]
 
 
 # Function to render the movie grid
-def render_movie_grid():
-    rows_count = math.ceil(MOVIES_COUNT / COLUMNS_PER_ROW)
+def render_movie_grid(to_show=None):
+    movies_limit = len(to_show) if to_show else TOTAL_MOVIES_COUNT
+    rows_count = math.ceil(movies_limit / COLUMNS_PER_ROW)
 
     for row in range(rows_count):
         cols = st.columns(COLUMNS_PER_ROW)
         for i, col in enumerate(cols):
+            print("i, col =>", i, col)
             movie_id = row * COLUMNS_PER_ROW + i
-            if movie_id < MOVIES_COUNT:
-                movie = indexed_data.id_to_item_bmap[movie_id]  # noqa
+            if to_show:
+                # This movie_id here represents the index of the movie_id in the
+                # to_show array, so we need to access the real id of the movie first
+                movie_id = to_show[movie_id]
+            # TODO: BUG TO FIX
+            if movie_id < movies_limit:
+                movie = indexed_data.id_to_item_bmap[movie_id]
                 movie_data = item_database[movie]  # noqa
                 with col:
                     st.markdown(
@@ -197,6 +245,8 @@ def render_movie_grid():
                         """,
                         unsafe_allow_html=True,
                     )
+            else:
+                print("Skipping to recommend movie => ", movie)
 
 
 # Function to render movie details and rating form
@@ -205,7 +255,7 @@ def render_movie_details(movie_id):
 
     # Create two columns for side-by-side layout
     col1, col2 = st.columns([1, 2])  # Adjust the ratio as needed
-
+    can_recommend = False
     with col1:
 
         with contextlib.suppress(Exception):
@@ -216,27 +266,34 @@ def render_movie_details(movie_id):
         # Movie title and description
         st.subheader(movie_data["title"])
         st.write(f"**Genres:** {' '.join(movie_data['genres'])}")
-        st.write(f"**Description:** {remove_data['overview']}")  # Assuming you have a 'description' field in your movie_data
+        st.write(
+            f"**Description:** {remove_data['overview']}"
+        )  # Assuming you have a 'description' field in your movie_data
 
         # Rating form
-        new_rating = st.number_input("Rate this movie:", min_value=0.0, max_value=5.0, value=5.0, step=0.5)
+        new_rating = st.number_input(
+            "Rate this movie:", min_value=0.0, max_value=5.0, value=5.0, step=0.5
+        )
         if st.button("Go Back to Movie List"):
             st.query_params.clear()
 
         if st.button("Submit Rating"):
-            # Update the movie rating
-            logger.info(f"Attempt to compute recommendation using [({movie_id}, {new_rating})]")
+            can_recommend = True
 
-            # Call the recommend function
-            recommendations = recommend(movie_data, new_rating)
+    if can_recommend:
+        # Update the movie rating
+        recommender_input = [(movie_id, new_rating)]
+        logger.info(
+            f"Attempt to compute recommendation using [({movie_id}, {new_rating})]"
+        )
 
-            # Display recommendations
-            st.subheader("Based on your rating, here are some recommendations:")
-            render_movie_grid()
-
-def recommend(movie, rating):
-    # This is a placeholder function. Implement your actual recommendation logic here.
-    return ["3", "4", "5"]
+        # Call the recommen method
+        recommendations = recommender.recommend(recommender_input)
+        print("recommendations => ", recommendations)
+        # Display recommendations
+        st.subheader("Based on your rating, here are some recommendations:")
+        render_movie_grid([r["item_id"] for r in recommendations])
+        can_recommend = False
 
 
 # Streamlit Interface
@@ -257,14 +314,19 @@ else:
     search_term = st.text_input("Search movies...")
     genres = st.multiselect(
         "Filter by genres",
-        options=list(set(g.strip() for movie in movies_sample for g in movie["genres"].split(","))),
+        options=list(
+            set(
+                g.strip() for movie in movies_sample for g in movie["genres"].split(",")
+            )
+        ),
     )
 
     # Filter movies based on input
     filtered_movies = filter_movies(movies_sample, search_term, genres)
 
     # Add custom CSS for the zoom effect
-    st.markdown("""
+    st.markdown(
+        """
         <style>
             .zoom:hover {
                 transform: scale(1.2);
@@ -275,7 +337,9 @@ else:
                 padding: 10px;
             }
         </style>
-        """, unsafe_allow_html=True)
+        """,
+        unsafe_allow_html=True,
+    )
 
     # Show filtered movies or a "no results" message
     if not filtered_movies:

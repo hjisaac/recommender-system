@@ -245,4 +245,3 @@ def plot_error_evolution(
 
     # Display the plot
     plt.show()
-

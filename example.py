@@ -82,9 +82,7 @@ item_database = (
         how="left",
     )
     .assign(
-        genres=lambda df: df[FEATURE_TO_ENCODE].apply(
-            lambda genres: genres.split("|")
-        ),
+        genres=lambda df: df[FEATURE_TO_ENCODE].apply(lambda genres: genres.split("|")),
         features_hot_encoded=lambda df: df[FEATURE_TO_ENCODE].apply(
             lambda g: vocabulary_based_one_hot_encode(
                 words=g, vocabulary=ITEM_FEATURE_LIST
@@ -152,9 +150,6 @@ recommender = recommender_builder.build(
 # In[ ]:
 
 
-
-
-
 # In[9]:
 
 
@@ -171,7 +166,7 @@ recommender = recommender_builder.build(
 
 
 #
-prediction_input = [("17", 5)] # Sense and Sensibility (1995)
+prediction_input = [("17", 5)]  # Sense and Sensibility (1995)
 predictions = recommender.recommend(prediction_input)
 logger.info(
     f'Prediction for Sense and Sensibility (1995) (id=17) is {[p["title"] + ": " + "|".join(p["genres"])  for p in predictions]}'
@@ -206,5 +201,4 @@ logger.info(
 # recommender.recommend()
 
 
-
-#%%
+# %%
