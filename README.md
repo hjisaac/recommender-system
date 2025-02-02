@@ -56,13 +56,6 @@ The codebase is crafted with a focus on **modularity** and **reusability** and *
 
 ### Alternating Least Squares (ALS)
 
-$$
-\min_{U, V} \lambda \sum_{(i,j) \in \mathcal{R}} (r_{ij} - (U_i^T V_j + b^{(u)}_i + b^{(v)}_j))^2 + \tau (\|U\|^2 + \|V\|^2) + \gamma (\|b^{(u)}\|^2 + \|b^{(v)}\|^2)
-$$
-
-<details> 
-<summary><i>collapse</i></summary>
-
 **ALS** is a collaborative filtering technique based on **matrix factorization**. It models user and item interactions by discovering latent features that explain observed ratings. The algorithm alternates between optimizing user and item matrices to minimize the regularized objective function:
 
 - Without item features modeled:
@@ -89,6 +82,9 @@ Where:
 - $\gamma$: Regularization parameters accounting for $b^{(u)}$ and $b^{(v)}$
 
 #### Workflow
+
+<details>
+<summary><i>collapse</i></summary>
 
 1. Solve the optimization problem for $b^{(u)}$ keeping all the other matrices (.i.e $U$, $V$, $b^{(v)}$) fixed.
 
@@ -122,10 +118,7 @@ Where:
 - Scalable to large datasets.
 - Support for parallelization for computation performance.
 - Handles sparsity in user-item interaction matrices effectively.
-
-
 </details>
-
 ---
 
 ## Datasets
