@@ -119,6 +119,7 @@ Where:
 - Support for parallelization for computation performance.
 - Handles sparsity in user-item interaction matrices effectively.
 </details>
+
 ---
 
 ## Datasets
@@ -148,7 +149,7 @@ To set up the project:
 3. **Run an example**:
    To run the movielens example, download the dataset from [here](https://grouplens.org/datasets/movielens/).
    Ideally, put that dataset in the example folder and change the path of rating.csv file passed to the indexer.
-   And run `poetry run python examples/path_to_example_file.py`
+   And run `poetry run python examples/path_to_example_file.py` or run the related notebook.
 
 </details>   
 
@@ -202,9 +203,14 @@ $$
 
 Where:
 - $r_{ij}$: Actual rating.
+  
 - $\hat{r}_{ij} = U_i^T V_j + b^{(u)}_i + b^{(v)}_j$: Predicted rating.
 
 ### Parameters tuning
+
+
+
+### Results (Example)
 
 | Sample size | $\beta$   | $\lambda$ | $\gamma$ | $\tau$ | $k$  | Epochs | RMSE Train   | RMSE Test    | Loss Train       | Loss Test        | Recommendation                                      |
 |-------------|-----------|-----------|----------|--------|------|--------|--------------|--------------|------------------|------------------|-----------------------------------------------------|
@@ -220,23 +226,24 @@ Where:
 | 32,000,204  | 10        | 0.5       | 0.01     | 0.5    | 10   | 20     | 0.6975553770 | 0.7890316677 | -3210830.2328    | -1092998.8915    | Can capture some same genre movies                  |
 | 32,000,204  | 0.1       | 0.5       | 0.01     | 2      | 10   | 20     | 0.7040819727 | 0.781400124  | -3332430.7169    | -1137663.3828    | Can capture some same genre movies                  |
 | 32,000,204  | 10        | 0.1       | 0.1      | 0.1    | 30   | 20     | 0.5656629475 | 0.8762468276 | -586130.365640   | -422391.191275   | Can capture same movies saisons and genres          |
-| 32,000,204  | 1000      | 0.1       | 0.1      | 0.1    | 30   | 20     | 0.6007653637 | 0.839526128  | -622068.9192116  | -385560.61266044 | Can capture same movies saisons and genres |	
-
-### Results (Example)
-
-Here we will present the performance of the model **20250112-211340_lambda0.5_gamma0.01_tau2_n_epochs20_n_factors10**. 
+| 32,000,204  | 1000      | 0.1       | 0.1      | 0.1    | 30   | 20     | 0.6007653637 | 0.839526128  | -622068.9192116  | -385560.61266044 | Can capture same movies saisons and genres          |	
 
 
-#### RMSE
+Here are the RMSE and Loss curves of the model **20250112-211340_lambda0.5_gamma0.01_tau2_n_epochs20_n_factors10**. 
+
+#### RMSE Curve
 
 ![RMSE test train image](./artifacts/figures/rmse_test_train_20250112-220603_lambda0.5_gamma0.01_tau2_epochs20_factors10_input1000000000_lambda0.svg)
 
 - RMSE Train: 0.7814
 - RMSE Test:  0.7041
 
-#### Loss
+#### Loss Curve
 
 ![RMSE test train image](./artifacts/figures/loss_test_train.svg)
+
+
+
 
 ### Recommendation
 
