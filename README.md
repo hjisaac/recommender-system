@@ -44,7 +44,6 @@ The codebase is crafted with a focus on **modularity** and **reusability** and *
 
 ## Key Features
 
-- **State-of-the-Art Algorithm**: Implements the ALS matrix factorization algorithm
 - **Scalable Design**: Handles datasets with millions of user-item interactions, ensuring practical usability.
 - **Performance Validation**: Extensively tested on the **MovieLens dataset**, achieving excellent prediction accuracy.
 - **Extensibility**: The modular architecture supports easy integration of additional algorithms or datasets.
