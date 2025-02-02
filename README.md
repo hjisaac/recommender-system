@@ -2,7 +2,7 @@ This project demonstrates the development of a **recommender system** leveraging
 
 ---
 
-# Recommender System Codebase
+# Recommender System
 
 ## Table of Contents
 
@@ -207,6 +207,8 @@ Where:
 - $\hat{r}_{ij} = U_i^T V_j + b^{(u)}_i + b^{(v)}_j$: Predicted rating.
 
 ### Results (Example)
+
+This table shows the tried parameters and the related results.
 
 | Sample size | $\beta$   | $\lambda$ | $\gamma$ | $\tau$ | $k$  | Epochs | RMSE Train   | RMSE Test    | Loss Train       | Loss Test        | Recommendation                                      |
 |-------------|-----------|-----------|----------|--------|------|--------|--------------|--------------|------------------|------------------|-----------------------------------------------------|
