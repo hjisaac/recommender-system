@@ -311,7 +311,7 @@ tests/                # Test suite for validating the functionality of the proje
 
 ## Limitations 
 
-<details open> 
+<details> 
 <summary><i>collapse</i></summary>
 
 Running the MovieLens example (32 million ratings) takes approximately 3 hours on CPU alone.
@@ -325,7 +325,7 @@ need to remove these data structures from the code. There is an issue opened to 
 
 ## Improvements
 
-<details open> 
+<details> 
 <summary><i>collapse</i></summary>
 
 - **Integration of Additional Algorithms**: Incorporate other collaborative filtering and content-based methods.
