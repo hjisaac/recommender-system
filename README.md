@@ -207,6 +207,8 @@ Where:
 
 ### Results (Example)
 
+This table shows the tried parameters and the related results.
+
 | Sample size | $\beta$   | $\lambda$ | $\gamma$ | $\tau$ | $k$  | Epochs | RMSE Train   | RMSE Test    | Loss Train       | Loss Test        | Recommendation                                      |
 |-------------|-----------|-----------|----------|--------|------|--------|--------------|--------------|------------------|------------------|-----------------------------------------------------|
 | 1,000,000   | None      | 5         | 0.2      | 0.5    | 10   | 10     | 0.6398357382 | 0.9573722035 | -859437.8237     | -497705.9132     | Not good                                            |
