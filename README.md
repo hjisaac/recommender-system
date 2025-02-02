@@ -1,4 +1,4 @@
-This project demonstrates the development of a **recommender system** leveraging **matrix factorization** techniques. The **Alternating Least Squares (ALS)** algorithm is at the core of this system, enabling precise user-item rating predictions. It has been validated using the **MovieLens dataset**, showcasing good performance and adaptability to real-world scenarios.
+This project demonstrates the development of a **recommender system** leveraging **matrix factorization** techniques at first glance. The **Alternating Least Squares (ALS)** algorithm has been implemented, enabling user-item rating predictions. It has been validated using the **MovieLens dataset**, showcasing good performance and adaptability to real-world scenarios.
 
 ---
 
@@ -55,6 +55,10 @@ The codebase is crafted with a focus on **modularity** and **reusability** and *
 
 
 ### Alternating Least Squares (ALS)
+
+$$
+\min_{U, V} \lambda \sum_{(i,j) \in \mathcal{R}} (r_{ij} - (U_i^T V_j + b^{(u)}_i + b^{(v)}_j))^2 + \tau (\|U\|^2 + \|V\|^2) + \gamma (\|b^{(u)}\|^2 + \|b^{(v)}\|^2)
+$$
 
 <details> 
 <summary><i>collapse</i></summary>
