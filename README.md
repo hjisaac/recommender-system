@@ -114,6 +114,7 @@ Where:
 
 
 #### Advantages
+
 - Scalable to large datasets.
 - Support for parallelization for computation performance.
 - Handles sparsity in user-item interaction matrices effectively.
