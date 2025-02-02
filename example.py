@@ -13,7 +13,7 @@ from src.recommenders import CollaborativeFilteringRecommenderBuilder
 from src.backends import Backend
 from src.helpers._logging import logger  # noqa
 from src.settings import settings
-from src.utils import vocabulary_based_one_hot_encode, load_pickle, save_pickle
+from src.utils import vocabulary_based_one_hot_encode
 
 from src.helpers.graphing import (
     plot_als_train_test_loss_evolution,
@@ -25,7 +25,6 @@ from src.helpers.graphing import (
 
 
 # In[2]:
-
 
 USER_HEADER = "userId"
 ITEM_HEADER = "movieId"
@@ -83,9 +82,7 @@ item_database = (
         how="left",
     )
     .assign(
-        genres=lambda df: df[FEATURE_TO_ENCODE].apply(
-            lambda genres: genres.split("|")
-        ),
+        genres=lambda df: df[FEATURE_TO_ENCODE].apply(lambda genres: genres.split("|")),
         features_hot_encoded=lambda df: df[FEATURE_TO_ENCODE].apply(
             lambda g: vocabulary_based_one_hot_encode(
                 words=g, vocabulary=ITEM_FEATURE_LIST
@@ -153,9 +150,6 @@ recommender = recommender_builder.build(
 # In[ ]:
 
 
-
-
-
 # In[9]:
 
 
@@ -167,31 +161,44 @@ recommender = recommender_builder.build(
 
 # plot_als_train_test_loss_evolution(als_backend.algorithm)
 
-
+# 279178
 # In[11]:
 
 
 #
-prediction_input = [("17", 4)]
-recommender.recommend(prediction_input)
-
+prediction_input = [("17", 5)]  # Sense and Sensibility (1995)
+predictions = recommender.recommend(prediction_input)
+logger.info(
+    f'Prediction for Sense and Sensibility (1995) (id=17) is {[p["title"] + ": " + "|".join(p["genres"])  for p in predictions]}'
+)
 
 # In[12]:
 
 
-prediction_input = [("267654", 4)]  # Harry Poter
-recommender.recommend(prediction_input)
+prediction_input = [("267654", 5)]  # Harry Poter
+predictions = recommender.recommend(prediction_input)
+
+logger.info(
+    f'Prediction for Harry Poter (id=267654) is {[p["title"] + ": " + "|".join(p["genres"])  for p in predictions]}'
+)
 
 
 # In[13]:
 
 
-#
-recommender.recommend()
+prediction_input = [("279178", 5)]  # Lord of the ring
+predictions = recommender.recommend(prediction_input)
+
+logger.info(
+    f'Prediction for Lord of the ring (id=279178) is {[p["title"] + ": " + "|".join(p["genres"])  for p in predictions]}'
+)
 
 
-# In[ ]:
+# In[14]:
+
+# Trends prediction
+# This needs a lot of RAMS
+# recommender.recommend()
 
 
-
-
+# %%

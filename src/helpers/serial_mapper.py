@@ -3,6 +3,10 @@ from abc import ABC, abstractmethod
 from collections import defaultdict
 
 
+def _get_none():  # noqa
+    return None
+
+
 class AbstractSerialMapper(ABC):
 
     EMPTY = object()
@@ -42,7 +46,7 @@ class SerialBidirectionalMapper(AbstractSerialMapper):
     def __init__(self):
         super().__init__()
         self._data = []
-        self._inverse_data = defaultdict(lambda: None)
+        self._inverse_data = defaultdict(_get_none)
 
     def __getitem__(self, key):
         return self._data[key]

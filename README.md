@@ -1,4 +1,4 @@
-This project demonstrates the development of a **recommender system** leveraging **matrix factorization** techniques. The **Alternating Least Squares (ALS)** algorithm is at the core of this system, enabling precise user-item rating predictions. It has been validated using the **MovieLens dataset**, showcasing good performance and adaptability to real-world scenarios.
+This project demonstrates the development of a **recommender system** leveraging **matrix factorization** techniques at first glance. The **Alternating Least Squares (ALS)** algorithm has been implemented, enabling user-item rating predictions. It has been validated using the **MovieLens dataset**, showcasing good performance and adaptability to real-world scenarios.
 
 ---
 
@@ -36,15 +36,14 @@ This project demonstrates the development of a **recommender system** leveraging
 
 ## Introduction
 
-This project is designed to deliver **accurate and scalable recommendations** using collaborative filtering. The **ALS algorithm** powers the system, offering strong generalization and robust prediction capabilities.
+This project is designed to showcase accurate and scalable recommendations using collaborative filtering. Powered by the **ALS algorithm** , the system offers strong generalization capabilities.
 
-The codebase is crafted with a focus on **modularity** and **reusability**, ensuring it serves as a foundation for both research and real-world applications.
+The codebase is crafted with a focus on **modularity** and **reusability** and **extensibility** in mind.
 
 ---
 
 ## Key Features
 
-- **State-of-the-Art Algorithm**: Implements the ALS matrix factorization algorithm
 - **Scalable Design**: Handles datasets with millions of user-item interactions, ensuring practical usability.
 - **Performance Validation**: Extensively tested on the **MovieLens dataset**, achieving excellent prediction accuracy.
 - **Extensibility**: The modular architecture supports easy integration of additional algorithms or datasets.
@@ -55,9 +54,6 @@ The codebase is crafted with a focus on **modularity** and **reusability**, ensu
 
 
 ### Alternating Least Squares (ALS)
-
-<details> 
-<summary><i>collapse</i></summary>
 
 **ALS** is a collaborative filtering technique based on **matrix factorization**. It models user and item interactions by discovering latent features that explain observed ratings. The algorithm alternates between optimizing user and item matrices to minimize the regularized objective function:
 
@@ -85,6 +81,9 @@ Where:
 - $\gamma$: Regularization parameters accounting for $b^{(u)}$ and $b^{(v)}$
 
 #### Workflow
+
+<details>
+<summary><i>collapse</i></summary>
 
 1. Solve the optimization problem for $b^{(u)}$ keeping all the other matrices (.i.e $U$, $V$, $b^{(v)}$) fixed.
 
@@ -118,8 +117,6 @@ Where:
 - Scalable to large datasets.
 - Support for parallelization for computation performance.
 - Handles sparsity in user-item interaction matrices effectively.
-
-
 </details>
 
 ---
@@ -151,7 +148,7 @@ To set up the project:
 3. **Run an example**:
    To run the movielens example, download the dataset from [here](https://grouplens.org/datasets/movielens/).
    Ideally, put that dataset in the example folder and change the path of rating.csv file passed to the indexer.
-   And run `poetry run python examples/path_to_example_file.py`
+   And run `poetry run python examples/path_to_example_file.py` or run the related notebook.
 
 </details>   
 
@@ -205,29 +202,63 @@ $$
 
 Where:
 - $r_{ij}$: Actual rating.
+  
 - $\hat{r}_{ij} = U_i^T V_j + b^{(u)}_i + b^{(v)}_j$: Predicted rating.
 
 ### Results (Example)
 
-Here we will present the performance of the model **20250112-211340_lambda0.5_gamma0.01_tau2_n_epochs20_n_factors10**. 
+| Sample size | $\beta$   | $\lambda$ | $\gamma$ | $\tau$ | $k$  | Epochs | RMSE Train   | RMSE Test    | Loss Train       | Loss Test        | Recommendation                                      |
+|-------------|-----------|-----------|----------|--------|------|--------|--------------|--------------|------------------|------------------|-----------------------------------------------------|
+| 1,000,000   | None      | 5         | 0.2      | 0.5    | 10   | 10     | 0.6398357382 | 0.9573722035 | -859437.8237     | -497705.9132     | Not good                                            |
+| 1,000,000   | None      | 0.5       | 0.01     | 0.4    | 10   | 20     | 0.6345867557 | 0.8798720925 | -87902.6796      | -45921.5971      | Not good                                            |
+| 1,000,000   | None      | 1         | 0.04     | 0.4    | 10   | 20     | 0.6301793968 | 0.9039692663 | -171394.7980     | -94303.5198      | Not good                                            |
+| 1,000,000   | None      | 0.5       | 0.1      | 0.1    | 10   | 20     | 0.6281751607 | 0.921288     | -90251.1060      | -53596.0488      | Not good                                            |
+| 1,000,000   | None      | 0.1       | 0.1      | 0.1    | 10   | 20     | 0.6387279301 | 0.8667931235 | -23797.7348      | -15022.7668      | Not good                                            |
+| 32,000,204  | None      | 5         | 0.2      | 0.5    | 10   | 10     | 0.7002276159 | 0.8106347909 | -32134423.5451   | -11279037.9697   | Not good                                            |
+| 32,000,204  | None      | 0.1       | 0.01     | 0.1    | 10   | 20     | 0.6974530613 | 0.7876710025 | -662039.0551     | -237845.6851     | Can capture some same genre movies                  |
+| 32,000,204  | None      | 0.1       | 0.1      | 0.1    | 10   | 20     | 0.7005592936 | 0.791084577  | -805758.7356     | -377689.7136     | Can capture some same genre movies                  |
+| 32,000,204  | 10        | 0.1       | 0.1      | 0.1    | 30   | 20     | 0.6001383912 | 0.8438440669 | -636944.0774     | -403691.8737     | Can capture same movies saisons and genres          |
+| 32,000,204  | 10        | 0.5       | 0.01     | 0.5    | 10   | 20     | 0.6975553770 | 0.7890316677 | -3210830.2328    | -1092998.8915    | Can capture some same genre movies                  |
+| 32,000,204  | 0.1       | 0.5       | 0.01     | 2      | 10   | 20     | 0.7040819727 | 0.781400124  | -3332430.7169    | -1137663.3828    | Can capture some same genre movies                  |
+| 32,000,204  | 10        | 0.1       | 0.1      | 0.1    | 30   | 20     | 0.5656629475 | 0.8762468276 | -586130.365640   | -422391.191275   | Can capture same movies saisons and genres          |
+| 32,000,204  | 1000      | 0.1       | 0.1      | 0.1    | 30   | 20     | 0.6007653637 | 0.839526128  | -622068.9192116  | -385560.61266044 | Can capture same movies saisons and genres          |	
 
+Here are the RMSE and Loss curves of the model **20250112-211340_lambda0.5_gamma0.01_tau2_n_epochs20_n_factors10**. 
 
-#### RMSE
+#### RMSE Curve
 
 ![RMSE test train image](./artifacts/figures/rmse_test_train_20250112-220603_lambda0.5_gamma0.01_tau2_epochs20_factors10_input1000000000_lambda0.svg)
 
 - RMSE Train: 0.7814
 - RMSE Test:  0.7041
 
-#### Loss
+#### Loss Curve
 
 ![RMSE test train image](./artifacts/figures/loss_test_train.svg)
+
+
+
+
+### Recommendation
+
+Here are the returned recommendations for the movie `Harry Potter 20th Anniversary: Return to Hogwarts (2022) - Documentary` rated at 5:
+
+1. *Louis C.K.: Shameless* (2007) – Comedy
+2. *Louis C.K.: Chewed Up* (2008) – Comedy
+3. *Louis C.K.: Hilarious* (2010) – Comedy
+4. *Harry Potter 20th Anniversary: Return to Hogwarts* (2022) – Documentary
+5. *Louis C.K.: Live at The Comedy Store* (2015) – Comedy
+6. *Jackass Number Two* (2006) – Comedy | Documentary
+7. *Jackass 3D* (2010) – Action | Comedy | Documentary
+8. *Harry Potter and the Deathly Hallows: Part 2* (2011) – Action | Adventure | Drama | Fantasy | Mystery | IMAX
+9. *Harry Potter and the Deathly Hallows: Part 1* (2010) – Action | Adventure | Fantasy | IMAX
+10. *Harry Potter and the Half-Blood Prince* (2009) – Adventure | Fantasy | Mystery | Romance | IMAX
 
 #### Latent space
 
 
-
 These results demonstrate the model's ability to generalize well to unseen data, confirming its practical applicability.
+We can obviously do better with more parameter space exploration.
 
 ---
 

@@ -48,7 +48,7 @@ def filter_movies(movies, search_term, genres):
         movie
         for movie in movies
         if search_term.lower() in movie["title"].lower()
-           and (not genres or any(g.strip() in movie["genres"] for g in genres))
+        and (not genres or any(g.strip() in movie["genres"] for g in genres))
     ]
 
 

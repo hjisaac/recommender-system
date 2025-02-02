@@ -22,6 +22,9 @@ class IndexedDatasetWrapper:
     id_to_user_bmap: SerialBidirectionalMapper
     id_to_item_bmap: SerialBidirectionalMapper
 
+    def __hash__(self):
+        return self.__class__.__name__
+
 
 class AbstractDatasetIndexer(ABC):
 

@@ -2,6 +2,7 @@ import os
 import dill as pickle
 from typing import Optional
 
+from src.settings import ROOT_DIR
 from src.utils import load_pickle
 
 
@@ -104,8 +105,10 @@ class CheckpointManager(object):
         checkpoint_files = []
 
         try:
+            absolute_dir = os.path.join(ROOT_DIR, self.checkpoint_folder)
+
             # Walk through all directories and subdirectories
-            for root, _, files in os.walk(self.checkpoint_folder):
+            for root, _, files in os.walk(absolute_dir):
                 for file in files:
                     if file.endswith(".pkl"):  # Check for .pkl files
                         # Get the full file path

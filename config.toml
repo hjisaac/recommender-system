@@ -9,12 +9,12 @@ LOG_FILE = "./artifacts/logs/app.log"
 HYPER_N_EPOCH = 20 # 20
 
 # Original: HYPER_N_FACTOR = 10
-HYPER_N_FACTOR = 10
+HYPER_N_FACTOR = 30
 
 HYPER_GAMMA = 0.1
 HYPER_LAMBDA = 0.1
 HYPER_TAU = 0.1
-HYPER_BETA = 10
+HYPER_BETA = 1000 # previous was 10
 CHECKPOINT_FOLDER = "./artifacts/checkpoints/als"
 
 [figures]
