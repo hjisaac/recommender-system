@@ -1,18 +1,23 @@
+import os
 import streamlit as st
 import requests
 import pandas as pd
-import numpy as np
 import time
-import contextlib
+from dotenv import load_dotenv
 
 from src.algorithms.alternating_least_squares import AlternatingLeastSquares
 from src.helpers.dataset_indexer import DatasetIndexer
 from src.helpers.checkpoint_manager import CheckpointManager
 from src.recommenders import CollaborativeFilteringRecommenderBuilder
 from src.backends import Backend
-from src.helpers._logging import logger
+from src.helpers._logging import logger # noqa
 from src.settings import settings
 from src.utils import vocabulary_based_one_hot_encode, save_pickle, load_pickle
+
+# Load env variables
+load_dotenv()
+
+TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 
 # Constants
 USER_HEADER = "userId"
@@ -102,7 +107,7 @@ def index_data():
 
 # Cache the recommender model
 @st.cache_resource
-def get_recommender(_indexed_data, item_database):
+def get_recommender(_indexed_data, item_database): # noqa
     try:
         return load_pickle("./recommender.pkl")
     except Exception as e:
@@ -145,8 +150,7 @@ recommender = get_recommender(indexed_data, item_database)
 
 # Function to fetch movie details from TMDB
 def fetch_movie_from_server(movie_tmdb_id):
-    api_key = None
-    url = f"https://api.themoviedb.org/3/movie/{movie_tmdb_id}?api_key={api_key}"
+    url = f"https://api.themoviedb.org/3/movie/{movie_tmdb_id}?api_key={TMDB_API_KEY}"
     try:
         response = requests.get(url)
         data = response.json()
@@ -208,7 +212,7 @@ def filter_movies(search_term, max_results=10):  # noqa
             # The presence of the feature_hot_encoded np.array is making streamlit to crash so
             # remove it for the meantime.
             filtered_movies.append(
-                {"id": k, **{k: v[k] for k in v if k != "feature_hot_encoded"}}
+                {"id": k, **v}
             )
 
         # Stop when we reach the desired number of results
