@@ -36,7 +36,7 @@ This project demonstrates the development of a **recommender system** leveraging
 
 ## Introduction
 
-This project is designed to deliver **accurate and scalable recommendations** using collaborative filtering. The **ALS algorithm** powers the system, offering strong generalization and robust prediction capabilities.
+This project is designed to showcase accurate and scalable recommendations using collaborative filtering. Powered by the **ALS algorithm** , the system offers strong generalization capabilities.
 
 The codebase is crafted with a focus on **modularity** and **reusability** and **extensibility** in mind.
 
@@ -259,6 +259,7 @@ Here are the returned recommendations for the movie `Harry Potter 20th Anniversa
 
 
 These results demonstrate the model's ability to generalize well to unseen data, confirming its practical applicability.
+We can obviously do better with more parameter space exploration.
 
 ---
 
