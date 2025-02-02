@@ -223,7 +223,6 @@ Where:
 | 32,000,204  | 10        | 0.1       | 0.1      | 0.1    | 30   | 20     | 0.5656629475 | 0.8762468276 | -586130.365640   | -422391.191275   | Can capture same movies saisons and genres          |
 | 32,000,204  | 1000      | 0.1       | 0.1      | 0.1    | 30   | 20     | 0.6007653637 | 0.839526128  | -622068.9192116  | -385560.61266044 | Can capture same movies saisons and genres          |	
 
-
 Here are the RMSE and Loss curves of the model **20250112-211340_lambda0.5_gamma0.01_tau2_n_epochs20_n_factors10**. 
 
 #### RMSE Curve
