@@ -2,7 +2,7 @@ This project demonstrates the development of a **recommender system** leveraging
 
 ---
 
-# Recommender System Codebase
+# Recommender System
 
 ## Table of Contents
 
