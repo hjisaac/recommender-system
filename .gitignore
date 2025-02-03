@@ -7,7 +7,6 @@ dsa_*
 figures/*
 test.svg
 **/__pycache__
-datasets/*
 .idea
 **/app.log
 10000000_item_database.pkl
