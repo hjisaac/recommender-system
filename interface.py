@@ -169,7 +169,6 @@ def get_movie_poster_url(movie_tmdb_id):
         return f"{BASE_URL}{data['poster_path']}"
     except Exception as e:
         logger.error(e)
-        return None
 
 
 def render_movie_details(movie_data, image_width=300, double_column=True):
@@ -177,6 +176,7 @@ def render_movie_details(movie_data, image_width=300, double_column=True):
     try:
         poster = get_movie_poster_url(movie_data["tmdbId"])
     except Exception as e:  # noqa
+        logger.error(e)
         poster = None
 
     if not double_column:
