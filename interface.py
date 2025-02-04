@@ -24,7 +24,7 @@ USER_HEADER = "userId"
 ITEM_HEADER = "movieId"
 RATING_HEADER = "rating"
 FEATURE_TO_ENCODE = "genres"
-CSV_FILES_DIR = "datasets/movielens"  # The dataset subfolder
+CSV_FILES_DIR = "./ml-32m"  # The dataset subfolder
 BASE_URL = "https://image.tmdb.org/t/p/w500"
 TOTAL_MOVIES_COUNT = 10000  # Adjust based on your dataset
 COLUMNS_PER_ROW = 4
@@ -87,7 +87,9 @@ def load_item_database():
 @st.cache_resource
 def index_data():
     try:
-        return load_pickle("indexed_data.pkl")
+        indexed_data = load_pickle("indexed_data.pkl")
+        logger.info("indexed_data loaded successfully.")
+        return indexed_data
     except Exception as e:
         logger.error(e)
         dataset_indexer = DatasetIndexer(
@@ -95,7 +97,7 @@ def index_data():
             user_header=USER_HEADER,
             item_header=ITEM_HEADER,
             rating_header=RATING_HEADER,
-            limit=1_000_000,
+            limit=1_000_000_000,
         )
         indexed_data = dataset_indexer.index_simple( # noqa
             approximate_train_ratio=settings.general.APPROXIMATE_TRAIN_RATIO
@@ -211,10 +213,10 @@ def filter_movies(search_term, max_results=10):  # noqa
         if search_term in v["title"].lower():
             # The presence of the feature_hot_encoded np.array is making streamlit to crash so
             # remove it for the meantime.
-            filtered_movies.append(
-                {"id": k, **v}
-            )
-
+            movie_data = {"id": k, **v}
+            if "features_hot_encoded" in movie_data:
+                movie_data["features_hot_encoded"] = movie_data["features_hot_encoded"].tolist()
+            filtered_movies.append(movie_data)
         # Stop when we reach the desired number of results
         if len(filtered_movies) >= max_results:
             break
