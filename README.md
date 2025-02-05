@@ -6,7 +6,7 @@ This project demonstrates the development of a **recommender system** leveraging
 
 ![demo](./demo_short.gif)
 
-Or download and play the ![Demo Video](./demo.mp4)
+Or download  the ![Demo Video](./demo.mp4) or go and test it in live on ![Streamlit](./demo_short.gif) (it may take some time to load...).
 
 
 ## Table of Contents
