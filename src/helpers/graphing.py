@@ -251,7 +251,7 @@ def plot_error_evolution(
     # Display the plot
     plt.show()
 
-def plot_movie_factors(movie_factors, movie_indices, movie_titles=None):
+def plot_movie_factors(movie_factors, movie_indices, movie_titles=None, label=""):
     """
     Plots movie factors in 2D using PCA and highlights specific movie indices.
 
@@ -270,21 +270,27 @@ def plot_movie_factors(movie_factors, movie_indices, movie_titles=None):
 
     # Plot all movies in gray
     plt.figure(figsize=(10, 7))
-    plt.scatter(movie_factors_2D[:, 0], movie_factors_2D[:, 1], alpha=0.3, color="gray", label="All Movies")
+
+    plt.scatter(movie_factors_2D[:, 0], movie_factors_2D[:, 1], alpha=0.6, color="gray", label="All Movies")
 
     # Highlight and annotate selected movies
-    for idx in movie_indices:
-        plt.scatter(movie_factors_2D[idx, 0], movie_factors_2D[idx, 1], color="red", s=100, label="Highlighted Movie" if idx == movie_indices[0] else "")
-        plt.annotate(movie_titles[idx], (movie_factors_2D[idx, 0], movie_factors_2D[idx, 1]), fontsize=9, alpha=0.75)
-
+    for i, idx in enumerate(movie_indices):
+        plt.scatter(movie_factors_2D[idx, 0], movie_factors_2D[idx, 1], color="red", s=100, label=label if idx == movie_indices[0] else "")
+        plt.annotate(movie_titles[i], (movie_factors_2D[idx, 0], movie_factors_2D[idx, 1]), fontsize=9, alpha=0.75)
     plt.xlabel("PCA Component 1")
     plt.ylabel("PCA Component 2")
     plt.title("Movie Factors in 2D (PCA)")
     plt.legend()
+    plt.savefig(
+        get_plt_figure_path("gray"),
+        format=settings.figures.PLT_FIGURE_FORMAT,
+    )
     plt.show()
 
 
-def plot_movie_factors_with_categories(movie_factors, movie_categories, category_labels, movie_titles=None, use_tsne=False):
+
+def plot_movie_factors_with_categories(movie_factors, movie_categories, category_labels,
+                                       movie_titles=None, use_tsne=False, movie_indices_to_ignore=None):
     """
     Plots movie factors in 2D using PCA (or t-SNE) while coloring based on movie categories.
     Multi-category movies are assigned blended colors.
@@ -295,8 +301,17 @@ def plot_movie_factors_with_categories(movie_factors, movie_categories, category
         category_labels (list): List of category names (length = num_categories).
         movie_titles (list, optional): List of movie titles (length = num_movies).
         use_tsne (bool): Whether to use t-SNE instead of PCA for better separation.
+        movie_indices_to_ignore (list, optional): List of indices to exclude from the plot.
     """
-    num_movies, num_categories = movie_categories.shape
+    if movie_indices_to_ignore is None:
+        movie_indices_to_ignore = set()
+    else:
+        movie_indices_to_ignore = set(movie_indices_to_ignore)  # Convert to set for faster lookup
+
+    # Filter out ignored indices
+    valid_indices = [i for i in range(len(movie_factors)) if i not in movie_indices_to_ignore]
+    movie_factors_filtered = movie_factors[valid_indices]
+    movie_categories_filtered = movie_categories[valid_indices]
 
     # Dimensionality Reduction (PCA or t-SNE)
     if use_tsne:
@@ -304,16 +319,17 @@ def plot_movie_factors_with_categories(movie_factors, movie_categories, category
     else:
         reducer = PCA(n_components=2)
 
-    movie_factors_2D = reducer.fit_transform(movie_factors)
+    movie_factors_2D = reducer.fit_transform(movie_factors_filtered)
 
     # Generate a distinct color for each category
+    num_categories = movie_categories.shape[1]
     palette = sns.color_palette("hsv", num_categories)
 
     # Compute blended colors for movies with multiple categories
     def blend_colors(cat_vector):
         return np.dot(cat_vector, palette) / (cat_vector.sum() + 1e-9)  # Avoid division by zero
 
-    movie_colors = np.array([blend_colors(movie_categories[i]) for i in range(num_movies)])
+    movie_colors = np.array([blend_colors(movie_categories_filtered[i]) for i in range(len(valid_indices))])
 
     # Plot movies
     plt.figure(figsize=(10, 7))

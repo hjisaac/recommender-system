@@ -272,6 +272,11 @@ Here are the returned recommendations for the movie `Harry Potter 20th Anniversa
 
 #### Latent space
 
+#### Happy Potter vs All the rest
+
+![Happy Potter vs All the rest](./artifacts/figures/harry_potter_against_all.jpg)
+
+
 
 These results demonstrate the model's ability to generalize well to unseen data, confirming its practical applicability.
 We can obviously do better with more parameter space exploration.
