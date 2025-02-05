@@ -5,15 +5,15 @@ This project demonstrates the development of a **recommender system** leveraging
 # Recommender System 
 
 ![demo](./demo_short.gif)
-
+![Demo Video](./demo.mp4)
 <details>
 <summary><i>
+
+</i></summary>
   <video width="600" controls>
   <source src="./demo.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
-</i></summary>
-
 </details>
 
 ## Table of Contents
