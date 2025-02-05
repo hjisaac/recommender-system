@@ -2,7 +2,12 @@ This project demonstrates the development of a **recommender system** leveraging
 
 ---
 
-# Recommender System
+# Recommender System 
+
+![demo](./demo_short.gif)
+
+Or download  the ![Demo Video](./demo.mp4) or go and test it in live on ![Streamlit](./demo_short.gif) (it may take some time to load...).
+
 
 ## Table of Contents
 
@@ -45,7 +50,7 @@ The codebase is crafted with a focus on **modularity** and **reusability** and *
 ## Key Features
 
 - **Scalable Design**: Handles datasets with millions of user-item interactions, ensuring practical usability.
-- **Performance Validation**: Extensively tested on the **MovieLens dataset**, achieving excellent prediction accuracy.
+- **Performance Validation**: Tested on the **MovieLens dataset**, achieving every good prediction accuracy.
 - **Extensibility**: The modular architecture supports easy integration of additional algorithms or datasets.
 
 ---
@@ -149,7 +154,13 @@ To set up the project:
 3. **Run an example**:
    To run the movielens example, download the dataset from [here](https://grouplens.org/datasets/movielens/).
    Ideally, put that dataset in the example folder and change the path of rating.csv file passed to the indexer.
-   And run `poetry run python examples/path_to_example_file.py` or run the related notebook.
+   And run the notebook or convert it into a python file with `nbconvert`. Or you can also just run the example.{py, ipynb} file.
+   
+4. **Run the streamlit example**
+    The streamlit uses the model **20250112-211340_lambda0.5_gamma0.01_tau2_n_epochs20_n_factors10**
+
+    `streamlit run interface.py`
+    
 
 </details>   
 
@@ -235,16 +246,18 @@ Here are the RMSE and Loss curves of the model **20250112-211340_lambda0.5_gamma
 - RMSE Train: 0.7814
 - RMSE Test:  0.7041
 
+For the other models, we got approximately the same curve shape and a similar RMSE value.
+
 #### Loss Curve
 
-![RMSE test train image](./artifacts/figures/loss_test_train.svg)
+![loss test train image](./artifacts/figures/loss_test_train.svg)
 
-
+For the other models, we got approximately the same curve shape and a similar loss value.
 
 
 ### Recommendation
 
-Here are the returned recommendations for the movie `Harry Potter 20th Anniversary: Return to Hogwarts (2022) - Documentary` rated at 5:
+Here are the returned recommendations for the movie `Harry Potter 20th Anniversary: Return to Hogwarts (2022) - Documentary` rated at 5 using the model **20250117-073926_lambda0.1_gamma0.1_tau0.1_n_epochs20_n_factors30** :
 
 1. *Louis C.K.: Shameless* (2007) – Comedy
 2. *Louis C.K.: Chewed Up* (2008) – Comedy
@@ -258,6 +271,11 @@ Here are the returned recommendations for the movie `Harry Potter 20th Anniversa
 10. *Harry Potter and the Half-Blood Prince* (2009) – Adventure | Fantasy | Mystery | Romance | IMAX
 
 #### Latent space
+
+#### Happy Potter vs All the rest
+
+![Happy Potter vs All the rest](./artifacts/figures/harry_potter_against_all.jpg)
+
 
 
 These results demonstrate the model's ability to generalize well to unseen data, confirming its practical applicability.
