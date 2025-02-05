@@ -2,8 +2,14 @@ This project demonstrates the development of a **recommender system** leveraging
 
 ---
 
-# Recommender System
+# Recommender System 
 
+![demo](.demo_short.gif)
+
+<details>
+<summary><i>video</i></summary>
+
+</details>
 
 ## Table of Contents
 
@@ -150,7 +156,13 @@ To set up the project:
 3. **Run an example**:
    To run the movielens example, download the dataset from [here](https://grouplens.org/datasets/movielens/).
    Ideally, put that dataset in the example folder and change the path of rating.csv file passed to the indexer.
-   And run `poetry run python examples/path_to_example_file.py` or run the related notebook.
+   And run the notebook or convert it into a python file with `nbconvert`. Or you can also just run the example.{py, ipynb} file.
+   
+4. **Run the streamlit example**
+    The streamlit uses the model **20250112-211340_lambda0.5_gamma0.01_tau2_n_epochs20_n_factors10**
+
+    `streamlit run interface.py`
+    
 
 </details>   
 
