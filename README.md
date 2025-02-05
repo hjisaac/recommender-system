@@ -4,12 +4,10 @@ This project demonstrates the development of a **recommender system** leveraging
 
 # Recommender System 
 
-![demo](.demo_short.gif)
+![demo](./demo_short.gif)
 
-<details>
-<summary><i>video</i></summary>
+Or download and play the ![Demo Video](./demo.mp4)
 
-</details>
 
 ## Table of Contents
 
