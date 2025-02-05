@@ -2,6 +2,11 @@ from collections import Counter
 from datetime import datetime
 from functools import partial
 from matplotlib import pyplot as plt
+import seaborn as sns
+import numpy as np
+from sklearn.decomposition import PCA
+from sklearn.manifold import TSNE
+
 from src.settings import settings
 from src.utils import convert_flat_dict_to_string
 
@@ -244,4 +249,82 @@ def plot_error_evolution(
     )
 
     # Display the plot
+    plt.show()
+
+def plot_movie_factors(movie_factors, movie_indices, movie_titles=None):
+    """
+    Plots movie factors in 2D using PCA and highlights specific movie indices.
+
+    Args:
+        movie_factors (np.ndarray): A matrix of shape (num_movies, num_features).
+        movie_indices (list): List of movie indices to highlight.
+        movie_titles (list, optional): List of movie titles (same length as num_movies).
+    """
+    # Reduce dimensions using PCA
+    pca = PCA(n_components=2)
+    movie_factors_2D = pca.fit_transform(movie_factors)
+
+    # Generate default titles if not provided
+    if movie_titles is None:
+        movie_titles = [f"Movie {i}" for i in range(movie_factors.shape[0])]
+
+    # Plot all movies in gray
+    plt.figure(figsize=(10, 7))
+    plt.scatter(movie_factors_2D[:, 0], movie_factors_2D[:, 1], alpha=0.3, color="gray", label="All Movies")
+
+    # Highlight and annotate selected movies
+    for idx in movie_indices:
+        plt.scatter(movie_factors_2D[idx, 0], movie_factors_2D[idx, 1], color="red", s=100, label="Highlighted Movie" if idx == movie_indices[0] else "")
+        plt.annotate(movie_titles[idx], (movie_factors_2D[idx, 0], movie_factors_2D[idx, 1]), fontsize=9, alpha=0.75)
+
+    plt.xlabel("PCA Component 1")
+    plt.ylabel("PCA Component 2")
+    plt.title("Movie Factors in 2D (PCA)")
+    plt.legend()
+    plt.show()
+
+
+def plot_movie_factors_with_categories(movie_factors, movie_categories, category_labels, movie_titles=None, use_tsne=False):
+    """
+    Plots movie factors in 2D using PCA (or t-SNE) while coloring based on movie categories.
+    Multi-category movies are assigned blended colors.
+
+    Args:
+        movie_factors (np.ndarray): A matrix of shape (num_movies, num_features).
+        movie_categories (np.ndarray): A binary matrix of shape (num_movies, num_categories).
+        category_labels (list): List of category names (length = num_categories).
+        movie_titles (list, optional): List of movie titles (length = num_movies).
+        use_tsne (bool): Whether to use t-SNE instead of PCA for better separation.
+    """
+    num_movies, num_categories = movie_categories.shape
+
+    # Dimensionality Reduction (PCA or t-SNE)
+    if use_tsne:
+        reducer = TSNE(n_components=2, perplexity=30, random_state=42)
+    else:
+        reducer = PCA(n_components=2)
+
+    movie_factors_2D = reducer.fit_transform(movie_factors)
+
+    # Generate a distinct color for each category
+    palette = sns.color_palette("hsv", num_categories)
+
+    # Compute blended colors for movies with multiple categories
+    def blend_colors(cat_vector):
+        return np.dot(cat_vector, palette) / (cat_vector.sum() + 1e-9)  # Avoid division by zero
+
+    movie_colors = np.array([blend_colors(movie_categories[i]) for i in range(num_movies)])
+
+    # Plot movies
+    plt.figure(figsize=(10, 7))
+    plt.scatter(movie_factors_2D[:, 0], movie_factors_2D[:, 1], c=movie_colors, alpha=0.7, edgecolors="k")
+
+    # Annotate category legend
+    for i, label in enumerate(category_labels):
+        plt.scatter([], [], color=palette[i], label=label)
+
+    plt.xlabel("Component 1" if not use_tsne else "t-SNE Dim 1")
+    plt.ylabel("Component 2" if not use_tsne else "t-SNE Dim 2")
+    plt.title("Movie Factors with Category Coloring")
+    plt.legend(title="Categories", bbox_to_anchor=(1.05, 1), loc="upper left")
     plt.show()

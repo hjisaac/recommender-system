@@ -4,6 +4,7 @@ This project demonstrates the development of a **recommender system** leveraging
 
 # Recommender System
 
+
 ## Table of Contents
 
 <details>
@@ -45,7 +46,7 @@ The codebase is crafted with a focus on **modularity** and **reusability** and *
 ## Key Features
 
 - **Scalable Design**: Handles datasets with millions of user-item interactions, ensuring practical usability.
-- **Performance Validation**: Extensively tested on the **MovieLens dataset**, achieving excellent prediction accuracy.
+- **Performance Validation**: Tested on the **MovieLens dataset**, achieving every good prediction accuracy.
 - **Extensibility**: The modular architecture supports easy integration of additional algorithms or datasets.
 
 ---
@@ -235,16 +236,18 @@ Here are the RMSE and Loss curves of the model **20250112-211340_lambda0.5_gamma
 - RMSE Train: 0.7814
 - RMSE Test:  0.7041
 
+For the other models, we got approximately the same curve shape and a similar RMSE value.
+
 #### Loss Curve
 
-![RMSE test train image](./artifacts/figures/loss_test_train.svg)
+![loss test train image](./artifacts/figures/loss_test_train.svg)
 
-
+For the other models, we got approximately the same curve shape and a similar loss value.
 
 
 ### Recommendation
 
-Here are the returned recommendations for the movie `Harry Potter 20th Anniversary: Return to Hogwarts (2022) - Documentary` rated at 5:
+Here are the returned recommendations for the movie `Harry Potter 20th Anniversary: Return to Hogwarts (2022) - Documentary` rated at 5 using the model **20250117-073926_lambda0.1_gamma0.1_tau0.1_n_epochs20_n_factors30** :
 
 1. *Louis C.K.: Shameless* (2007) – Comedy
 2. *Louis C.K.: Chewed Up* (2008) – Comedy
