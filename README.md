@@ -4,10 +4,12 @@ This project demonstrates the development of a **recommender system** leveraging
 
 # Recommender System 
 
-![demo](.demo_short.gif)
+![demo](./demo_short.gif)
 
 <details>
-<summary><i>video</i></summary>
+<summary><i>
+  https://github.com/hjisaac/recommender-system/blob/deploy/demo.mp4
+</i></summary>
 
 </details>
 
