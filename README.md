@@ -215,10 +215,10 @@ MCP-) speed/min/max: 3280/800/3900 MHz Kernel: 6.9.3-
 76060903-generic x86 64.*
 
 
-The code without the feature vector functionality activated, takes approximately two hours on a dataset of 32 million
+The code without the feature vector functionality activated, takes approximately **2 hours** on a dataset of 32 million
 entries. But with features vector functionality activated takes
-around 3 hours to run. The code at its current stage does
-not include Jax or Numba.
+around **3 hours** to run. The code at its current stage does
+not include **Jax** or **Numba**.
 
 **Root Mean Squared Error (RMSE)** is used as the primary evaluation metric:
 
