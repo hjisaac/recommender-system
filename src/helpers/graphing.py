@@ -275,6 +275,8 @@ def plot_movie_factors(movie_factors, movie_indices, movie_titles=None, label=""
 
     # Highlight and annotate selected movies
     for i, idx in enumerate(movie_indices):
+        if i is None:
+            continue
         plt.scatter(movie_factors_2D[idx, 0], movie_factors_2D[idx, 1], color="red", s=100, label=label if idx == movie_indices[0] else "")
         plt.annotate(movie_titles[i], (movie_factors_2D[idx, 0], movie_factors_2D[idx, 1]), fontsize=9, alpha=0.75)
     plt.xlabel("PCA Component 1")

@@ -219,7 +219,7 @@ Where:
 
 ### Results (Example)
 
-This table shows the tried parameters and the related results.
+This table shows the tried parameters and the related results. When $\beta$ is `None`, it means that feature vector (factor) is not integrated. 
 
 | Sample size | $\beta$   | $\lambda$ | $\gamma$ | $\tau$ | $k$  | Epochs | RMSE Train   | RMSE Test    | Loss Train       | Loss Test        | Recommendation                                      |
 |-------------|-----------|-----------|----------|--------|------|--------|--------------|--------------|------------------|------------------|-----------------------------------------------------|
@@ -252,7 +252,7 @@ For the other models, we got approximately the same curve shape and a similar RM
 
 ![loss test train image](./artifacts/figures/loss_test_train.svg)
 
-For the other models, we got approximately the same curve shape and a similar loss value.
+For the other models, we got approximately the same curve shape (cf. the table above).
 
 
 ### Recommendation
@@ -274,7 +274,7 @@ Here are the returned recommendations for the movie `Harry Potter 20th Anniversa
 
 #####  Happy Potter vs All the rest
 
-![Happy Potter vs All the rest](./artifacts/figures/harry_potter_against_all.jpg)
+![Happy Potter vs All the rest](./artifacts/figures/harry_potter_against_all_with_genres.png)
 
 
 
