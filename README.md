@@ -210,6 +210,15 @@ Only collaborative filtering is implemented now, and it is encaspsulated in the 
 ## Performance
 
 The first example implemented to access performance uses the [**MovieLens dataset**](https://grouplens.org/datasets/movielens/).
+The code has been run on a machine having the following specs: *CPU: quad core Intel Core i7-7820HQ (-MT
+MCP-) speed/min/max: 3280/800/3900 MHz Kernel: 6.9.3-
+76060903-generic x86 64.*
+
+
+The code without the feature vector functionality activated, takes approximately **2 hours** on a dataset of 32 million
+entries. But with features vector functionality activated takes
+around **3 hours** to run. The code at its current stage does
+not include **Jax** or **Numba**.
 
 **Root Mean Squared Error (RMSE)** is used as the primary evaluation metric:
 
