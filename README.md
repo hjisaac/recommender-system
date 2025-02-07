@@ -233,7 +233,7 @@ Where:
 
 ### Results (Example)
 
-This table shows the tried parameters and the related results. When $\beta$ is `None`, it means that feature vector (factor) is not integrated or modeled[^1]. 
+This table shows the tried parameters and the related results. When $\beta$ is `None`, it means that feature vector (factor) is not integrated or modeled[^1] and the version of the code refleting such implementation can be found by targeting the commit 225f85d82145de5508f5802c369f0eb6f44ecacf. 
 
 | Sample size | $\beta$   | $\lambda$ | $\gamma$ | $\tau$ | $k$  | Epochs | RMSE Train   | RMSE Test    | Loss Train       | Loss Test        | Recommendation                                      |
 |-------------|-----------|-----------|----------|--------|------|--------|--------------|--------------|------------------|------------------|-----------------------------------------------------|
