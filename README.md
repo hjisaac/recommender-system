@@ -380,7 +380,7 @@ This project is licensed under the MIT License. See the `LICENSE` file for more 
 
 ## Feedbacks
 
-Feel free to give any feedback or report any issues to me [<hjisaach at aims.ac.za>](hjisaach@aims.ac.za) or [<hjisaac.h at gmail.com>](hjisaac.h@gmail.com). 
+Feel free to give any feedback or report any issues to me  [<hjisaach at aims.ac.za>](hjisaach@aims.ac.za). 
 
 ---
 [^1]: Unfortunately, we have not made the name of the model to reflect that fact (TODO).
