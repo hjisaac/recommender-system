@@ -145,6 +145,8 @@ To set up the project:
    git clone https://github.com/hjisaac/recommender-system.git
    cd recommender-system
    ```
+   
+    *You may need to install Git LFS as the artifacts are finally managed by that techno*
 
 2. **Install dependencies**:
    ```bash
