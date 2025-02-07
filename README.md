@@ -188,7 +188,7 @@ Only collaborative filtering is implemented now, and it is encaspsulated in the 
    # To recommend, call the recommend method of the recommender object with a list of rating. E.g: [(item1, rating1), ..]
    recommender.recommend(input_ratings)
    
-   # If called without arguments, the recommender will recommend best rated items.
+   # If called without arguments, the recommender will recommend best rated items[^2]. 
    recommender.recommend()
    ```
 
@@ -219,7 +219,7 @@ Where:
 
 ### Results (Example)
 
-This table shows the tried parameters and the related results. When $\beta$ is `None`, it means that feature vector (factor) is not integrated[^1]. 
+This table shows the tried parameters and the related results. When $\beta$ is `None`, it means that feature vector (factor) is not integrated or modeled[^1]. 
 
 | Sample size | $\beta$   | $\lambda$ | $\gamma$ | $\tau$ | $k$  | Epochs | RMSE Train   | RMSE Test    | Loss Train       | Loss Test        | Recommendation                                      |
 |-------------|-----------|-----------|----------|--------|------|--------|--------------|--------------|------------------|------------------|-----------------------------------------------------|
@@ -380,6 +380,6 @@ Feel free to give any feedback or report any issues to me [<hjisaach at aims.ac.
 
 ---
 [^1]: Unfortunately, we have not made the name of the model to reflect that fact (TODO).
-
+[^2]: This operation needs a huge amount of RAM. One can achieve the same goal using other ways.
 
 
