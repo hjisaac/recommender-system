@@ -188,7 +188,8 @@ Only collaborative filtering is implemented now, and it is encaspsulated in the 
    # To recommend, call the recommend method of the recommender object with a list of rating. E.g: [(item1, rating1), ..]
    recommender.recommend(input_ratings)
    
-   # If called without arguments, the recommender will recommend best rated items[^2]. 
+   # If called without arguments, the recommender will recommend best rated items. 
+   # This operation needs a huge amount of RAM. One can achieve the same goal using other ways.
    recommender.recommend()
    ```
 
@@ -246,13 +247,13 @@ Here are the RMSE and Loss curves of the model **20250112-211340_lambda0.5_gamma
 - RMSE Train: 0.7814
 - RMSE Test:  0.7041
 
-For the other models, we got approximately the same curve shape and a similar RMSE value.
+For the other models, we got approximately the same curve shape (cf. the table above for the RMSE values).
 
 #### Loss Curve
 
 ![loss test train image](./artifacts/figures/loss_test_train.svg)
 
-For the other models, we got approximately the same curve shape (cf. the table above).
+For the other models, we got approximately the same curve shape (cf. the table above for the loss values).
 
 
 ### Recommendation
@@ -380,6 +381,5 @@ Feel free to give any feedback or report any issues to me [<hjisaach at aims.ac.
 
 ---
 [^1]: Unfortunately, we have not made the name of the model to reflect that fact (TODO).
-[^2]: This operation needs a huge amount of RAM. One can achieve the same goal using other ways.
 
 
