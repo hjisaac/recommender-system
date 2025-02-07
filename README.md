@@ -270,9 +270,9 @@ Here are the returned recommendations for the movie `Harry Potter 20th Anniversa
 9. *Harry Potter and the Deathly Hallows: Part 1* (2010) – Action | Adventure | Fantasy | IMAX
 10. *Harry Potter and the Half-Blood Prince* (2009) – Adventure | Fantasy | Mystery | Romance | IMAX
 
-#### Latent space
+#### Latent Space
 
-#### Happy Potter vs All the rest
+#####  Happy Potter vs All the rest
 
 ![Happy Potter vs All the rest](./artifacts/figures/harry_potter_against_all.jpg)
 
