@@ -275,6 +275,8 @@ def plot_movie_factors(movie_factors, movie_indices, movie_titles=None, label=""
 
     # Highlight and annotate selected movies
     for i, idx in enumerate(movie_indices):
+        if i is None:
+            continue
         plt.scatter(movie_factors_2D[idx, 0], movie_factors_2D[idx, 1], color="red", s=100, label=label if idx == movie_indices[0] else "")
         plt.annotate(movie_titles[i], (movie_factors_2D[idx, 0], movie_factors_2D[idx, 1]), fontsize=9, alpha=0.75)
     plt.xlabel("PCA Component 1")
@@ -297,7 +299,7 @@ def plot_movie_factors_with_categories(movie_factors, movie_categories, category
 
     Args:
         movie_factors (np.ndarray): A matrix of shape (num_movies, num_features).
-        movie_categories (np.ndarray): A binary matrix of shape (num_movies, num_categories).
+        movie_categories (list): A list of binary lists (length = num_movies, num_categories per movie).
         category_labels (list): List of category names (length = num_categories).
         movie_titles (list, optional): List of movie titles (length = num_movies).
         use_tsne (bool): Whether to use t-SNE instead of PCA for better separation.
@@ -310,8 +312,8 @@ def plot_movie_factors_with_categories(movie_factors, movie_categories, category
 
     # Filter out ignored indices
     valid_indices = [i for i in range(len(movie_factors)) if i not in movie_indices_to_ignore]
-    movie_factors_filtered = movie_factors[valid_indices]
-    movie_categories_filtered = movie_categories[valid_indices]
+    movie_factors_filtered = np.array([movie_factors[i] for i in valid_indices])  # Convert to NumPy array
+    movie_categories_filtered = [movie_categories[i] for i in valid_indices]  # Keep as list
 
     # Dimensionality Reduction (PCA or t-SNE)
     if use_tsne:
@@ -322,12 +324,12 @@ def plot_movie_factors_with_categories(movie_factors, movie_categories, category
     movie_factors_2D = reducer.fit_transform(movie_factors_filtered)
 
     # Generate a distinct color for each category
-    num_categories = movie_categories.shape[1]
+    num_categories = len(category_labels)
     palette = sns.color_palette("hsv", num_categories)
 
     # Compute blended colors for movies with multiple categories
     def blend_colors(cat_vector):
-        return np.dot(cat_vector, palette) / (cat_vector.sum() + 1e-9)  # Avoid division by zero
+        return np.dot(cat_vector, palette) / (sum(cat_vector) + 1e-9)  # Avoid division by zero
 
     movie_colors = np.array([blend_colors(movie_categories_filtered[i]) for i in range(len(valid_indices))])
 

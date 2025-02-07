@@ -6,7 +6,7 @@ This project demonstrates the development of a **recommender system** leveraging
 
 ![demo](./demo_short.gif)
 
-Or download  the ![Demo Video](./demo.mp4) or go and test it in live on ![Streamlit](./demo_short.gif) (it may take some time to load...).
+Or download the ![Demo Video](./demo.mp4) or go and test it in live on [Streamlit](https://recommender-system-cixeur34nxyb5prblsl4yt.streamlit.app/) (it may take some time to load...).
 
 
 ## Table of Contents
@@ -145,6 +145,8 @@ To set up the project:
    git clone https://github.com/hjisaac/recommender-system.git
    cd recommender-system
    ```
+   
+    *You may need to install Git LFS as the artifacts are finally managed by that techno*
 
 2. **Install dependencies**:
    ```bash
@@ -152,14 +154,16 @@ To set up the project:
    ```
 
 3. **Run an example**:
-   To run the movielens example, download the dataset from [here](https://grouplens.org/datasets/movielens/).
-   Ideally, put that dataset in the example folder and change the path of rating.csv file passed to the indexer.
-   And run the notebook or convert it into a python file with `nbconvert`. Or you can also just run the example.{py, ipynb} file.
+
+To run the movielens example, download the dataset from [here](https://grouplens.org/datasets/movielens/).
+Ideally, put that dataset in the example folder and change the path of rating.csv file passed to the indexer.
+And run the notebook or convert it into a python file with `nbconvert`. Or you can also just run the example.{py, ipynb} file.
    
 4. **Run the streamlit example**
-    The streamlit uses the model **20250112-211340_lambda0.5_gamma0.01_tau2_n_epochs20_n_factors10**
 
-    `streamlit run interface.py`
+The streamlit uses the model **20250112-211340_lambda0.5_gamma0.01_tau2_n_epochs20_n_factors10**
+
+`streamlit run interface.py`
     
 
 </details>   
@@ -188,7 +192,8 @@ Only collaborative filtering is implemented now, and it is encaspsulated in the 
    # To recommend, call the recommend method of the recommender object with a list of rating. E.g: [(item1, rating1), ..]
    recommender.recommend(input_ratings)
    
-   # If called without arguments, the recommender will recommend best rated items.
+   # If called without arguments, the recommender will recommend best rated items. 
+   # This operation needs a huge amount of RAM. One can achieve the same goal using other ways.
    recommender.recommend()
    ```
 
@@ -219,7 +224,7 @@ Where:
 
 ### Results (Example)
 
-This table shows the tried parameters and the related results.
+This table shows the tried parameters and the related results. When $\beta$ is `None`, it means that feature vector (factor) is not integrated or modeled[^1]. 
 
 | Sample size | $\beta$   | $\lambda$ | $\gamma$ | $\tau$ | $k$  | Epochs | RMSE Train   | RMSE Test    | Loss Train       | Loss Test        | Recommendation                                      |
 |-------------|-----------|-----------|----------|--------|------|--------|--------------|--------------|------------------|------------------|-----------------------------------------------------|
@@ -246,13 +251,13 @@ Here are the RMSE and Loss curves of the model **20250112-211340_lambda0.5_gamma
 - RMSE Train: 0.7814
 - RMSE Test:  0.7041
 
-For the other models, we got approximately the same curve shape and a similar RMSE value.
+For the other models, we got approximately the same curve shape (cf. the table above for the RMSE values).
 
 #### Loss Curve
 
 ![loss test train image](./artifacts/figures/loss_test_train.svg)
 
-For the other models, we got approximately the same curve shape and a similar loss value.
+For the other models, we got approximately the same curve shape (cf. the table above for the loss values).
 
 
 ### Recommendation
@@ -270,11 +275,11 @@ Here are the returned recommendations for the movie `Harry Potter 20th Anniversa
 9. *Harry Potter and the Deathly Hallows: Part 1* (2010) – Action | Adventure | Fantasy | IMAX
 10. *Harry Potter and the Half-Blood Prince* (2009) – Adventure | Fantasy | Mystery | Romance | IMAX
 
-#### Latent space
+#### Latent Space
 
-#### Happy Potter vs All the rest
+#####  Happy Potter vs All the rest
 
-![Happy Potter vs All the rest](./artifacts/figures/harry_potter_against_all.jpg)
+![Happy Potter vs All the rest](./artifacts/figures/harry_potter_against_all_with_genres.png)
 
 
 
@@ -301,7 +306,6 @@ datasets/             # Documentation about the datasets used for training and e
 docs/                 # Documentation for the project, including detailed explanations and guidelines.
 
 examples/             # Example scripts to demonstrate the usage of the system.
-├── basic_example/    # A simple example to get started quickly.
 └── movies_lens/      # Example using the MovieLens dataset.
 
 figures/              # Additional plots and figures for analysis and results.
@@ -378,7 +382,7 @@ This project is licensed under the MIT License. See the `LICENSE` file for more 
 
 Feel free to give any feedback or report any issues to me [<hjisaac.h at gmail.com>](hjisaac.h@gmail.com). 
 
-
-
+---
+[^1]: Unfortunately, we have not made the name of the model to reflect that fact (TODO).
 
 
