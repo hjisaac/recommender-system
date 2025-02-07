@@ -154,14 +154,16 @@ To set up the project:
    ```
 
 3. **Run an example**:
-   To run the movielens example, download the dataset from [here](https://grouplens.org/datasets/movielens/).
-   Ideally, put that dataset in the example folder and change the path of rating.csv file passed to the indexer.
-   And run the notebook or convert it into a python file with `nbconvert`. Or you can also just run the example.{py, ipynb} file.
+
+To run the movielens example, download the dataset from [here](https://grouplens.org/datasets/movielens/).
+Ideally, put that dataset in the example folder and change the path of rating.csv file passed to the indexer.
+And run the notebook or convert it into a python file with `nbconvert`. Or you can also just run the example.{py, ipynb} file.
    
 4. **Run the streamlit example**
-    The streamlit uses the model **20250112-211340_lambda0.5_gamma0.01_tau2_n_epochs20_n_factors10**
 
-    `streamlit run interface.py`
+The streamlit uses the model **20250112-211340_lambda0.5_gamma0.01_tau2_n_epochs20_n_factors10**
+
+`streamlit run interface.py`
     
 
 </details>   
@@ -304,7 +306,6 @@ datasets/             # Documentation about the datasets used for training and e
 docs/                 # Documentation for the project, including detailed explanations and guidelines.
 
 examples/             # Example scripts to demonstrate the usage of the system.
-├── basic_example/    # A simple example to get started quickly.
 └── movies_lens/      # Example using the MovieLens dataset.
 
 figures/              # Additional plots and figures for analysis and results.
