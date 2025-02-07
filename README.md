@@ -6,7 +6,7 @@ This project demonstrates the development of a **recommender system** leveraging
 
 ![demo](./demo_short.gif)
 
-Or download the ![Demo Video](./demo.mp4) or go and test it in live on ![Streamlit](https://recommender-system-cixeur34nxyb5prblsl4yt.streamlit.app/) (it may take some time to load...).
+Or download the ![Demo Video](./demo.mp4) or go and test it in live on [Streamlit](https://recommender-system-cixeur34nxyb5prblsl4yt.streamlit.app/) (it may take some time to load...).
 
 
 ## Table of Contents
